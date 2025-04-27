@@ -3,6 +3,8 @@ from tkinter import ttk
 from PIL import Image, ImageTk
 import math
 import cv2
+import numpy as np
+from ultralytics import YOLO
 
 class CameraView(ttk.Frame):
     def __init__(self, parent):
@@ -12,10 +14,33 @@ class CameraView(ttk.Frame):
         self.canvas.pack(fill="both", expand=True, padx=10, pady=10)
         self.image_tk = None
         
+        # YOLO model initialization
+        try:
+            self.model = YOLO('yolo11n.pt')
+            self.model_loaded = True
+            print("YOLO model loaded successfully")
+        except Exception as e:
+            print(f"Error loading YOLO model: {e}")
+            self.model_loaded = False
+            
+        # Parameters for distance calculation
+        self.focal_length = 720  # Focal length in pixels, may need adjustment
+        self.actual_object_sizes = {
+            'person': 50,   # Width in cm
+            'car': 180,     # Width in cm
+            'bus': 250,     # Width in cm
+            'bottle': 6.5   # Width in cm
+            # Add more objects as needed
+        }
+        
     def update_frame(self, frame):
         if frame is not None:
             try:
-                frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+                # Process the frame with YOLO if model is loaded
+                processed_frame = self.process_frame(frame) if self.model_loaded else frame
+                
+                # Convert and display the frame
+                frame_rgb = cv2.cvtColor(processed_frame, cv2.COLOR_BGR2RGB)
                 img = Image.fromarray(frame_rgb)
                 img = img.resize((640, 360), Image.LANCZOS)
                 self.image_tk = ImageTk.PhotoImage(image=img)
@@ -28,6 +53,68 @@ class CameraView(ttk.Frame):
         else:
             self.canvas.delete("all")
             self.canvas.config(bg="black")
+    
+    def process_frame(self, frame):
+        """Process frame with YOLO and add object detection and distance estimation"""
+        if not self.model_loaded:
+            return frame
+            
+        try:
+            # Make a copy to avoid modifying the original
+            processed_frame = frame.copy()
+            
+            # Run YOLO detection
+            results = self.model(processed_frame, verbose=False)[0]
+            
+            # Extract detection information
+            boxes = results.boxes.xyxy.cpu().numpy()
+            classes = results.boxes.cls.cpu().numpy()
+            confidences = results.boxes.conf.cpu().numpy()
+            
+            # Process each detection
+            for i, box in enumerate(boxes):
+                x1, y1, x2, y2 = map(int, box)
+                class_id = int(classes[i])
+                label = self.model.names[class_id]
+                conf = confidences[i]
+                
+                # Calculate object width in pixels
+                bbox_width_pixels = x2 - x1
+                
+                # Get real-world width of the object
+                actual_width = self.actual_object_sizes.get(label, 100)  # Default if not in dictionary
+                
+                # Calculate distance using the formula: distance = (actual_width * focal_length) / width_in_pixels
+                if bbox_width_pixels != 0:
+                    distance = (actual_width * self.focal_length) / bbox_width_pixels
+                    distance_text = f"{distance:.1f} cm"
+                else:
+                    distance = float('inf')
+                    distance_text = "Unknown"
+                
+                # Draw bounding box
+                cv2.rectangle(processed_frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
+                
+                # Add label and confidence
+                text = f"{label} ({conf:.2f})"
+                cv2.putText(processed_frame, text, (x1, y1-10), 
+                            cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
+                
+                # Add distance
+                cv2.putText(processed_frame, distance_text, (x1, y2+20), 
+                            cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
+                
+                # Add warning if object is too close
+                if distance < 150:  # Threshold in cm
+                    cv2.putText(processed_frame, "WARNING: Object Close!", 
+                                (x1, y1 + (y2 - y1) // 2),
+                                cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
+            
+            return processed_frame
+            
+        except Exception as e:
+            print(f"Error in YOLO processing: {e}")
+            return frame
 
 
 class LidarView(ttk.Frame):
