@@ -1,161 +1,82 @@
-import serial
-from rplidar import RPLidar
-import numpy as np
-import cv2
+import tkinter as tk
+from tkinter import ttk
 import math
-import time
 
-class RPLidarHandler:
-    def __init__(self, port='COM5', baudrate=115200, timeout=3):
-        self.port = port
-        self.baudrate = baudrate
-        self.timeout = timeout
-        self.lidar = None
-    
-    def connect(self):
-        try:
-            self.lidar = RPLidar(self.port, self.baudrate, timeout=self.timeout)
-            self.lidar.start_motor()
-            info = self.lidar.get_info()
-            print(f"RPLIDAR Info: {info}")
-            health = self.lidar.get_health()
-            print(f"RPLIDAR Health: {health}")
-            return True
-        except serial.SerialException as e:
-            print(f"Error connecting to RPLIDAR on {self.port}: {e}")
-            return False
-        except Exception as e:
-            print(f"An unexpected error occurred during RPLIDAR connection: {e}")
-            return False
-    
-    def disconnect(self):
-        if self.lidar:
-            try:
-                self.lidar.stop()
-                self.lidar.stop_motor()
-                self.lidar.disconnect()
-                print("RPLIDAR disconnected.")
-            except Exception as e:
-                print(f"Error during disconnection: {e}")
-    
-    def get_scan_data(self):
-        if self.lidar:
-            try:
-                # Get just one scan instead of getting stuck in an iterator
-                scan = next(self.lidar.iter_scans(scan_type='express'))
-                points = []
-                for quality, angle, distance in scan:
-                    points.append((angle, distance / 1000.0))  # distance in meters
-                return points
-            except serial.SerialException as e:
-                print(f"Serial error while reading RPLIDAR data: {e}")
-            except Exception as e:
-                print(f"Error reading RPLIDAR data: {e}")
-        return []
+class CarLidarView(ttk.Frame):
+    def __init__(self, parent, point_size=3, max_distance=100, **kwargs):
+        super().__init__(parent, style="Dark.TFrame", **kwargs)
+        self.point_size = point_size
+        self.max_distance = max_distance
+        self.scale_factor = 280 / self.max_distance  # Adjust scale for the limited view
+        self.center_x = 150
+        self.center_y = 280  # Center towards the bottom for a forward view
+        self._create_widgets()
 
-def draw_radar_grid(frame, center, size, max_distance):
-    # Draw concentric circles
-    for d in range(1, int(max_distance) + 1):
-        radius = int((d / max_distance) * (size / 2))
-        cv2.circle(frame, center, radius, (30, 30, 30), 1)
-        # Add distance label
-        cv2.putText(frame, f"{d}m", 
-                   (center[0] + radius - 20, center[1] - 5), 
-                   cv2.FONT_HERSHEY_SIMPLEX, 0.5, (100, 100, 100), 1)
-    
-    # Draw radial lines (every 30 degrees)
-    for angle in range(0, 360, 30):
-        radian = math.radians(angle)
-        x = int(center[0] + (size/2) * math.cos(radian))
-        y = int(center[1] + (size/2) * math.sin(radian))
-        cv2.line(frame, center, (x, y), (30, 30, 30), 1)
-        
-        # Add angle label at the edge
-        label_x = int(center[0] + (size/2 - 30) * math.cos(radian))
-        label_y = int(center[1] + (size/2 - 30) * math.sin(radian))
-        cv2.putText(frame, f"{angle}°", (label_x-10, label_y), 
-                   cv2.FONT_HERSHEY_SIMPLEX, 0.4, (100, 100, 100), 1)
+    def _create_widgets(self):
+        ttk.Label(self, text="Car LIDAR (Forward View)", style="Title.TLabel").pack(pady=5)
+        self.canvas = tk.Canvas(self, bg="black", width=300, height=300)
+        self.canvas.pack(fill="both", expand=True, padx=10, pady=10)
+        self._draw_fov()
 
-def main():
-    lidar = RPLidarHandler(port='COM5')
-    
-    if lidar.connect():
-        try:
-            print("Starting visualization...")
-            # Create a black image
-            img_size = 800
-            center = (img_size // 2, img_size // 2)
-            max_distance = 8  # meters
-            
-            # Create window with trackbars
-            cv2.namedWindow("RPLIDAR Visualization")
-            
-            running = True
-            while running:
-                # Create a fresh frame
-                frame = np.zeros((img_size, img_size, 3), dtype=np.uint8)
-                
-                # Draw radar grid
-                draw_radar_grid(frame, center, img_size, max_distance)
-                
-                # Get scan data
-                scan = lidar.get_scan_data()
-                
-                if scan:
-                    # Draw scan points
-                    for angle, distance in scan:
-                        if distance <= 0.0 or distance > max_distance:
-                            continue
-                        
-                        # Scale distance to pixels
-                        r = (distance / max_distance) * (img_size / 2)
-                        theta = math.radians(angle)
-                        x = int(center[0] + r * math.cos(theta))
-                        y = int(center[1] + r * math.sin(theta))
-                        
-                        # Draw point with color based on distance
-                        # Close = red, far = green
-                        intensity = int(255 * (distance / max_distance))
-                        color = (0, intensity, 255-intensity)
-                        cv2.circle(frame, (x, y), 2, color, -1)
-                
-                # Draw center point and axes
-                cv2.circle(frame, center, 5, (0, 0, 255), -1)
-                cv2.line(frame, (center[0], 0), (center[0], img_size), (50, 50, 50), 1)
-                cv2.line(frame, (0, center[1]), (img_size, center[1]), (50, 50, 50), 1)
-                
-                # Add info text
-                cv2.putText(frame, "RPLIDAR Visualization", (10, 20), 
-                           cv2.FONT_HERSHEY_SIMPLEX, 0.6, (200, 200, 200), 1)
-                cv2.putText(frame, "Press ESC to exit", (10, 40), 
-                           cv2.FONT_HERSHEY_SIMPLEX, 0.5, (150, 150, 150), 1)
-                
-                # Show points count
-                if scan:
-                    cv2.putText(frame, f"Points: {len(scan)}", (10, 60), 
-                               cv2.FONT_HERSHEY_SIMPLEX, 0.5, (150, 150, 150), 1)
-                
-                # Show the frame
-                cv2.imshow("RPLIDAR Visualization", frame)
-                
-                # Handle key press
-                key = cv2.waitKey(1) & 0xFF
-                if key == 27:  # ESC key
-                    running = False
-                
-                # Add a small delay to reduce CPU usage
-                time.sleep(0.05)
-                
-        except KeyboardInterrupt:
-            print("Operation interrupted by user.")
-        
-        finally:
-            print("Stopping visualization...")
-            lidar.disconnect()
-            cv2.destroyAllWindows()
-    
-    else:
-        print("Failed to connect to RPLIDAR.")
+    def _draw_fov(self, angle_start=60, angle_end=120, radius=150, color="#555"):
+        """Draws the field of view arc."""
+        start_rad = math.radians(angle_start - 90) # Adjust for canvas orientation
+        end_rad = math.radians(angle_end - 90)     # Adjust for canvas orientation
+        self.canvas.create_arc(self.center_x - radius, self.center_y - radius,
+                               self.center_x + radius, self.center_y + radius,
+                               start=math.degrees(start_rad), extent=math.degrees(end_rad - start_rad),
+                               style=tk.ARC, outline=color, dash=(3, 3), tags="fov")
 
-if __name__ == "__main__":
-    main()
+    def update_display(self, lidar_data):
+        self.canvas.delete("lidar_point")
+        if not lidar_data:
+            return
+
+        points_to_draw = []
+
+        for angle_deg, distance_mm in lidar_data:
+            # Assuming data is already filtered to 60-120 degrees
+            if 0 <= distance_mm <= self.max_distance:
+                angle_rad = math.radians(angle_deg - 90) # Adjust for canvas orientation
+                scaled_distance = distance_mm * self.scale_factor
+                end_x = self.center_x + scaled_distance * math.cos(angle_rad)
+                end_y = self.center_y - scaled_distance * math.sin(angle_rad)
+
+                color = "#00FF00"  # Default green
+                if distance_mm < 10:
+                    color = "#FF0000"  # Red for very close
+                elif distance_mm < 30:
+                    color = "#FFFF00"  # Yellow for close
+
+                points_to_draw.append((end_x, end_y, color))
+
+        for x, y, color in points_to_draw:
+            self.canvas.create_oval(x - self.point_size, y - self.point_size,
+                                    x + self_point_size, y + self.point_size,
+                                    fill=color, outline=color, tags="lidar_point")
+
+if __name__ == '__main__':
+    import tkinter as tk
+    import random
+
+    def update_lidar_data():
+        # Simulate car LIDAR data (60 to 120 degrees)
+        new_data = []
+        for angle in range(60, 121, 2):
+            distance = random.randint(5, 100)
+            if random.random() < 0.8: # Simulate some detections
+                new_data.append((angle, distance))
+        car_lidar_view.update_display(new_data)
+        root.after(100, update_lidar_data)
+
+    root = tk.Tk()
+    root.title("Car LIDAR Visualization")
+    root.style = ttk.Style()
+    root.style.theme_use('clam')
+
+    car_lidar_view = CarLidarView(root)
+    car_lidar_view.pack(fill="both", expand=True)
+
+    root.after(500, update_lidar_data)
+
+    root.mainloop()

@@ -43,7 +43,7 @@ class MainWindow(ttk.Frame):
         self.camera_handler = CameraHandler(camera_index=0)
         self.root = root
         self.root.title("Car Control Platform")
-        self.root.geometry("1200x800")
+        self.root.geometry("1350x800")
         self.root.configure(bg="#222222")
         
         self.robot_state = RobotState()
