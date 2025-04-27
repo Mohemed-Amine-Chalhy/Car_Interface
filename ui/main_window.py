@@ -7,17 +7,17 @@ import cv2
 import sys
 from pathlib import Path
 
-# Get the path of the current script (main_window.py)
-current_file_path = Path(__file__).resolve()
+# # Get the path of the current script (main_window.py)
+# current_file_path = Path(__file__).resolve()
 
-# Get the directory containing the current script (the 'ui' folder)
-ui_dir = current_file_path.parent
+# # Get the directory containing the current script (the 'ui' folder)
+# ui_dir = current_file_path.parent
 
-# Get the parent directory of 'ui', which is 'car_interface'
-car_interface_dir = ui_dir.parent
+# # Get the parent directory of 'ui', which is 'car_interface'
+# car_interface_dir = ui_dir.parent
 
-# Add the 'car_interface' directory to sys.path
-sys.path.append(str(car_interface_dir))
+# # Add the 'car_interface' directory to sys.path
+# sys.path.append(str(car_interface_dir))
 
 
 from core.robot_state import RobotState
@@ -48,7 +48,7 @@ class MainWindow(ttk.Frame):
         
         self.robot_state = RobotState()
         self.lidar_handler = RPLidarHandler(port='COM5')
-        self.camera_handler = CameraHandler(camera_index=1)
+        self.camera_handler = CameraHandler(camera_index=0)
         
         self.is_connected = False
         self.camera_active = False

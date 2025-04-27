@@ -44,7 +44,7 @@ class RPLidarHandler:
         if self.lidar and not self.is_scanning:
             try:
                 # Initialize the iterator for scans
-                self.scan_generator = self.lidar.iter_scans(scan_type='express')
+                self.scan_generator = self.lidar.iter_scans(scan_type='normal')
                 self.is_scanning = True
                 print("RPLIDAR scanning started.")
             except Exception as e:
@@ -67,8 +67,8 @@ class RPLidarHandler:
                 scan = next(self.scan_generator)
                 scan_data = []
                 for quality, angle, distance in scan:
-                    if distance > 0:  # Ignore zero values
-                        scan_data.append((angle, distance / 10.0))  # Angle in degrees, distance in cm
+                    if distance > 0 and 60<angle<120:  # Ignore zero values
+                        scan_data.append((angle, distance))  # Angle in degrees, distance in cm
                 return scan_data
             except StopIteration:
                 print("Scan iteration complete, restarting...")

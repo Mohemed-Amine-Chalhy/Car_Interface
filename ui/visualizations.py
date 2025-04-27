@@ -28,11 +28,7 @@ class CameraView(ttk.Frame):
         else:
             self.canvas.delete("all")
             self.canvas.config(bg="black")
-            
-    
-import tkinter as tk
-from tkinter import ttk
-import math
+
 
 class LidarView(ttk.Frame):
     def __init__(self, parent):
@@ -41,7 +37,7 @@ class LidarView(ttk.Frame):
         self.canvas = tk.Canvas(self, bg="black", width=300, height=300)
         self.canvas.pack(fill="both", expand=True, padx=10, pady=10)
         self.point_size = 2  # Pre-defined point size
-        self.max_distance = 2000 # Pre-defined max distance
+        self.max_distance = 5000 # Pre-defined max distance
         self.scale_factor = 300 / self.max_distance
 
     def update_display(self, lidar_data):
