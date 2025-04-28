@@ -1,0 +1,6 @@
+numpy==2.2.5
+opencv_python==4.11.0.86
+Pillow==11.2.1
+pyserial==3.5
+rplidar_roboticia==0.9.5
+ultralytics==8.3.118
