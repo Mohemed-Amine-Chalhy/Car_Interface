@@ -118,7 +118,7 @@ class CameraView(ttk.Frame):
 
 
 class LidarView(ttk.Frame):
-    def __init__(self, parent, point_size=2, max_distance=5000, **kwargs):
+    def __init__(self, parent, point_size=2, max_distance=4000, **kwargs):
         super().__init__(parent, style="Dark.TFrame", **kwargs)
         self.point_size = point_size
         self.max_distance = max_distance
@@ -165,7 +165,7 @@ class LidarView(ttk.Frame):
             color = "#00FF00"  # Default green
             if distance_mm < 500:
                 color = "#FF0000"  # Red for very close
-            elif distance_mm < 1500:
+            elif distance_mm < 2000:
                 color = "#FFFF00"  # Yellow for close
 
             points_to_draw.append((end_x, end_y, color))
