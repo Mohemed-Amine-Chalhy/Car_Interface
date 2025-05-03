@@ -8,5 +8,5 @@ class RobotState:
         self.lidar_data = []
         self.proximity_alert = False
         self.sp32port = 'COM5'
-        self.lidarport = 'COM6'
+        #self.lidarport = 'COM5'
         self.autostop = False

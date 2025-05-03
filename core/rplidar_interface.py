@@ -67,7 +67,7 @@ class RPLidarHandler:
                 scan = next(self.scan_generator)
                 scan_data = []
                 for quality, angle, distance in scan:
-                    if distance > 0 and 60<angle<120:  # Ignore zero values
+                    #if distance > 0 and 60<angle<120:  # Ignore zero values
                         scan_data.append((angle, distance))  # Angle in degrees, distance in cm
                 return scan_data
             except StopIteration:
