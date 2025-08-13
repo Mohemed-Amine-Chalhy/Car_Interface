@@ -11,7 +11,7 @@ This repository contains the Python-based graphical user interface (GUI) for con
 Here is a brief look at our car in action and the control interface.
 
 **Control Interface GUI**
-![Interface Placeholder](https://imgur.com/a/yvtTBJF)
+![Interface Placeholder]([https://imgur.com/a/yvtTBJF](https://postimg.cc/Mvp41Rxm))
 *A screenshot of the main application window, showing the Robot Control and Lidar Visualizer tabs.*
 
 **Video Showcase**
