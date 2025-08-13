@@ -17,7 +17,8 @@ Here is a brief look at our car in action and the control interface.
 
 **Video Showcase**
 
-[![ezgif-84aa40de80b339.gif](https://i.postimg.cc/vmDkBW0Q/ezgif-84aa40de80b339.gif)](https://postimg.cc/cKyXk8qj)
+![Demo](https://i.postimg.cc/vmDkBW0Q/ezgif-84aa40de80b339.gif)
+
 ## Features
 
 *   **Dual-Mode Control:**
