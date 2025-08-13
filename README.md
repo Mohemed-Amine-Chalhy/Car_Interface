@@ -107,8 +107,4 @@ This project is built with Python and relies on several external libraries.
 
 ## Project Team
 
-This project was created by:
 
-*   [Your Name]
-*   [Teammate's Name]
-*   [Teammate's Name]
