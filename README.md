@@ -16,7 +16,7 @@ Here is a brief look at our car in action and the control interface.
 *A screenshot of the main application window, showing the Robot Control and Lidar Visualizer tabs.*
 
 **Video Showcase**
-[![Demonstration Video Placeholder](https://via.placeholder.com/800x450.png?text=Placeholder:+Click+to+Watch+Video+of+the+Car)](https://www.youtube.com)
+[![Demonstration Video Placeholder]([![ezgif-84aa40de80b339.gif](https://i.postimg.cc/vmDkBW0Q/ezgif-84aa40de80b339.gif)](https://postimg.cc/cKyXk8qj))
 *Click the image above for a video of the car navigating a course using the controller.*
 ![Alternative text for the GIF](https://i.imgur.com/your-gif-file.gif)
 ## Features
