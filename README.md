@@ -16,6 +16,7 @@ Here is a brief look at our car in action and the control interface.
 *A screenshot of the main application window, showing the Robot Control and Lidar Visualizer tabs.*
 
 **Video Showcase**
+![hippo](https://media3.giphy.com/media/aUovxH8Vf9qDu/giphy.gif)
 
 ![Demo](https://i.postimg.cc/vmDkBW0Q/ezgif-84aa40de80b339.gif)
 
