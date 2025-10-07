@@ -109,6 +109,6 @@ This project is built with Python and relies on several external libraries.
 *   **Better Controller Mapping:** Create a configuration file or GUI section to allow users to easily remap controller buttons and axes.
 
 ## Project Team
-[Project Team Social Media Account](https://www.instagram.com/drivenai_26/)
+[Check out this cool video](https://www.instagram.com/p/DJD9AVDM7V6/)
 
 
