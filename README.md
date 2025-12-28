@@ -111,4 +111,28 @@ This project is built with Python and relies on several external libraries.
 ## Project Team
 [Check out this cool video](https://www.instagram.com/p/DJD9AVDM7V6/)
 
+AGMAH Ayoub
+
+AIT BASSOU Ghita
+
+ATOUCH Aicha
+
+BOUSSIF Asmae
+
+CHALHY Mohamed Amine
+
+DADI Khadija
+
+DIALLO Marwa
+
+EL AMARI Soulaimane
+
+EL OUAHABI Chaimae
+
+EL-YAZAMY Ismail
+
+OBBADI Maryem
+
+TAHFI Othmane
+
 
