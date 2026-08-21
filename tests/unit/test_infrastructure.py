@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import logging
+import os
 import zipfile
 from pathlib import Path
 from unittest.mock import Mock, patch
@@ -105,8 +106,23 @@ def test_logging_configuration_writes_to_selected_bounded_file(tmp_path) -> None
 
 
 def test_application_data_directory_uses_platform_local_state(monkeypatch, tmp_path) -> None:
-    monkeypatch.setenv("LOCALAPPDATA", str(tmp_path))
-    assert logging_config.application_data_directory() == tmp_path / "CarInterface"
+    windows_state = tmp_path / "windows-state"
+    posix_state = tmp_path / "posix-state"
+    monkeypatch.setenv("LOCALAPPDATA", str(windows_state))
+    monkeypatch.setenv("XDG_STATE_HOME", str(posix_state))
+
+    expected_state = windows_state if os.name == "nt" else posix_state
+    assert logging_config.application_data_directory() == expected_state / "CarInterface"
+
+
+def test_application_data_directory_falls_back_to_user_home(monkeypatch) -> None:
+    monkeypatch.delenv("LOCALAPPDATA", raising=False)
+    monkeypatch.delenv("XDG_STATE_HOME", raising=False)
+
+    platform_state = Path("AppData/Local") if os.name == "nt" else Path(".local/state")
+    assert (
+        logging_config.application_data_directory() == Path.home() / platform_state / "CarInterface"
+    )
 
 
 def test_factory_composes_simulation_without_connecting_devices() -> None:
