@@ -1,0 +1,53 @@
+name: Bug report
+description: Report a reproducible defect that does not require disclosing a vulnerability.
+title: "[Bug]: "
+labels: [bug, triage]
+body:
+  - type: markdown
+    attributes:
+      value: >-
+        For security or safety vulnerabilities, stop here and follow SECURITY.md.
+        Never test a report on an occupied or unrestrained vehicle.
+  - type: dropdown
+    id: mode
+    attributes:
+      label: Runtime mode
+      options:
+        - Simulation
+        - Hardware (bench-qualified, wheels raised)
+        - Diagnostics or developer tooling
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version or commit
+      placeholder: v0.1.0 or commit SHA
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: What happened?
+      description: Include the expected behavior and the actual behavior.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Minimal reproduction
+      description: Use simulation whenever possible and redact ports, usernames, and private paths.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Relevant evidence
+      description: Paste a short redacted log excerpt or attach a support bundle after reviewing it.
+  - type: checkboxes
+    id: safety
+    attributes:
+      label: Safety confirmation
+      options:
+        - label: I did not reproduce this on an occupied or unrestrained vehicle.
+          required: true

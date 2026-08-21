@@ -1,0 +1,51 @@
+# Python bytecode and caches
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.hypothesis/
+.coverage
+.coverage.*
+.reports/
+
+# Virtual environments and local tooling
+.venv/
+.uv-cache*/
+venv/
+env/
+.tox/
+.nox/
+
+# Build and packaging output
+build/
+dist/
+*.egg-info/
+*.egg
+*.spec.bak
+
+# Editors and operating systems
+.idea/
+.vscode/*
+!.vscode/settings.json
+*.code-workspace
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Runtime state and diagnostics
+*.log
+logs/
+diagnostics/
+crash-reports/
+
+# Local configuration and secrets
+.env
+.env.*
+!.env.example
+config.local.toml
+config.local.yaml
+config.local.yml
+*.pem
+*.key
