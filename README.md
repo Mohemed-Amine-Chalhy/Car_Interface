@@ -1,4 +1,3 @@
-Of course, here is a README.md file suitable for your GitHub repository.
 
 ---
 
