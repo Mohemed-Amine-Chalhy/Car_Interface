@@ -1,137 +1,147 @@
+# Car Interface
 
----
+Car Interface is a Windows-first desktop control application for an ESP32-based
+vehicle. Its v0.1 application scope is manual driving with a game controller,
+RPLidar visualization and obstacle-assist inputs, and a safe-by-default
+simulator for development without hardware.
 
-# ESP32 Remote Control Car with Lidar Assistance
+> [!WARNING]
+> This software is not a certified safety system and has not been validated on
+> every physical vehicle. A moving vehicle can injure people and damage
+> property. Use an independent, physical emergency-stop/power cutoff, keep the
+> test area controlled, and complete the hardware qualification checklist before
+> allowing the wheels to contact the ground. Never depend on the GUI, Lidar, a
+> wireless controller, or a host-computer process as the only stop mechanism.
 
-This repository contains the Python-based graphical user interface (GUI) for controlling a custom-built, ESP32-powered car. The project was developed for a school assignment and features real-time control via a game controller, Lidar-based obstacle detection, and an advanced user interface for monitoring and interaction.
+## Status and scope
 
-## Demonstration
+The maintained tree now contains one production package and its supporting
+tests/tooling. Historical prototypes were removed from the working tree and
+remain available only through Git history. The v0.1 scope is:
 
-Here is a brief look at our car in action and the control interface.
+- simulation is the default execution mode;
+- physical hardware requires explicit operator opt-in;
+- ESP32, controller, and Lidar failures must transition to a safe state;
+- the host/firmware protocol is versioned and requires acknowledgements and a
+  firmware-side watchdog;
+- camera, computer-vision, and YOLO support is deferred: v0.1 ships no vision
+  adapter, dependency extra, model asset, or vision-enabled build path; and
+- simulation and software qualification do not establish physical safety.
 
-**Control Interface GUI**
-[![Screenshot-2025-08-13-022142.png](https://i.postimg.cc/WbGvL6HC/Screenshot-2025-08-13-022142.png)](https://postimg.cc/Mvp41Rxm)
+No release should be described as hardware-qualified until the checklist in
+[Hardware qualification](docs/hardware-qualification.md) has been completed for
+the exact vehicle, firmware, host build, and controller model.
 
-*A screenshot of the main application window, showing the Robot Control and Lidar Visualizer tabs.*
+The repository does not include an identified, qualified ESP32 firmware
+artifact. Physical operation and any hardware-qualified release are therefore
+currently blocked. Public or commercial distribution is also blocked pending a
+copyright-holder license decision; see [LICENSE](LICENSE).
 
-**Video Showcase**
+## Quick start: simulator
 
+Requirements:
 
-![Demo](https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExaHA0dHo1YW5wbjdua25ob2ZmN2Zya3Y1cnFocGFhb2E0c3g3Nm5kZiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/IpNjWXPWk869qG8ss6/giphy.gif)
+- Windows 10/11 for the full desktop application;
+- [uv](https://docs.astral.sh/uv/), which installs the Python version declared in
+  `.python-version`; and
+- PowerShell 7+ recommended on Windows. A POSIX bootstrap script is also
+  provided for logic-only development on Linux/macOS.
 
+From PowerShell:
 
+```powershell
+.\scripts\bootstrap.ps1
+.\.venv\Scripts\python.exe scripts\dev.py doctor
+.\.venv\Scripts\python.exe scripts\dev.py run-sim
+```
 
-## Features
+From a POSIX shell:
 
-*   **Dual-Mode Control:**
-    *   **Controller Mode:** Drive the car using a standard Xbox or PlayStation controller, with analog steering and acceleration for precise control.
-    *   **Manual GUI Mode:** Use sliders and buttons on the interface for direct control and testing.
-*   **Advanced Lidar System:**
-    *   **Real-time Visualization:** A dedicated tab displays a 2D plot of the Lidar's surroundings.
-    *   **Obstacle Detection:** Identifies and highlights potential obstacles directly in the car's path.
-    *   **Auto-Stop Assist:** An intelligent safety feature that automatically triggers an emergency stop if an obstacle gets too close.
-    *   **Proximity Alerts:** Plays audible beeps that increase in frequency as the car approaches an obstacle.
-*   **Robust Connectivity:**
-    *   Communicates with the ESP32 via a stable serial connection.
-    *   Automatic detection of available serial ports.
-*   **Comprehensive User Interface:**
-    *   **Robot Control Tab:** Manage connections, toggle control modes, and view live logs.
-    *   **Lidar Visualizer Tab:** Activate/deactivate the Lidar, configure the auto-stop threshold, and monitor the environment.
-    *   **Real-time Logging:** A console displays all communication with the ESP32, controller events, and system status messages.
-*   **Safety First:**
-    *   **Emergency Stop (E-Stop):** A prominent E-Stop button in the GUI and a failsafe that triggers if the controller disconnects during operation.
-    *   **Manual Brake Override:** Engage or release the car's brake manually from both the GUI and the controller.
+```bash
+./scripts/bootstrap.sh
+.venv/bin/python scripts/dev.py doctor
+.venv/bin/python scripts/dev.py run-sim
+```
 
-## Hardware Components
+Bootstrap creates a local virtual environment, installs the locked development
+dependencies, and installs the repository's Git hooks. It does not connect to
+hardware.
 
-To replicate this project, you will need the following hardware:
-*   **Car Chassis:** A custom-built car frame with motors and motor drivers.
-*   **Main Microcontroller:** An ESP32 development board to control the motors and steering.
-*   **Lidar Sensor:** An RPLidar (A1 or similar model) for environmental scanning.
-*   **Power Source:** A battery pack suitable for powering the ESP32 and motors.
-*   **Game Controller:** An Xbox or PS5-compatible controller.
-*   **Host Computer:** A computer to run the Python control application.
+If the bootstrap scripts or lockfile are not present in your checkout, that
+checkout predates the maintained environment and must not be used for hardware
+operation.
 
-## Software & Installation
+## Hardware operation
 
-This project is built with Python and relies on several external libraries.
+**Current status: BLOCKED.** No qualified firmware artifact or completed
+physical-hardware qualification is present. The command below exists for
+controlled commissioning only after those blockers are resolved; it is not an
+authorization to operate a vehicle.
 
-### Prerequisites
+Hardware mode is deliberately not a quick-start path. Before commissioning it:
 
-*   **Python 3.7+**
-*   **Arduino IDE** (for programming the ESP32)
+1. Read [Safety](docs/safety.md) and prepare an independent physical cutoff.
+2. Verify wiring and power domains using [Hardware setup](docs/hardware-setup.md).
+3. Install the externally verified firmware artifact and complete the protocol
+   validation checks in
+   [Firmware compatibility](docs/firmware-compatibility.md).
+4. Configure ports and limits as described in
+   [Configuration](docs/configuration.md).
+5. Run the wheels-off-ground procedure in the
+   [Operator guide](docs/operator-guide.md).
+6. Start hardware mode only with the exact explicit acknowledgement shown below.
 
-### Installation Steps
+Do not bypass the acknowledgement in scripts, shortcuts, or application code.
 
-1.  **Clone the Repository:**
-    ```bash
-    git clone https://github.com/your-username/your-repository-name.git
-    cd your-repository-name
-    ```
+```powershell
+.\.venv\Scripts\python.exe scripts\dev.py run-hardware `
+  --config C:\path\to\vehicle.toml `
+  --i-understand-this-controls-real-hardware
+```
 
-2.  **Set up the ESP32:**
-    *   Open the Arduino IDE and install the necessary libraries for your motor driver and other components.
-    *   Upload the corresponding `.ino` sketch (not included in this file) to your ESP32. This sketch should be able to interpret serial commands like `V [speed]`, `W [steer_value]`, `S 1` (Stop), `Q 1` (Release Stop), etc.
+## Quality checks
 
-3.  **Install Python Libraries:**
-    Install all the required Python packages using pip:
-    ```bash
-    pip install pyserial pygame rplidar-python
-    ```
-    *Note: `tkinter` is part of the standard Python library and does not need to be installed separately.*
+The local check command is the same quality gate used by CI:
 
-## How to Run
+```powershell
+.\.venv\Scripts\python.exe scripts\dev.py check
+```
 
-1.  **Connect Hardware:**
-    *   Connect the ESP32-powered car to your computer via USB.
-    *   Connect the RPLidar to your computer via USB.
-    *   Ensure your game controller is connected to the computer (via Bluetooth or USB).
+Individual commands include `format`, `lint`, `typecheck`, `test`, `security`,
+`build`, `sbom`, `checksums`, and `release-check`. Run
+`python scripts/dev.py --help` for the exact options in the current checkout.
+Hardware-in-the-loop tests are always opt-in and are never part of ordinary test
+collection.
 
-2.  **Launch the Application:**
-    Run the main Python script from the terminal:
-    ```bash
-    python your_main_script_name.py
-    ```
+## Documentation
 
-3.  **Using the Interface:**
-    *   **Connect to Car:** In the "Robot Control" tab, select the correct COM port for your ESP32 from the dropdown menu and click **Connect**.
-    *   **Connect Controller:** Click the **Connect** button in the "Xbox Controller" section. The status should change to "Connected".
-    *   **Activate Lidar:** Switch to the "Lidar Visualizer" tab, select the Lidar's COM port, and click **Activate LIDAR**.
-    *   **Enable Control:** Return to the "Robot Control" tab and click **Enable Control**. This will switch the car to "AUTOMATIC" mode, allowing you to drive with the controller.
-    *   **Drive!** Use the right stick for steering and the right trigger for acceleration. The left trigger acts as a manual brake.
+- [Documentation map](docs/README.md)
+- [Getting started](docs/getting-started.md)
+- [Operator guide](docs/operator-guide.md)
+- [Safety model](docs/safety.md)
+- [Configuration reference](docs/configuration.md)
+- [Hardware setup](docs/hardware-setup.md)
+- [Architecture](docs/architecture.md)
+- [Serial protocol](docs/protocol.md)
+- [Development](docs/development.md)
+- [Testing](docs/testing.md)
+- [Troubleshooting](docs/troubleshooting.md)
+- [Release and rollback](docs/release.md)
+- [Threat model](docs/threat-model.md)
+- [Support](docs/support.md)
+- [Credits](docs/credits.md)
 
-## Future Improvements
+## Contributing and security
 
-*   **Path Planning:** Implement autonomous navigation algorithms that use the Lidar data to follow a path or avoid obstacles automatically.
-*   **Web-Based UI:** Convert the Tkinter GUI into a web application using a framework like Flask or Django, allowing control from any device on the network.
-*   **Camera Integration:** Add a camera to the car and stream the video feed to the control interface for FPV (First-Person View) driving.
-*   **Better Controller Mapping:** Create a configuration file or GUI section to allow users to easily remap controller buttons and axes.
+See [CONTRIBUTING.md](CONTRIBUTING.md) before opening a change. Report a
+potential vulnerability or unsafe behavior privately according to
+[SECURITY.md](SECURITY.md), not in a public issue. Community participation is
+covered by [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md).
 
-## Project Team
-[Check out this cool video](https://www.instagram.com/p/DJD9AVDM7V6/)
+## Copyright, licensing, and third-party material
 
-AGMAH Ayoub
-
-AIT BASSOU Ghita
-
-ATOUCH Aicha
-
-BOUSSIF Asmae
-
-CHALHY Mohamed Amine
-
-DADI Khadija
-
-DIALLO Marwa
-
-EL AMARI Soulaimane
-
-EL OUAHABI Chaimae
-
-EL-YAZAMY Ismail
-
-OBBADI Maryem
-
-TAHFI Othmane
-
-
+No open-source license is currently granted. Copyright remains with the
+respective holders, and public or commercial distribution is blocked until they
+authorize a common license. Read [LICENSE](LICENSE) and complete the provenance
+review in [Third-party assets](docs/third-party-assets.md) before distributing
+any artifact.

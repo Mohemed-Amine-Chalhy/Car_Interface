@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security and safety disclosure
+    url: https://github.com/Mohemed-Amine-Chalhy/Car_Interface/security/advisories/new
+    about: Read SECURITY.md first and use a private advisory for sensitive reports.

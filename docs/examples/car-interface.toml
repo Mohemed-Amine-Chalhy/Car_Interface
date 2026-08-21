@@ -1,0 +1,23 @@
+# Start in simulation. Changing this key does not acknowledge hardware risk.
+[car_interface]
+mode = "simulation"
+
+# Example Windows ports. Identify devices on each machine; never assume these.
+esp32_port = "COM3"
+lidar_port = "COM6"
+baud_rate = 115200
+serial_startup_delay_seconds = 2.0
+controller_id = 0
+
+# Acknowledgements are mandatory for physical hardware.
+require_ack = true
+ack_timeout_seconds = 0.2
+heartbeat_interval_seconds = 0.1
+command_stale_seconds = 0.5
+lidar_stale_seconds = 0.75
+
+# Re-qualify the vehicle after changing any limit or dimension.
+auto_stop_distance_cm = 50.0
+vehicle_width_cm = 42.0
+max_speed_percent = 50
+log_level = "INFO"
