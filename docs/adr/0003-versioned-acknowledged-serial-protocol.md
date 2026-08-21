@@ -1,0 +1,59 @@
+# ADR-0003: Use a versioned, acknowledged serial protocol and firmware watchdog
+
+- Status: Accepted
+- Date: 2026-08-21
+- Decision owners: Car Interface maintainers
+- Supersedes: inconsistent newline-delimited prototype commands
+- Superseded by: none
+
+## Context
+
+Prototype code used incompatible command spellings, ranges, spacing, and
+steering semantics. Adding a command to a FIFO queue could be reported as
+success even when firmware never received it. Stop commands could wait behind
+motion, and host failure had no documented independent firmware timeout.
+
+## Decision drivers
+
+- Detect corruption, incompatibility, loss, and stale responses.
+- Distinguish enqueue, transmission, and application.
+- Prioritize stop behavior and prevent replay of old motion.
+- Provide an independently enforced communication-loss safe state.
+
+## Considered options
+
+1. Keep legacy text commands and add logging. This cannot establish integrity or
+   unambiguous compatibility.
+2. Use protocol-v1 ASCII frames with version, sequence, CRC, strict values,
+   ACK/NACK, priority, heartbeat, and watchdog.
+3. Adopt a binary/network protocol immediately. This adds tooling complexity
+   without a current requirement that justifies it.
+
+## Decision
+
+Use option 2 as specified in [protocol.md](../protocol.md). Every command needs a
+matching ACK/NACK. Emergency/safety commands outrank ordinary control and evict
+pending motion when directed by the safety policy. Invalid traffic never
+refreshes the firmware watchdog. Watchdog expiry independently zeros propulsion,
+asserts brake, and inhibits motion.
+
+## Consequences
+
+- Host and firmware must be released and qualified as a compatible pair.
+- CRC detects accidental corruption but does not authenticate a malicious
+  endpoint; physical/local access remains part of the threat model.
+- Sequence and retry semantics add state that needs conformance testing.
+- Legacy firmware is intentionally incompatible with production hardware mode.
+
+## Verification
+
+- Golden frame and parser property tests.
+- Dispatcher ordering, ACK/NACK, timeout, and queue-saturation tests.
+- Firmware conformance corpus for malformed/overlength input.
+- Wheels-clear host crash, cable removal, and watchdog measurements.
+
+## Rollback or supersession
+
+Rollback must restore the complete previously qualified host and firmware pair.
+Never add a runtime “legacy protocol” fallback to a production release. Breaking
+changes require a new protocol version and ADR.
