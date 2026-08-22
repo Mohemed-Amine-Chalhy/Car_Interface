@@ -29,6 +29,34 @@ def test_hardware_run_requires_explicit_acknowledgement_before_composition(
     build_service.assert_not_called()
 
 
+def test_showcase_flag_is_available_for_simulation() -> None:
+    args = cli.build_parser().parse_args(["run", "--mode", "simulation", "--showcase"])
+
+    assert args.showcase is True
+    assert args.mode == "simulation"
+
+
+def test_showcase_rejects_hardware_mode_before_composition(capsys) -> None:
+    with patch.object(cli, "build_control_service") as build_service:
+        result = cli.main(
+            [
+                "run",
+                "--mode",
+                "hardware",
+                "--esp32-port",
+                "COM_TEST_ACTUATOR",
+                "--lidar-port",
+                "COM_TEST_LIDAR",
+                "--showcase",
+                "--i-understand-this-controls-real-hardware",
+            ]
+        )
+
+    assert result == 2
+    assert "showcase is available only in simulation mode" in capsys.readouterr().err
+    build_service.assert_not_called()
+
+
 def test_doctor_reports_environment_without_composing_or_opening_devices(capsys) -> None:
     report = {
         "python": "3.13.0 test",

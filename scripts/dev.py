@@ -374,6 +374,8 @@ def _application_command(mode: str, namespace: argparse.Namespace) -> tuple[str,
         command.extend(("--esp32-port", namespace.esp32_port))
     if getattr(namespace, "lidar_port", None):
         command.extend(("--lidar-port", namespace.lidar_port))
+    if getattr(namespace, "showcase", False):
+        command.append("--showcase")
     return tuple(command)
 
 
@@ -388,6 +390,17 @@ def _run_hardware(namespace: argparse.Namespace) -> None:
     environment[HARDWARE_ACK_ENV] = "1"
     command = (*_application_command("hardware", namespace), HARDWARE_ACK_FLAG)
     _run(command, env=environment)
+
+
+def _capture_showcase(namespace: argparse.Namespace) -> None:
+    _run(
+        (
+            sys.executable,
+            str(ROOT / "scripts" / "capture_showcase.py"),
+            "--output-dir",
+            str(namespace.output_dir),
+        )
+    )
 
 
 def _add_config_argument(parser: argparse.ArgumentParser) -> None:
@@ -439,6 +452,11 @@ def _parser() -> argparse.ArgumentParser:
         help="start the application with simulated devices",
     )
     _add_config_argument(simulation_parser)
+    simulation_parser.add_argument(
+        "--showcase",
+        action="store_true",
+        help="run the deterministic guided walkthrough",
+    )
 
     hardware_parser = subparsers.add_parser(
         "run-hardware",
@@ -452,6 +470,17 @@ def _parser() -> argparse.ArgumentParser:
         action="store_true",
         required=True,
         help="confirm that the command may move a real vehicle",
+    )
+
+    capture_parser = subparsers.add_parser(
+        "capture-showcase",
+        help="record the real simulator walkthrough as README media",
+    )
+    capture_parser.add_argument(
+        "--output-dir",
+        type=Path,
+        default=ROOT / "docs" / "assets" / "showcase",
+        help="directory for the GIF and screenshots",
     )
 
     build_parser = subparsers.add_parser("build", help="build Python and Windows release artifacts")
@@ -505,6 +534,8 @@ def _dispatch(namespace: argparse.Namespace) -> None:
             _run_simulation(namespace)
         case "run-hardware":
             _run_hardware(namespace)
+        case "capture-showcase":
+            _capture_showcase(namespace)
         case "build":
             _build(clean=namespace.clean)
         case "checksums":

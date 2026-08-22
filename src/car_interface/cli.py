@@ -39,6 +39,11 @@ def build_parser() -> argparse.ArgumentParser:
     run.add_argument("--max-speed-percent", type=int)
     run.add_argument("--log-level", choices=("DEBUG", "INFO", "WARNING", "ERROR"))
     run.add_argument(
+        "--showcase",
+        action="store_true",
+        help="run the deterministic guided walkthrough (simulation mode only)",
+    )
+    run.add_argument(
         "--i-understand-this-controls-real-hardware",
         action="store_true",
         help="required acknowledgement before hardware adapters can be composed",
@@ -86,23 +91,28 @@ def main(argv: Sequence[str] | None = None) -> int:
 def _run(args: argparse.Namespace) -> int:
     import tkinter as tk
 
-    from .ui import CarInterfaceWindow
+    from .ui import CarInterfaceWindow, ShowcaseDirector
 
     config = _load_from_args(args)
     if config.mode == "hardware" and not args.i_understand_this_controls_real_hardware:
         raise ConfigurationError(
             "hardware mode requires --i-understand-this-controls-real-hardware"
         )
+    if args.showcase and config.mode != "simulation":
+        raise ConfigurationError("the guided showcase is available only in simulation mode")
     log_path = configure_logging(config.log_level)
     LOGGER.info("Starting Car Interface in %s mode; logs: %s", config.mode, log_path)
     service = build_control_service(config)
     root = tk.Tk()
-    CarInterfaceWindow(
+    window = CarInterfaceWindow(
         root,
         service,
         simulation=config.mode == "simulation",
         max_speed_percent=config.max_speed_percent,
     )
+    showcase = ShowcaseDirector(root, window, service) if args.showcase else None
+    if showcase is not None:
+        root.after(500, showcase.start)
     try:
         root.mainloop()
     finally:
