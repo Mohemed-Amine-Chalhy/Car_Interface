@@ -1,10 +1,10 @@
 # Physical vehicle platform
 
-Car Interface originated on a custom autonomous-driving car that was physically
-built and demonstrated by a multidisciplinary engineering team. Mohamed Amine
-Chalhy owned the vehicle software and AI-model integration within that team.
-This section records what is known about the actual platform and makes the
-remaining reconstruction work visible.
+Car Interface originated on a custom autonomous-driving car that my
+multidisciplinary engineering team physically built and demonstrated. Within
+that team, I owned the vehicle software and AI-model integration. This section
+records what is known about our actual platform and makes the remaining
+reconstruction work visible.
 
 ![Physical platform topology](../assets/hardware-topology.svg)
 
@@ -20,7 +20,7 @@ remaining reconstruction work visible.
 | Vehicle | Custom chassis with propulsion, steering, brake actuation, motor drivers, and battery power | **Confirmed system; detailed BOM and measurements TBD** |
 | Host | Windows desktop application with control, Lidar, camera, logging, and device connection views | **Historical and maintained implementations** |
 
-The owner confirmed that both pictured boards were used in the vehicle. The old
+I confirmed that both pictured boards were used in the vehicle. The old
 host code used the words “Arduino” and “ESP32” inconsistently for its serial
 endpoint, so board responsibilities cannot be reconstructed from class names
 alone. Repository evidence most strongly supports the ESP32 as the primary

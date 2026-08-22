@@ -4,9 +4,9 @@ The physical autonomous-driving car was built and demonstrated by a
 multidisciplinary team of twelve engineers working across mechanical,
 electrical, embedded, software, and AI disciplines.
 
-## Mohamed Amine Chalhy — vehicle software and AI integration
+## My role — vehicle software and AI integration
 
-Mohamed Amine Chalhy owned the software and AI-integration workstream:
+I owned the software and AI-integration workstream:
 
 - Python/Tkinter operator application;
 - manual and game-controller vehicle control;
@@ -15,7 +15,7 @@ Mohamed Amine Chalhy owned the software and AI-integration workstream:
 - obstacle-assistance behavior; and
 - camera capture and YOLO inference integration.
 
-His work connected operator input, sensing, perception, and embedded actuation
+My work connected operator input, sensing, perception, and embedded actuation
 in the demonstrated vehicle. The
 [engineering case study](case-study.md) and
 [technical source tour](../README.md#technical-tour) provide the detailed
@@ -36,6 +36,6 @@ implementation story.
 - OBBADI Maryem
 - TAHFI Othmane
 
-The completed car was a shared engineering achievement. Mohamed's ownership
-within that collaboration was the vehicle-software and AI-integration scope
-described above.
+The completed car was a shared engineering achievement. My role within that
+collaboration was the vehicle-software and AI-integration scope described
+above.

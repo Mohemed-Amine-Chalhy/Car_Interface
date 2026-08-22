@@ -134,8 +134,8 @@ diagram as historical fact.
    each USB device.
 4. Read the ESP32 chip and flash identity without erasing it; archive any
    recoverable flash image and its SHA-256.
-5. Archive the Uno flash/EEPROM only if the project owner has a known-good
-   recovery method; record fuses and lock bits.
+5. Archive the Uno flash/EEPROM only when a known-good recovery method is
+   available; record fuses and lock bits.
 6. Recover source, libraries, board packages, IDE settings, and build logs from
    the original development computers.
 7. Compile deterministic binaries without connecting actuator power.

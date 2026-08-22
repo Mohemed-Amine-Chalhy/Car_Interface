@@ -24,12 +24,12 @@ are not packaged in v0.1.
 
 ## Engineering contribution
 
-Mohamed Amine Chalhy's role covered the vehicle software and AI-model
-integration: device orchestration, serial control, controller mapping, Lidar
-processing, the operator interface, camera capture, YOLO inference, and
-detection visualization. The repository demonstrates model integration; custom
-training should only be claimed when a dataset, training configuration, weights,
-and evaluation results are recovered.
+My role covered the vehicle software and AI-model integration: device
+orchestration, serial control, controller mapping, Lidar processing, the
+operator interface, camera capture, YOLO inference, and detection visualization.
+The repository demonstrates model integration; custom training should only be
+claimed when a dataset, training configuration, weights, and evaluation results
+are recovered.
 
 ## Lidar geometry
 

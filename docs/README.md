@@ -1,8 +1,8 @@
 # Car Interface engineering documentation
 
-This documentation presents Mohamed Amine Chalhy's vehicle-software and
+I'm Mohamed Amine Chalhy. This documentation presents my vehicle-software and
 AI-integration work within the twelve-engineer team that built and demonstrated
-the physical autonomous-driving car in 2025. It connects the working prototype
+the physical autonomous-driving car in 2025. It connects our working prototype
 to the typed, testable host architecture maintained in this repository.
 
 ![Vehicle system overview](assets/vehicle-system-overview.svg)
@@ -11,8 +11,8 @@ to the typed, testable host architecture maintained in this repository.
 
 For a focused technical evaluation:
 
-1. Read the [engineering case study](case-study.md) for the problem, Mohamed's
-   ownership, and the system-level outcome.
+1. Read the [engineering case study](case-study.md) for the problem, my
+   contribution, and the system-level outcome.
 2. Review [project results](project-results.md) for the verified baseline of
    113 tests, 82.94% aggregate coverage, strict typing, CI, and Windows
    packaging.

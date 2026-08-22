@@ -6,11 +6,12 @@
 ![Tests: 113 passed](https://img.shields.io/badge/tests-113_passed-brightgreen)
 ![Aggregate coverage: 82.94%](https://img.shields.io/badge/coverage-82.94%25-brightgreen)
 
-**Mohamed Amine Chalhy's software-engineering work on a real autonomous-driving
-car built and demonstrated in 2025 by a twelve-engineer multidisciplinary
-team.** He owned the vehicle-software and AI-integration workstream: the Python
-operator application, game-controller input, embedded serial communication,
-RPLidar processing, obstacle assistance, and YOLO-based camera inference.
+**I'm Mohamed Amine Chalhy, and this repository presents my software-engineering
+work on a real autonomous-driving car built and demonstrated in 2025 by a
+twelve-engineer multidisciplinary team.** I owned the vehicle-software and
+AI-integration workstream: the Python operator application, game-controller
+input, embedded serial communication, RPLidar processing, obstacle assistance,
+and YOLO-based camera inference.
 
 ![Autonomous-driving car and control-interface demonstration](https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExaHA0dHo1YW5wbjdua25ob2ZmN2Zya3Y1cnFocGFhb2E0c3g3Nm5kZiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/IpNjWXPWk869qG8ss6/giphy.gif)
 
@@ -18,10 +19,10 @@ RPLidar processing, obstacle assistance, and YOLO-based camera inference.
 · [Read the engineering case study](docs/case-study.md)
 · [Review verified results](docs/project-results.md)
 
-## Engineering ownership
+## My engineering contribution
 
-Mohamed's contribution connected operator input, real-time sensing, AI
-inference, and embedded actuation in one working vehicle platform.
+My contribution connected operator input, real-time sensing, AI inference, and
+embedded actuation in one working vehicle platform.
 
 | Area | Software-engineering contribution |
 | --- | --- |
@@ -188,9 +189,9 @@ and [firmware dossier](docs/firmware/README.md).
 ## Team
 
 The physical car was a collaborative achievement by twelve engineers spanning
-mechanical, electrical, embedded, software, and AI work. Mohamed Amine Chalhy
-owned the vehicle-software and AI-integration scope described above. The full
-team is recognized in [Credits](docs/credits.md).
+mechanical, electrical, embedded, software, and AI work. I owned the
+vehicle-software and AI-integration scope described above. The full team is
+recognized in [Credits](docs/credits.md).
 
 ## Hardware compatibility status
 

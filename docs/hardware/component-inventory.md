@@ -11,7 +11,7 @@ records unknowns rather than substituting visually similar products.
 ESP-WROOM-32 module, Micro-USB, EN and BOOT buttons, and a visibly marked Silicon
 Labs CP2102 USB-to-UART bridge.
 
-**Evidence:** owner-supplied product photograph and historical host classes
+**Evidence:** the product photograph I supplied and historical host classes
 named for ESP32 control.
 
 **What is confirmed:**
@@ -39,7 +39,7 @@ ATmega328P, USB Type-B connector, barrel jack, ICSP headers, 14 digital headers,
 and six analog-input headers. The exact vendor and board revision are not visible
 in the supplied image.
 
-**Evidence:** owner confirmation that this board type was used and a historical
+**Evidence:** my confirmation that this board type was used and a historical
 Python serial experiment targeting an “Arduino” at 115200 baud.
 
 Arduino's official [UNO R3 reference](https://docs.arduino.cc/hardware/uno-rev3)

@@ -7,9 +7,9 @@ physical autonomous-driving car. The platform combined a custom chassis,
 ESP32 and Arduino electronics, a Windows operator application, game-controller
 input, RPLidar sensing, and camera-based YOLO perception.
 
-**Mohamed Amine Chalhy owned the vehicle-software and AI-integration
-workstream.** His scope connected the operator, sensors, inference pipeline, and
-embedded vehicle controllers into one usable system.
+**I owned the vehicle-software and AI-integration workstream.** My scope
+connected the operator, sensors, inference pipeline, and embedded vehicle
+controllers into one usable system.
 
 [Watch the recorded physical-car showcase](https://www.instagram.com/p/DJD9AVDM7V6/)
 
@@ -29,7 +29,7 @@ The main software problem was not an isolated algorithm. It was building a
 coherent real-time control workflow across devices, worker threads, UI events,
 sensor updates, and physical actuation.
 
-## Mohamed Amine Chalhy's ownership
+## My engineering contribution
 
 | Workstream | Engineering delivered |
 | --- | --- |
@@ -67,9 +67,9 @@ vehicle-control response rather than treating the Lidar as a standalone demo.
 
 The physical prototype used a camera-to-YOLO pipeline that displayed bounding
 boxes, class labels, confidence values, and an approximate-distance overlay.
-Mohamed's contribution was the inference and application integration. The
-retained engineering record supports that integration scope, while the
-maintained package currently focuses on control and RPLidar.
+My contribution was the inference and application integration. The retained
+engineering record supports that integration scope, while the maintained
+package currently focuses on control and RPLidar.
 
 The original pipeline is reconstructed in the
 [historical YOLO11n engineering record](perception/historical-yolo-pipeline.md).
