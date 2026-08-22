@@ -7,8 +7,12 @@ models, sounds, fonts, or copied code.
 
 ## Maintained-tree status
 
-- Historical prototype scripts, notebook output, demonstration media links, and
-  the unverified `yolo11n.pt` model were removed from the maintained tree.
+- Historical prototype scripts, notebook output, and the unverified
+  `yolo11n.pt` model were removed from the maintained tree.
+- The README retains links to the externally hosted project demonstration on
+  Giphy and Instagram. The media files are not copied into the repository or
+  included in packaged artifacts; their hosting and reuse rights remain subject
+  to the respective services and copyright holders.
 - v0.1 has no camera/vision adapter, OpenCV or Ultralytics dependency,
   vision-specific dependency group, model asset, or vision-enabled build.
 - The runtime dependency set is pygame, pyserial, and rplidar-roboticia as locked

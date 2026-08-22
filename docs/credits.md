@@ -1,6 +1,8 @@
 # Credits
 
-The original school prototype README credited these project-team members:
+The original autonomous-driving car was built by the multidisciplinary
+engineering team listed below. Mohamed Amine Chalhy was part of the team and
+was responsible for the vehicle software and AI models.
 
 - AGMAH Ayoub
 - AIT BASSOU Ghita

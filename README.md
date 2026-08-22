@@ -5,6 +5,23 @@ vehicle. Its v0.1 application scope is manual driving with a game controller,
 RPLidar visualization and obstacle-assist inputs, and a safe-by-default
 simulator for development without hardware.
 
+## Project background and demonstration
+
+Car Interface grew out of an autonomous-driving car built by a
+multidisciplinary team of engineers. Mohamed Amine Chalhy was part of that team
+and was responsible for the vehicle software and AI models. The complete
+engineering team is recognized in [Credits](docs/credits.md).
+
+The maintained v0.1 package focuses on manual control, Lidar-assisted safety,
+and simulation. The AI and computer-vision work from the original engineering
+project is historical context and is not included in the current release.
+
+### Original project video
+
+![Original autonomous-driving car and control-interface demonstration](https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExaHA0dHo1YW5wbjdua25ob2ZmN2Zya3Y1cnFocGFhb2E0c3g3Nm5kZiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/IpNjWXPWk869qG8ss6/giphy.gif)
+
+[Watch the project showcase on Instagram](https://www.instagram.com/p/DJD9AVDM7V6/)
+
 > [!WARNING]
 > This software is not a certified safety system and has not been validated on
 > every physical vehicle. A moving vehicle can injure people and damage
