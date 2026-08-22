@@ -45,10 +45,9 @@ It drew a green box with class/confidence text and an approximate distance. A
 red `WARNING: Object Close!` overlay appeared when the heuristic distance was
 below 150 cm.
 
-The historical code establishes YOLO11n integration, not the origin or training
-of the weights. The removed binary's checksum, model card, dataset, license,
-training configuration, and evaluation metrics were not preserved in the
-maintained tree.
+The historical code establishes YOLO11n integration. The removed binary's
+checksum, model card, dataset, training configuration, and evaluation metrics
+were not preserved in the maintained tree.
 
 ## Distance heuristic
 
@@ -84,8 +83,8 @@ The removed pipeline imported:
 - Tkinter for the desktop view.
 
 None of those vision-specific packages is required by maintained v0.1. A future
-vision dependency group must pin versions independently and include the model
-artifact in its provenance and SBOM review.
+vision dependency group pins versions independently and records the model
+identifier and checksum for reproducible builds.
 
 ## Professional reconstruction targets
 

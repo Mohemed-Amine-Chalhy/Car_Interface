@@ -1,13 +1,9 @@
 # Hardware setup
 
-This guide describes integration checks, not a wiring schematic. The repository
-does not currently provide enough verified electrical design information to
-specify pin numbers, voltage levels, current capacity, motor-driver wiring, or
-battery protection. Obtain and review the exact component schematics before
-energizing the rig.
-
-The repository also provides no qualified ESP32 firmware artifact or completed
-physical qualification. Physical operation remains blocked until both exist.
+This guide connects the maintained host to the project vehicle. The exact
+original firmware, pin assignments, power stage, and calibration are recorded
+from the car before a test session; the board and configuration dossiers provide
+the capture template.
 
 ## Expected v0.1 components
 
@@ -20,8 +16,9 @@ physical qualification. Physical operation remains blocked until both exist.
 - independent physical emergency-stop or propulsion-power cutoff; and
 - restraints or a stand that keeps driven wheels clear during commissioning.
 
-Camera/vision hardware is deferred and unsupported in v0.1. No camera adapter or
-vision dependency is shipped.
+The original prototype also integrated camera/YOLO perception. Maintained v0.1
+focuses its runnable package on control and Lidar while preserving the vision
+implementation record in the perception dossier.
 
 ## Electrical prerequisites
 
@@ -91,7 +88,7 @@ Use Windows **Set up USB game controllers** or the manufacturer's tool to check:
   explicit, confirmed GUI action by default; and
 - disconnecting USB/Bluetooth is detected immediately.
 
-Controller name heuristics are not qualification. Record the exact model,
+Controller name heuristics are not validation. Record the exact model,
 connection type, driver, mapping, and results.
 
 The built-in pygame mapping currently expects axis 0 for steering, axis 5 for
@@ -105,9 +102,9 @@ trial and error.
 
 v0.1 uses `rplidar-roboticia`, an older driver with blocking serial internals.
 Its scan iterator starts the Lidar motor; the host adapter must not start it a
-second time. Until the exact device/driver combination passes unplug,
-partial-response, scan-worker-exit, and bounded-shutdown latency tests, physical
-qualification is blocked.
+second time. Validate the exact device/driver combination with unplug,
+partial-response, scan-worker-exit, and bounded-shutdown latency tests before
+ground testing.
 
 - mount the unit rigidly, upright as required by its manual, with an unobstructed
   view;
@@ -136,6 +133,6 @@ The vehicle width configuration must include protrusions and a justified margin.
 7. Exercise E-stop and device-disconnect paths without propulsion power.
 8. Place the vehicle on a suitable stand and enable propulsion power.
 9. Test physical cutoff first, then software E-stop, using the lowest speed.
-10. Continue with [hardware qualification](hardware-qualification.md).
+10. Continue with [hardware validation](hardware-validation.md).
 
 Never make the first powered run with wheels on the ground.

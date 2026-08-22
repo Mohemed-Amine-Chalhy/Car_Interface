@@ -10,15 +10,15 @@ Collect:
 
 - camera make, model, lens, mount height/pitch, supported resolutions, and
   Windows device identity;
-- original YOLO weight file, SHA-256, source, license, class list, and model
+- original YOLO weight file, SHA-256, source, class list, and model
   version;
 - training dataset/configuration and evaluation output if the model was trained
   or fine-tuned by the team;
-- representative recorded drives with permission to publish; and
+- representative recorded drives; and
 - host CPU/GPU, memory, OS, and accelerator/runtime versions.
 
-**Complete when:** a reviewed model card and camera inventory contain no unknown
-artifact provenance.
+**Complete when:** a model card and camera inventory identify every runtime
+artifact and configuration value.
 
 ## Phase 2 — introduce an optional typed boundary
 
@@ -74,8 +74,7 @@ or attached to a release with a checksum rather than committed as an opaque
 large binary.
 
 **Complete when:** a clean machine can reproduce the environment, verify the
-model, run a recorded-video smoke test, and build an artifact with an accurate
-SBOM.
+model checksum, run a recorded-video smoke test, and build the application.
 
 ## Phase 5 — camera and distance calibration
 
@@ -92,7 +91,7 @@ envelope.
 
 ## Phase 6 — model evaluation
 
-Create a versioned, publishable evaluation set representing the car's actual
+Create a versioned evaluation set representing the car's actual
 environment. Report per-class counts, precision, recall, confusion, mAP at the
 chosen IoU thresholds, and failure examples. Separate training, validation, and
 test data and record the exact evaluation command.
@@ -126,5 +125,4 @@ record and all degradation paths are observable.
 | RPLidar known-distance error | Fixed targets | TBD |
 | Synchronized system stability | 30-minute vehicle run | TBD |
 
-Leaving results as `TBD` until measured avoids fabricated performance numbers
-while presenting a complete, professional validation strategy.
+This template turns the next vehicle session into a repeatable benchmark.

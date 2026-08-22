@@ -44,7 +44,7 @@
     <rect x="563" y="198" width="178" height="91" rx="14" fill="#26204e" stroke="#a78bfa"/>
     <text x="585" y="228" class="heading">YOLO11n</text>
     <text x="585" y="251" class="body">boxes • class • confidence</text>
-    <text x="585" y="274" class="body">weights provenance TBD</text>
+    <text x="585" y="274" class="body">model identity and checksum TBD</text>
   </g>
   <path d="M741 244H790" stroke="#c4b5fd" stroke-width="3" marker-end="url(#violetArrow)"/>
   <g filter="url(#shadow)">

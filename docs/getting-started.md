@@ -85,9 +85,9 @@ it does not prove any physical firmware implements the watchdog.
 ```
 
 This runs formatting checks, linting, strict type checking, non-hardware tests,
-coverage checks, and the configured security checks. Use `check --skip-audit`
-only when the dependency vulnerability service is unavailable; CI and release
-checks must run the audit.
+coverage checks, and source/dependency checks. Use `check --skip-audit` when the
+dependency vulnerability service is unavailable; CI runs that
+network-backed check separately.
 
 ## Next steps
 

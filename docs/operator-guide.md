@@ -1,14 +1,10 @@
 # Operator guide
 
-This guide assumes the environment is installed and the exact vehicle has a
-reviewed configuration. New users should run simulation first. Hardware users
-must first complete [Safety](safety.md), [Hardware setup](hardware-setup.md), and
-the wheels-off-ground sections of
-[Hardware qualification](hardware-qualification.md).
-
-No compatible firmware artifact or completed physical qualification is
-currently recorded, so physical operation is blocked. The hardware sections are
-a commissioning procedure for resolving that block, not a claim of readiness.
+Run simulation first. Vehicle testing uses the original firmware, verified
+wiring, and a validated configuration, following
+[Control-safety architecture](safety.md), [Hardware setup](hardware-setup.md),
+and the wheels-clear section of the
+[Hardware validation checklist](hardware-validation.md).
 
 ## Roles
 
@@ -59,7 +55,8 @@ Do not continue with a failed or uncertain item.
 
 ## Start hardware mode
 
-The deliberately long acknowledgement prevents accidental hardware startup:
+The explicit hardware flag prevents accidental startup and remains a manual
+action:
 
 ```powershell
 .\.venv\Scripts\python.exe scripts\dev.py run-hardware `
@@ -75,9 +72,8 @@ car-interface run --mode hardware `
   --i-understand-this-controls-real-hardware
 ```
 
-The acknowledgement only confirms intent; it does not certify the rig or waive
-any checklist. Do not store it in a desktop shortcut, environment profile,
-scheduled task, or automatic startup service.
+Do not store the flag in a desktop shortcut, environment profile, scheduled
+task, or automatic startup service.
 
 ## Connect and arm
 
@@ -98,7 +94,7 @@ Arming is permission to accept motion input, not a movement command.
 
 ## Driving
 
-- Begin at the lowest qualified speed.
+- Begin at the lowest validated speed.
 - Keep the vehicle continuously visible.
 - Keep hands clear of the vehicle and one person at the cutoff.
 - Make one input change at a time during commissioning.

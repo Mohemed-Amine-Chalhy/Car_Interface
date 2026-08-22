@@ -58,7 +58,7 @@ Do not grant broad administrator privileges as a routine fix.
 ## Protocol or compatibility rejected
 
 Likely causes are wrong port, wrong firmware, baud mismatch, corrupted frames,
-or an unqualified protocol version.
+or an unsupported protocol version.
 
 - Isolate propulsion power.
 - Verify the selected port identifies as the ESP32 endpoint.
@@ -84,11 +84,11 @@ Never disable `require_ack` to make hardware connect.
 - Connect only one controller while commissioning.
 - Verify `controller_id` and inspect every axis/button in the OS controller tool.
 - Check Bluetooth battery and power-management behavior.
-- Record the model and mapping; name-based guesses are not qualification.
+- Record the model and mapping; device-name guesses are not enough.
 
 If a controller disconnects while armed, the expected response is a latched
 fault with zero propulsion and brake assertion. Any other response is a
-release-blocking safety defect.
+control defect that must be fixed before the next hardware run.
 
 ## Lidar missing, reversed, or stale
 
@@ -100,7 +100,7 @@ release-blocking safety defect.
 
 The pinned `rplidar-roboticia` driver has blocking internals. If unplug or a
 partial response delays shutdown, use the physical cutoff, preserve logs and
-timings, and treat the hardware configuration as unqualified; do not mask the
+timings, and stop using that hardware configuration; do not mask the
 problem by extending application timeouts.
 
 A stale required Lidar must inhibit motion. Do not increase
@@ -130,14 +130,15 @@ Reproduce in simulation before attempting another hardware run.
 
 Camera/YOLO support is deferred and not shipped in v0.1. There is no supported
 extra, model asset, adapter, or build flag. Use the controller/Lidar scope; a
-future vision implementation requires a reviewed ADR and provenance work.
+future vision implementation requires an isolated design, reproducible model
+artifact, and validation plan.
 
 ## Pre-commit or quality-gate failure
 
 Run the failing command directly through `scripts/dev.py`. Formatting changes
 may need to be staged again. Do not use `--no-verify`; fix the file or the shared
 configuration. For a temporarily unavailable vulnerability service, local work
-may use `check --skip-audit`, but a release may not.
+may use `check --skip-audit`; CI runs the network-backed check separately.
 
 ## Packaged app fails but source works
 
@@ -147,5 +148,6 @@ may use `check --skip-audit`, but a release may not.
 - Build on Windows for Windows; PyInstaller artifacts are platform-specific.
 - Review antivirus quarantine without disabling endpoint protection globally.
 
-If the problem remains, collect the support bundle described in
-[support.md](support.md).
+If the problem remains, open a
+[GitHub issue](https://github.com/Mohemed-Amine-Chalhy/Car_Interface/issues)
+with the version, reproduction steps, and a short redacted log excerpt.

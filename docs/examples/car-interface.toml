@@ -19,7 +19,7 @@ heartbeat_interval_seconds = 0.1
 command_stale_seconds = 0.5
 lidar_stale_seconds = 0.75
 
-# Re-qualify the vehicle after changing any limit or dimension.
+# Revalidate the vehicle after changing any limit or dimension.
 auto_stop_distance_cm = 50.0
 vehicle_width_cm = 42.0
 max_speed_percent = 50

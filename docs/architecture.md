@@ -166,7 +166,7 @@ before sharing.
 v0.1 contains no camera/vision adapter, OpenCV or Ultralytics dependency, model
 asset, or vision-enabled packaging path. Vision is not installable or supported
 in this release. A future proposal must use a new ADR and prove failure
-isolation, bounded concurrency, asset provenance, and that vision cannot clear
+isolation, bounded concurrency, reproducible model identity, and that vision cannot clear
 or weaken a brake, E-stop, or fault.
 
 ## Historical code

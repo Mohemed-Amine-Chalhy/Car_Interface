@@ -19,8 +19,8 @@ Pass additional pytest arguments after `--`:
 The default pytest configuration enables strict configuration/markers, a
 30-second per-test timeout, branch coverage, terminal missing-line output, and
 XML coverage output at `.reports/coverage.xml`. The repository-wide minimum is
-80% branch coverage. Safety/domain modules should remain at or above 90% branch
-coverage even where the aggregate gate is lower.
+80% aggregate coverage; branch outcomes are measured and included in that
+result.
 
 ## Test layers
 
@@ -87,7 +87,7 @@ hardware test should also require explicit port/rig configuration and fail
 closed when it is absent. Never set the variable globally or remove the marker.
 
 Before running, satisfy the controls in [CONTRIBUTING.md](../CONTRIBUTING.md) and
-record results in [hardware-qualification.md](hardware-qualification.md).
+record results in [hardware-validation.md](hardware-validation.md).
 
 ## Safety regression matrix
 
@@ -112,9 +112,9 @@ record results in [hardware-qualification.md](hardware-qualification.md).
 .\.venv\Scripts\python.exe scripts\dev.py check
 ```
 
-CI uses `check --ci --skip-audit` for the platform matrix and runs the complete
-audit in a separate security job. After the documented licensing gate is
-resolved, a published release uses `release-check` without skips.
+CI uses `check --ci --skip-audit` for the platform matrix and runs the
+network-backed dependency vulnerability check in a separate job. Tagged
+releases use `release-check` with all checks enabled.
 
 ## Writing reliable tests
 

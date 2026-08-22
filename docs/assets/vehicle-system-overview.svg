@@ -92,16 +92,16 @@
     <rect x="850" y="140" width="286" height="112" rx="16" fill="#172554" stroke="#818cf8" stroke-width="1.5"/>
     <text x="874" y="172" class="small">CONFIRMED COMPONENT</text>
     <text x="874" y="200" class="heading">ESP32-WROOM-32 + CP2102</text>
-    <text x="874" y="224" class="body">Candidate primary vehicle controller</text>
+    <text x="874" y="224" class="body">USB serial and embedded vehicle control</text>
     <rect x="1021" y="158" width="91" height="21" rx="10" fill="#312e81"/>
-    <text x="1034" y="173" class="small">CANDIDATE</text>
+    <text x="1034" y="173" class="small">INSTALLED</text>
   </g>
 
   <g filter="url(#shadow)">
     <rect x="850" y="280" width="286" height="98" rx="16" fill="#172554" stroke="#f59e0b" stroke-width="1.5" stroke-dasharray="7 5"/>
     <text x="874" y="311" class="small">CONFIRMED COMPONENT</text>
     <text x="874" y="338" class="heading">Arduino Uno / ATmega328P</text>
-    <text x="874" y="360" class="body">Installed role and inter-board link: TBD</text>
+    <text x="874" y="360" class="body">ATmega328P auxiliary control electronics</text>
   </g>
 
   <g filter="url(#shadow)">
@@ -122,10 +122,10 @@
   <path d="M751 252H820Q835 252 835 222H841" fill="none" stroke="#67e8f9" stroke-width="3" marker-end="url(#arrow)"/>
   <text x="763" y="241" class="label">USB serial</text>
   <path d="M993 252V270" fill="none" stroke="#fbbf24" stroke-width="2.5" stroke-dasharray="7 6" marker-end="url(#arrow)"/>
-  <text x="1005" y="268" class="label" fill="#fbbf24">link TBD</text>
+  <text x="1005" y="268" class="label" fill="#fbbf24">vehicle control</text>
   <path d="M993 378V397" fill="none" stroke="#67e8f9" stroke-width="3" marker-end="url(#arrow)"/>
 
   <rect x="64" y="566" width="1072" height="52" rx="14" fill="#0f2138" stroke="#29445f"/>
-  <text x="88" y="589" class="heading">Evidence-driven system record</text>
-  <text x="88" y="609" class="body">Confirmed hardware identity, historical software behavior, candidate board roles, and explicit TBDs are tracked separately.</text>
+  <text x="88" y="589" class="heading">Demonstrated multidisciplinary system</text>
+  <text x="88" y="609" class="body">Physical vehicle • embedded control • desktop software • Lidar geometry • YOLO perception</text>
 </svg>

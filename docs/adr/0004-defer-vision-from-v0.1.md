@@ -8,19 +8,19 @@
 
 ## Context
 
-Historical prototypes mixed controller/Lidar behavior with incomplete camera and
-YOLO experiments. No maintained vision adapter used the model or dependencies,
-and the model's redistribution provenance had not been established. Carrying
-dormant dependencies or build switches would increase the licensing, packaging,
-performance, and support surface without providing a working feature.
+Historical prototypes combined controller/Lidar behavior with a camera and YOLO
+pipeline, but no maintained vision adapter used those dependencies. Carrying
+dormant packages or build switches would increase installation size,
+performance variability, and maintenance cost without providing a runnable
+feature in the current package.
 
 ## Decision drivers
 
 - Establish one achievable and testable v0.1 boundary.
 - Keep safety timing independent of inference workloads.
 - Do not ship unused code, dependencies, flags, or unverified binary assets.
-- Require an explicit architecture and provenance decision before expanding
-  scope.
+- Require an explicit architecture and reproducibility decision before
+  expanding scope.
 
 ## Considered options
 
@@ -41,24 +41,23 @@ Git history. Their behavior is not a supported entry point.
 
 ## Consequences
 
-- The production boundary, lockfile, SBOM, and bundle match implemented code.
-- Unverified model weights cannot enter a release accidentally.
+- The package boundary, lockfile, and bundle match implemented code.
+- Unidentified model weights cannot enter a build accidentally.
 - Camera features require a future scoped implementation rather than being
   implied by dormant dependencies.
-- v0.1 documentation and support must not offer camera troubleshooting or
-  vision build instructions.
+- v0.1 documentation does not advertise a runnable camera subsystem.
 
 ## Verification
 
 - `pyproject.toml` and `uv.lock` contain no project-declared OpenCV, Ultralytics,
   NumPy/Pillow vision stack, or vision-specific dependency group.
-- Bootstrap, build, SBOM, and release commands expose no vision flag.
+- Bootstrap, build, and release commands expose no vision flag.
 - The maintained tree contains no model weight or camera adapter.
 - The base simulator, tests, and package build pass without vision libraries.
 
 ## Future proposal
 
 Adding vision requires a new ADR, a maintained adapter, bounded worker/queue
-design, failure-isolation tests, performance budgets, model and dependency
-provenance, an SBOM/license review, packaging/update behavior, and proof that a
-vision result cannot clear or weaken brake, E-stop, or fault state.
+design, failure-isolation tests, performance budgets, pinned dependencies, model
+identity and checksum records, reproducible packaging, and proof that a vision
+result cannot clear or weaken brake, E-stop, or fault state.

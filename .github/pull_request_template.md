@@ -1,19 +1,27 @@
 ## Summary
 
-Describe the behavior changed and why.
+What changed, and why?
+
+## Implementation
+
+Describe the approach and any compatibility or migration considerations.
 
 ## Verification
 
+- [ ] Formatting and linting pass.
+- [ ] Strict type checking passes.
+- [ ] Relevant automated tests pass.
 - [ ] `python scripts/dev.py check` passes.
-- [ ] Simulation behavior was exercised for control or safety changes.
-- [ ] Documentation and configuration examples were updated.
-- [ ] No generated files, credentials, device identifiers, or unverified binary assets were added.
+- [ ] Documentation/configuration examples are updated where needed.
 
-## Safety impact
+List the commands run and any useful manual test results.
 
-- [ ] This change cannot affect physical movement.
-- [ ] This change can affect physical movement; the hazard, safe state, rollback, and qualification evidence are described below.
+## Hardware impact
 
-## Release impact
+- [ ] No hardware-facing behavior changed.
+- [ ] Hardware-facing behavior changed; affected boards, firmware, protocol,
+      calibration, and test setup are described below.
 
-List compatibility, migration, firmware, packaging, or operator-training implications.
+## UI evidence
+
+Add screenshots for visible interface changes, if applicable.

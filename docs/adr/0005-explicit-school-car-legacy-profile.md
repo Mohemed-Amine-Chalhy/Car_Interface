@@ -66,5 +66,5 @@ firmware-acknowledged. Hardware mode and protocol selection remain explicit.
 ## Rollback or supersession
 
 Remove the compatibility profile only after the physical car has been migrated
-to a qualified `car_v1` firmware. Do not replace explicit selection with
+to a validated `car_v1` firmware. Do not replace explicit selection with
 auto-detection.

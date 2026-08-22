@@ -1,25 +1,9 @@
 # Contributing
 
-Thank you for helping improve Car Interface. This project controls machinery,
-so a change that appears cosmetic can still affect timing, operator attention,
-or failure behavior. Treat safety behavior as part of the public API.
+Car Interface welcomes focused improvements to the desktop application,
+simulation, device adapters, firmware compatibility, tests, and documentation.
 
-The repository currently grants no open-source license. Do not submit material
-unless you are authorized to do so and can identify its provenance. Acceptance
-does not by itself grant permission to use or redistribute the project; public
-distribution remains blocked until the copyright holders select a license.
-
-## Before starting
-
-1. Read [docs/safety.md](docs/safety.md) and
-   [docs/architecture.md](docs/architecture.md).
-2. Search existing issues and decisions under [docs/adr](docs/adr).
-3. For a protocol, safety-state, dependency, or user-visible behavior change,
-   agree on the design before implementation and add or update an ADR.
-4. Never use physical hardware merely to discover what an unclear requirement
-   means. Start with the simulator and fakes.
-
-## Environment
+## Set up the project
 
 On Windows:
 
@@ -28,24 +12,23 @@ On Windows:
 .\.venv\Scripts\python.exe scripts\dev.py doctor
 ```
 
-On a POSIX development host:
+On Linux or macOS for logic-only development:
 
 ```bash
 ./scripts/bootstrap.sh
 .venv/bin/python scripts/dev.py doctor
 ```
 
-The bootstrap process must use the committed lockfile. Do not hand-edit a lock
-file. Use the project dependency workflow documented by `scripts/dev.py --help`
-and include both the dependency declaration and regenerated lockfile in the same
-change.
+The bootstrap scripts synchronize the committed `uv.lock` and install the Git
+hooks. Update `pyproject.toml` and regenerate `uv.lock` together when changing a
+dependency.
 
 ## Development workflow
 
-1. Create a focused branch.
-2. Add or update tests before changing safety behavior.
-3. Make the smallest coherent change.
-4. Run formatting and the complete local quality gate:
+1. Create a focused branch from `main`.
+2. Add or update tests for the behavior being changed.
+3. Keep refactoring separate from behavioral changes where practical.
+4. Run formatting and the full local quality gate:
 
    ```powershell
    .\.venv\Scripts\python.exe scripts\dev.py format
@@ -53,66 +36,54 @@ change.
    ```
 
 5. Update documentation and `CHANGELOG.md` for user-visible changes.
-6. Commit generated files only when the repository intentionally tracks them.
+6. Open a pull request that explains the implementation and verification.
 
-Pre-commit hooks are a fast feedback mechanism, not a replacement for
-`scripts/dev.py check`. Do not skip hooks to merge a change. If a hook is wrong,
-fix its configuration in a separate, reviewable commit.
+Pre-commit hooks provide fast feedback, while `scripts/dev.py check` is the
+complete gate used before review.
 
-## Change requirements
+## Code expectations
 
-Every production-code change should have:
+Production changes should:
 
-- typed interfaces and no unexplained `Any` in domain or safety code;
-- deterministic unit tests without attached hardware;
-- failure-path coverage where I/O or concurrency is involved;
-- structured, non-sensitive logging;
-- no device connection, movement, or long-running work at import time; and
-- no Tkinter calls from worker threads.
+- preserve typed interfaces and pass strict mypy;
+- include deterministic tests that run without attached hardware;
+- cover relevant I/O, error, timeout, and concurrency paths;
+- keep device connections and long-running work out of module imports;
+- keep Tkinter access on the UI thread;
+- use bounded queues and explicit cleanup for background workers; and
+- avoid committing machine-specific ports, local paths, credentials, generated
+  output, or large binary assets.
 
-Changes to stop behavior, command priority, limits, timeouts, controller loss,
-Lidar staleness, startup, or shutdown also require:
+Changes to public configuration or a serial protocol should update the matching
+example, tests, and technical documentation in the same pull request. Use an
+ADR when the architecture or compatibility contract changes materially.
 
-- a safety requirement or invariant stated in the change description;
-- tests that fail before and pass after the change;
-- simulator or fault-injection evidence;
-- an ADR if the safety model or protocol contract changes; and
-- an explicit note that software tests do not constitute physical validation.
+## Hardware-related changes
 
-## Commit and review guidance
+State the hardware impact clearly in the pull request. Include:
+
+- affected vehicle profile, board, firmware, protocol, and calibration values;
+- simulator or fake-adapter regression coverage;
+- bench-test setup and exact host/firmware commits when physical testing was
+  performed;
+- observed command/response behavior and relevant logs; and
+- any compatibility or rollback considerations.
+
+Physical testing is optional for ordinary software contributions. Do not imply
+that a software-only test validates an untested board or vehicle configuration.
+
+## Commits and pull requests
 
 Prefer small commits with imperative subjects, for example:
 
 ```text
-Add protocol acknowledgement timeout
-Test controller-loss transition to safe state
-Document firmware compatibility handshake
+Add legacy steering calibration profile
+Test fragmented serial responses
+Document ESP32 board configuration
 ```
 
-Keep refactoring separate from behavioral changes when practical. A pull
-request should explain the problem, approach, safety impact, test evidence,
-documentation changes, and rollback plan. Include screenshots only for UI work
-and redact port names, usernames, tokens, and machine-specific paths.
+A pull request should contain one coherent change, pass the quality gate, and
+identify any remaining work. Add screenshots for visible UI changes and concise
+logs or measurements for device behavior.
 
-At least one reviewer should understand the affected subsystem. Safety- and
-protocol-related changes require a second reviewer and must not be self-merged.
-
-## Tests involving hardware
-
-Hardware-in-the-loop tests are isolated from normal pytest discovery. Run them
-only when all of the following are true:
-
-- the test rig is identified and reserved;
-- the driven wheels are mechanically clear of the ground unless the test plan
-  specifically requires controlled motion;
-- an independent physical E-stop/power cutoff has been tested;
-- the exact firmware and host revisions are recorded; and
-- a second person is present for tests that can create motion.
-
-Record the results using [docs/hardware-qualification.md](docs/hardware-qualification.md).
-
-## Reporting unsafe behavior
-
-Stop testing immediately, place the system in a mechanically safe state, and
-follow [SECURITY.md](SECURITY.md). Do not publish exploitable or hazardous
-details before maintainers can assess them.
+Report security vulnerabilities privately according to [SECURITY.md](SECURITY.md).

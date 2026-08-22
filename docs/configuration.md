@@ -78,7 +78,7 @@ case-insensitively.
 Opening many ESP32 USB serial adapters resets the board. The startup delay gives
 firmware time to boot into safe outputs before the host clears startup bytes and
 sends the selected profile's initial commands. Reducing it can make startup
-traffic race the reset; increasing it delays connection readiness. Qualify the
+traffic race the reset; increasing it delays connection readiness. Validate the
 value for the exact board/bootloader.
 
 ## Timing relationship
@@ -93,19 +93,19 @@ Host command/controller/Lidar freshness timeouts are independent safe-state
 triggers and must also be justified. There must be enough margin for expected
 host scheduling and serial latency. A longer timeout reduces nuisance faults
 but allows a failed/stale condition to persist longer. Record the measured worst
-case and rationale in the qualification report; do not tune by guesswork.
+case and rationale in the vehicle test record; do not tune by guesswork.
 
 `command_stale_seconds` configures the host's expected watchdog contract; it
 does not program or prove the ESP32 watchdog. Firmware must be built/configured
 with a compatible independently verified value.
 
-## Safe configuration management
+## Reproducible vehicle profiles
 
-- Maintain one reviewed configuration per qualified vehicle.
-- Record its SHA-256 hash with the release and qualification results.
+- Maintain one reviewed configuration per tested vehicle.
+- Record its SHA-256 hash with the build and vehicle-test results.
 - Never put credentials or personal data in configuration; none are required.
 - Treat changes to speed, dimensions, stop distance, timeouts/startup delay,
-  controller index, or device identity as qualification changes.
+  controller index, or device identity as vehicle-profile changes.
 - Use `INFO` in normal operation. `DEBUG` can be noisy and should not be enabled
   during motion until its timing impact is evaluated.
 - Keep `require_ack = true` for `car_v1`. The explicit legacy profile rejects

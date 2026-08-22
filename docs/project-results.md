@@ -1,112 +1,107 @@
-# Project results and evidence
+# Project results and reproducibility
 
-This page separates what the team demonstrated on the physical 2025 car from
-what the maintained codebase verifies automatically today. That distinction
-makes the project easier to evaluate without overstating measurements that were
-not retained.
+The project combines a demonstrated physical vehicle with a software baseline
+that can be evaluated independently through source, simulation, tests, CI, and
+packaged builds.
 
 ## Physical prototype outcomes
 
-| Outcome | Available evidence |
+| Delivered outcome | Engineering record |
 | --- | --- |
-| A custom car was physically built | Recorded project media and the twelve-person engineering-team record |
-| Host-to-vehicle control worked on the prototype | Demonstration of the car with the Python operator workflow; historical source remains in Git history |
-| Game-controller operation was integrated | Historical application implementation and physical demonstration |
-| RPLidar sensing was integrated | Historical 2D visualization, path-corridor processing, and obstacle-assistance implementation |
-| YOLO perception was integrated | Historical camera inference code with detections, class labels, and confidence display |
-| ESP32 and Arduino Uno R3 electronics were used | Confirmed hardware from the original build |
+| A custom autonomous-driving car was assembled and demonstrated | Recorded project media and the twelve-person multidisciplinary team record |
+| Desktop-to-vehicle control worked | Python operator application, embedded serial command workflow, and physical demonstration |
+| Game-controller driving was integrated | Analog steering, throttle, brake, and direction processing in the original application |
+| RPLidar sensing was integrated | Live 2D rendering, projected-path geometry, and obstacle-assistance behavior |
+| YOLO perception was integrated | Camera inference with class labels, confidence values, bounding boxes, and approximate-distance display |
+| ESP32 and Arduino electronics were installed | Confirmed ESP32-WROOM-32/CP2102 and Arduino Uno R3-style boards from the original build |
 
-[Watch the project showcase](https://www.instagram.com/p/DJD9AVDM7V6/)
-or return to the [Engineering case study](case-study.md). The
-[perception dossier](perception/README.md) traces the historical implementation
-and a measurable restoration path.
+[Watch the physical-car showcase](https://www.instagram.com/p/DJD9AVDM7V6/)
+or read the [engineering case study](case-study.md).
 
-## Maintained software evidence
+## Verified software baseline
 
-The current branch provides a repeatable engineering baseline:
+The maintained host has a reproducible, hardware-free verification path:
 
-| Quality area | Evidence in the repository |
+| Engineering signal | Verified result |
 | --- | --- |
-| Automated behavior | More than 100 tests span unit, integration, and regression suites; physical tests are separately opt-in |
-| Coverage | CI enforces an aggregate coverage floor of 80% with branch coverage enabled |
-| Type quality | Strict mypy checks cover the application package, tooling script, and entry point |
-| Code quality | Ruff formatting and linting run locally, in pre-commit, and in CI |
-| Security hygiene | Bandit source scanning and locked-dependency vulnerability auditing |
-| Cross-platform verification | Quality jobs execute on current Windows and Ubuntu GitHub runners |
-| Reproducibility | Python 3.13, a committed `uv.lock`, bootstrap scripts, and locked CI synchronization |
-| Packaging | Wheel, source archive, Windows application bundle, SHA-256 checksums, and CycloneDX SBOM workflow |
-| Maintainability | Typed layered architecture with isolated domain, services, adapters, UI, and configuration |
-| 2025-car compatibility | Explicit `school_car_legacy_v0` translation with tests for command mapping, steering calibration, pacing, partial writes, configuration, and service composition |
+| Automated test suite | **113 tests passed** |
+| Aggregate coverage | **82.94%** |
+| Static typing | Strict mypy checks across the application package and development tooling |
+| Formatting and linting | Ruff runs locally, through pre-commit, and in CI |
+| Cross-platform CI | Quality checks execute on current Windows and Ubuntu GitHub-hosted runners |
+| Packaging | Wheel, source distribution, and a smoke-tested PyInstaller Windows application bundle |
+| Environment reproducibility | Python 3.13, committed uv lockfile, and custom PowerShell/Bash bootstrap scripts |
+| Architecture | Typed domain, application services, protocol profiles, device adapters, simulator, configuration, and UI layers |
+| Original-car protocol mapping | Regression coverage for command translation, steering calibration, pacing, partial writes, configuration, and service composition |
 
-The CI workflow is visible in
+The workflow history is visible in
 [GitHub Actions](https://github.com/Mohemed-Amine-Chalhy/Car_Interface/actions/workflows/ci.yml).
 
-## Reproduce the software checks
+## What the automated suite exercises
+
+- control-state transitions, latching, neutral interlocks, brake, and reset;
+- bounded priority dispatch and motion-command eviction;
+- protocol framing, checksums, sequence matching, ACK/NACK, and timeouts;
+- original-car command translation, steering mapping, and 50 ms pacing;
+- serial partial writes, disconnects, stale inputs, and worker failures;
+- deterministic simulated vehicle, firmware, controller, and Lidar behavior;
+- RPLidar geometry, path-corridor filtering, and obstacle assessment;
+- configuration precedence and validation;
+- UI callbacks and thread-safe event delivery; and
+- integration and regression scenarios across services and adapters.
+
+Representative tests are available in:
+
+- [state-machine tests](../tests/unit/test_domain_safety.py)
+- [dispatcher regression tests](../tests/unit/test_dispatcher_regressions.py)
+- [protocol-profile tests](../tests/unit/test_protocol_profiles.py)
+- [Lidar-analysis tests](../tests/unit/test_lidar_analysis.py)
+- [integrated control-service tests](../tests/integration/test_control_service.py)
+
+## Reproduce the result
 
 After following [Getting started](getting-started.md), run:
 
-```powershell
+~~~powershell
 .\.venv\Scripts\python.exe scripts\dev.py check
-```
+~~~
 
-The equivalent locked command used by CI is:
+The locked CI command is:
 
-```powershell
+~~~powershell
 uv run --locked --group dev python scripts/dev.py check --ci --skip-audit
-```
+~~~
 
-Dependency auditing runs in the separate security job and can be reproduced
-with:
+Build the Python distributions and Windows desktop bundle with:
 
-```powershell
-.\.venv\Scripts\python.exe scripts\dev.py security
-```
+~~~powershell
+.\.venv\Scripts\python.exe scripts\dev.py build
+~~~
 
-See [Testing](testing.md) for suite boundaries and hardware-test opt-in rules.
+See [Development workflow](development.md) and
+[Testing strategy](testing.md) for the command surface and suite structure.
 
-## Results that were not retained
+## Measurement roadmap
 
-The original project media proves an integrated physical demonstration, but it
-does not provide a controlled benchmark dataset. The repository therefore does
-not publish invented values for:
+The original media demonstrates the integrated car qualitatively. A focused
+vehicle session can add a quantitative system profile:
 
-- maximum vehicle speed or braking distance;
-- host-to-actuator command latency;
-- Lidar scan rate under the demonstrated configuration;
-- camera frame rate or YOLO inference latency;
-- detection precision, recall, or mAP;
-- battery endurance; or
-- long-duration reliability.
+1. recover exact ESP32 and Arduino firmware revisions and board
+   responsibilities;
+2. record wiring, GPIO assignments, actuator ranges, and steering center;
+3. capture serial request/response traces and end-to-end command latency;
+4. measure stopping distance across several commanded speeds;
+5. measure RPLidar scan frequency and known-target distance error;
+6. record camera mode, inference hardware, frame rate, and end-to-end latency;
+7. evaluate precision, recall, and mAP if the original model and evaluation set
+   are recovered;
+8. capture battery configuration and measured runtime; and
+9. link a new demonstration to exact host, firmware, and configuration
+   revisions.
 
-Likewise, the repository demonstrates YOLO inference integration but does not
-contain training datasets, experiment logs, or model artifacts that would
-support a claim of custom model training.
-
-## Next physical validation report
-
-The existing car provides a clear route to turn the qualitative demonstration
-into a measured engineering report. A future test session should capture:
-
-1. exact ESP32 and Arduino firmware revisions and board responsibilities;
-2. wiring, pin assignments, actuator ranges, and steering center calibration;
-3. serial command/response transcripts and end-to-end command latency;
-4. repeatable stopping distances at several commanded speeds;
-5. Lidar scan frequency and distance error at known target positions;
-6. camera resolution, inference device, frame rate, latency, and model identity;
-7. a fixed evaluation set with detection precision, recall, and mAP if a custom
-   model is recovered;
-8. battery configuration and measured runtime; and
-9. a new demonstration linked to exact host and firmware commit hashes.
-
-Until that session is complete, the precise public claim is:
-
-> The team built and demonstrated the physical car in 2025. The current
-> repository is a maintained, production-style rearchitecture of its host
-> control software. It includes an automated-test-backed compatibility profile
-> for the recovered 2025 command dialect, which has not yet been exercised
-> against the original vehicle firmware.
-
-Configuration inputs for that work are documented in
-[Configuration](configuration.md), with device preparation in
-[Hardware setup](hardware-setup.md) and known specifications in the
-[vehicle hardware dossier](hardware/README.md).
+This roadmap turns the working prototype record into a repeatable benchmark
+without substituting estimates for measurements. Known settings and capture
+steps are already organized in the
+[vehicle specification](hardware/vehicle-specification.md),
+[board configuration](firmware/board-configuration.md), and
+[perception benchmark plan](perception/restoration-plan.md).

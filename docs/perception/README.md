@@ -52,8 +52,8 @@ history, and a 50 cm stop-assist default.
 
 The historical pipeline is reconstructed in
 [historical-yolo-pipeline.md](historical-yolo-pipeline.md). Restoring it to the
-maintained package requires a typed, optional subsystem with pinned model
-provenance and real performance measurements. The implementation and validation
+maintained package requires a typed, optional subsystem with a pinned model
+identifier, checksum, and real performance measurements. The implementation and validation
 sequence is in [restoration-plan.md](restoration-plan.md).
 
 ## Results that remain to measure
@@ -69,5 +69,4 @@ future physical-car record should publish:
 - RPLidar scan rate, drop/stale rate, and known-distance error; and
 - stop-assist trigger distance across repeated approaches.
 
-Publishing measured values in those fields will make the engineering work more
-credible than an unqualified “real-time” or “accurate” claim.
+Those measurements form the benchmark for the restored perception subsystem.

@@ -1,5 +1,5 @@
-blank_issues_enabled: false
+blank_issues_enabled: true
 contact_links:
-  - name: Security and safety disclosure
+  - name: Private security report
     url: https://github.com/Mohemed-Amine-Chalhy/Car_Interface/security/advisories/new
-    about: Read SECURITY.md first and use a private advisory for sensitive reports.
+    about: Report vulnerabilities privately through GitHub Security Advisories.

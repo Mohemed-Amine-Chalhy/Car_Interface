@@ -1,8 +1,27 @@
-# Credits
+# Engineering team
 
-The original autonomous-driving car was built by the multidisciplinary
-engineering team listed below. Mohamed Amine Chalhy was part of the team and
-was responsible for the vehicle software and AI models.
+The physical autonomous-driving car was built and demonstrated by a
+multidisciplinary team of twelve engineers working across mechanical,
+electrical, embedded, software, and AI disciplines.
+
+## Mohamed Amine Chalhy — vehicle software and AI integration
+
+Mohamed Amine Chalhy owned the software and AI-integration workstream:
+
+- Python/Tkinter operator application;
+- manual and game-controller vehicle control;
+- serial communication with the embedded electronics;
+- RPLidar acquisition, visualization, and projected-path analysis;
+- obstacle-assistance behavior; and
+- camera capture and YOLO inference integration.
+
+His work connected operator input, sensing, perception, and embedded actuation
+in the demonstrated vehicle. The
+[engineering case study](case-study.md) and
+[technical source tour](../README.md#technical-tour) provide the detailed
+implementation story.
+
+## Full project team
 
 - AGMAH Ayoub
 - AIT BASSOU Ghita
@@ -17,7 +36,6 @@ was responsible for the vehicle software and AI models.
 - OBBADI Maryem
 - TAHFI Othmane
 
-Git history remains the authoritative record for individual code and
-documentation contributions. Inclusion on this page does not assign ownership
-or a license to third-party media or assets; see
-[third-party-assets.md](third-party-assets.md).
+The completed car was a shared engineering achievement. Mohamed's ownership
+within that collaboration was the vehicle-software and AI-integration scope
+described above.

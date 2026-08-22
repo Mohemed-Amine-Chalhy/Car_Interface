@@ -132,7 +132,7 @@ display_height = 360
 
 [vehicle.vision]
 historical_model = "YOLO11n"
-weights_provenance = "TBD"
+model_sha256 = "TBD"
 status = "historical integration; not shipped by maintained v0.1"
 ```
 

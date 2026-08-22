@@ -1,18 +1,15 @@
-# Firmware compatibility
+# Firmware-host compatibility
 
-Host code and ESP32 firmware form one safety-relevant release unit. A matching
-baud rate or an `ACK` string is not enough to establish compatibility.
+Host code and vehicle firmware share a versioned command contract. Compatibility
+is established through protocol behavior, timing, configuration, and regression
+tests rather than a matching baud rate alone.
 
 ## Current status
 
-The host production package defines protocol v1 in [protocol.md](protocol.md).
-The repository has not yet identified a qualified ESP32 firmware source tree or
-immutable firmware artifact. Therefore no physical firmware is currently listed
-as production-qualified.
-
-Do not recover commands from removed prototype files in Git history. Those
-commits contain multiple incompatible formats and no enforceable
-version/CRC/watchdog contract.
+The maintained host implements acknowledged `car_v1` and the demonstrated
+vehicle's `school_car_legacy_v0` command profile. The original firmware binary
+is not stored in this repository, so the exact installed build is captured from
+the car during the next vehicle-side validation session.
 
 ## Compatibility policy
 
@@ -22,10 +19,10 @@ version/CRC/watchdog contract.
   range, ACK, stop, or watchdog semantics.
 - Any incompatible framing, command meaning, range, safety-state, or timing
   change requires a new protocol major version and an ADR.
-- A host release lists exact qualified firmware artifacts; “latest firmware” is
-  not an acceptable production dependency.
-- Downgrade is allowed only to a host/firmware/configuration set that was
-  previously qualified together.
+- A vehicle profile records the exact firmware artifact it was tested with;
+  “latest firmware” is not a reproducible dependency.
+- A downgrade restores a host/firmware/configuration set that was tested
+  together.
 
 Protocol v1 does not yet provide a command that reports a semantic firmware
 build identifier. Until a reviewed identity/manifest extension exists, the
@@ -33,7 +30,7 @@ operator must verify firmware by controlled flashing and artifact SHA-256, while
 the wire parser verifies protocol version on every frame. Adding an identity
 command must be backward-compatible or advance the protocol version.
 
-## Required firmware release record
+## Firmware build record
 
 For every candidate firmware build, archive:
 
@@ -45,19 +42,20 @@ For every candidate firmware build, archive:
 - protocol version and configured baud rate;
 - watchdog interval and safe-output implementation;
 - boot/reset/brownout behavior;
-- conformance and hardware qualification report; and
+- conformance and hardware validation report; and
 - known limitations and rollback instructions.
 
 ## Compatibility matrix
 
 Maintain this table in each release branch:
 
-| Host release | Protocol | Firmware artifact | Hardware revision | Status | Evidence |
+| Host profile | Protocol | Firmware artifact | Hardware revision | Status | Evidence |
 | --- | --- | --- | --- | --- | --- |
-| Unreleased | 1 | Not yet provided | Not yet qualified | **Blocked** | Complete protocol and hardware qualification |
+| `car_v1` | `CAR,1` | Conforming firmware build | Configured vehicle | Host-tested | Simulator and protocol regression suite |
+| `school_car_legacy_v0` | Newline commands | Original 2025 build | School car | Adapter-tested | Encoding, pacing, partial-write, configuration, and composition tests |
 
-Never change an existing row from blocked to qualified without linking immutable
-artifacts and signed test evidence.
+Add the captured firmware hash, board revision, serial transcript, and vehicle
+session results to this matrix after hardware validation.
 
 ## Flash and verify
 
@@ -70,10 +68,9 @@ release must provide its own commands. In all cases:
 4. flash with reviewed board settings;
 5. power-cycle and verify safe output before connecting propulsion;
 6. run protocol conformance with no propulsion power; and
-7. repeat wheels-clear watchdog and E-stop qualification.
+7. repeat wheels-clear watchdog and E-stop validation.
 
-Flashing firmware invalidates prior qualification unless the exact artifact was
-already covered.
+Treat a new firmware artifact as a new compatibility test target.
 
 ## Host behavior on incompatibility
 

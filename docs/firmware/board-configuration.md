@@ -76,8 +76,8 @@ official [UNO R3 reference](https://docs.arduino.cc/hardware/uno-rev3) specifies
 - USB Type-B, barrel-jack power, and ICSP connections;
 - 32 KB flash, 2 KB SRAM, and 1 KB EEPROM on the reference board.
 
-The photograph does not establish genuine-versus-clone provenance, and those
-capabilities do not identify how the car used the pins.
+The exact vendor and board revision are not visible in the photograph, and the
+reference capabilities do not identify how the car used the pins.
 
 ### Build configuration
 

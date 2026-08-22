@@ -72,8 +72,8 @@ chosen navigation margin.
 | Distance heuristic focal length | 720 px | **Uncalibrated candidate** |
 | Close-object overlay | estimated distance below 150 cm | **Historical UI threshold** |
 
-No stored benchmark proves camera FPS, inference latency, detection precision,
-distance accuracy, or the provenance of the historical weights. See the
+The next benchmark captures camera FPS, inference latency, detection precision,
+distance accuracy, and the exact model identifier. See the
 [perception dossier](../perception/README.md) for the validation plan.
 
 ## Mechanical and electrical specification gaps
@@ -89,7 +89,7 @@ distance accuracy, or the provenance of the historical weights. See the
 | Steering actuator and mechanical range | TBD from label and endpoint test |
 | Brake actuator and default state | TBD from label, wiring, and firmware |
 | Battery chemistry, series count, capacity | TBD from pack label |
-| Regulators, fuses, connectors, wire gauge | TBD from electrical audit |
+| Regulators, fuses, connectors, wire gauge | TBD from electrical inspection |
 | RPLidar/camera mounting position and orientation | TBD from measurement |
 
 Completing those rows turns this reconstructed specification into a reproducible

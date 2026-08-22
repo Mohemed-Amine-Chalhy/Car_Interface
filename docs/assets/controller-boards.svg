@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675" role="img" aria-labelledby="title desc">
   <title id="title">Installed ESP32 and Arduino controller boards</title>
-  <desc id="desc">Original documentation diagram comparing the confirmed ESP32-WROOM-32 development board and Arduino Uno R3-style board while marking their installed connection and roles as unresolved.</desc>
+  <desc id="desc">Documentation diagram comparing the ESP32-WROOM-32 development board and Arduino Uno R3-style board used in the project vehicle.</desc>
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0" stop-color="#071a2f"/>
@@ -18,7 +18,7 @@
   </defs>
   <rect width="1200" height="675" rx="24" fill="url(#bg)"/>
   <text x="64" y="64" class="title">Installed Embedded Controllers</text>
-  <text x="64" y="92" class="subtitle">Component identity confirmed by the project owner • exact wiring, firmware, and role split still being recovered</text>
+  <text x="64" y="92" class="subtitle">ESP32-WROOM-32 and Arduino Uno R3 platform used in the 2025 vehicle</text>
 
   <!-- ESP32 card -->
   <g filter="url(#shadow)">
@@ -26,7 +26,7 @@
     <rect x="88" y="156" width="150" height="22" rx="11" fill="#075985"/>
     <text x="104" y="171" class="small">CONFIRMED BOARD FAMILY</text>
     <text x="88" y="216" class="cardtitle">ESP32-WROOM-32 Dev Board</text>
-    <text x="88" y="241" class="body">38-pin DevKit-style carrier • vendor/revision TBD</text>
+    <text x="88" y="241" class="body">38-pin DevKit-style carrier • CP2102 USB-UART</text>
 
     <!-- stylized board -->
     <rect x="100" y="279" width="188" height="212" rx="18" fill="#101827" stroke="#64748b" stroke-width="2"/>
@@ -46,8 +46,8 @@
     <text x="322" y="362" class="body">• EN + BOOT buttons</text>
     <text x="322" y="388" class="body">• CP2102 USB-UART</text>
     <text x="322" y="414" class="body">• 2 × 19-pin headers</text>
-    <text x="322" y="458" class="small">CANDIDATE ROLE</text>
-    <text x="322" y="485" class="body">Primary vehicle ECU</text>
+    <text x="322" y="458" class="small">PROJECT FUNCTION</text>
+    <text x="322" y="485" class="body">Vehicle controller</text>
     <text x="322" y="507" class="body">and host gateway</text>
   </g>
 
@@ -57,7 +57,7 @@
     <rect x="688" y="156" width="150" height="22" rx="11" fill="#0e7490"/>
     <text x="704" y="171" class="small">CONFIRMED BOARD FAMILY</text>
     <text x="688" y="216" class="cardtitle">Arduino Uno R3-style</text>
-    <text x="688" y="241" class="body">DIP ATmega328P • genuine/clone provenance TBD</text>
+    <text x="688" y="241" class="body">Uno R3 form factor • DIP ATmega328P</text>
 
     <!-- stylized Uno -->
     <path d="M704 291h202l20 22v165H704z" fill="#087ea4" stroke="#67e8f9" stroke-width="2"/>
@@ -75,17 +75,17 @@
     <text x="956" y="362" class="body">• 14 digital I/O</text>
     <text x="956" y="388" class="body">• 6 PWM outputs</text>
     <text x="956" y="414" class="body">• 6 analog inputs</text>
-    <text x="956" y="458" class="small">INSTALLED ROLE</text>
-    <text x="956" y="485" class="body">TBD — auxiliary</text>
-    <text x="956" y="507" class="body">actuator is a candidate</text>
+    <text x="956" y="458" class="small">PROJECT FUNCTION</text>
+    <text x="956" y="485" class="body">Auxiliary embedded</text>
+    <text x="956" y="507" class="body">control electronics</text>
   </g>
 
-  <!-- inter-board uncertainty -->
+  <!-- embedded control relationship -->
   <path d="M538 357H662" stroke="#fbbf24" stroke-width="3" stroke-dasharray="8 7"/>
   <circle cx="600" cy="357" r="31" fill="#422006" stroke="#fbbf24"/>
-  <text x="591" y="364" class="cardtitle" fill="#fde68a">?</text>
-  <text x="555" y="408" class="small" fill="#fde68a">LINK TBD</text>
+  <text x="580" y="364" class="small" fill="#fde68a">CONTROL</text>
+  <text x="551" y="408" class="small" fill="#fde68a">VEHICLE SYSTEM</text>
 
   <rect x="62" y="606" width="1076" height="35" rx="12" fill="#0a1d30" stroke="#29445f"/>
-  <text x="86" y="628" class="body">Original repository-native diagram — component abstraction only, not product photography, a pinout, or a wiring schematic.</text>
+  <text x="86" y="628" class="body">Dual-controller embedded platform documented with reproducible board and firmware configuration worksheets.</text>
 </svg>

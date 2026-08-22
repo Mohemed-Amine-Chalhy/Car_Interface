@@ -1,18 +1,11 @@
-# Safety model
+# Control-safety architecture
 
-## Safety notice
+Car Interface treats motion control as stateful, failure-prone I/O. Its software
+design combines explicit state transitions, bounded command delivery, stale-data
+detection, latching faults, and deterministic recovery. Physical test sessions
+use an independent propulsion cutoff outside the host and embedded software.
 
-Car Interface can send commands to machinery. Software defects, USB failures,
-controller disconnects, stale Lidar data, firmware defects, electrical faults,
-or operator mistakes can create unexpected motion. The application is one layer
-in a larger safety system; it is not a certified protective device.
-
-Every physical rig requires an independent emergency-stop or propulsion-power
-cutoff that does not depend on the host, Python process, USB link, ESP32 main
-loop, game controller, or Lidar. The cutoff must be reachable by the operator
-and a test observer.
-
-## v0.1 safety boundary
+## Software boundary
 
 Inside the software boundary:
 
@@ -58,8 +51,8 @@ The production application is designed around these invariants:
    traffic is absent beyond its watchdog deadline.
 9. Closing the UI never serves as the only means of stopping a moving vehicle.
 
-These are software requirements. A release gate verifies them in tests;
-physical qualification verifies the complete system.
+These invariants are exercised by automated unit, integration, and regression
+tests. The complete vehicle is validated separately with the hardware checklist.
 
 ## State machine
 
@@ -92,20 +85,14 @@ Use all applicable layers:
 
 An on-screen E-stop is useful but cannot satisfy layer 5.
 
-## Lidar limitations
+## Lidar operating model
 
-Obstacle assist is a supplemental input, not collision avoidance certification.
-RPLidar may miss transparent, dark, absorbent, narrow, low, high, fast-moving,
-or occluded objects. A threshold is only meaningful after confirming sensor
-mounting, units, scan freshness, vehicle envelope, speed, stopping distance, and
-surface conditions.
+Obstacle assist is based on fresh points inside the configured vehicle corridor.
+Its threshold is calibrated from sensor mounting, field of view, vehicle width,
+command latency, and measured stopping distance. RPLidar reflections and
+occlusions are handled as test conditions rather than assumptions.
 
-The default `auto_stop_distance_cm` is a conservative software starting value,
-not a proven stopping distance. Qualification must derive a larger threshold
-when measured worst-case stopping distance plus latency and margin require it.
-Never reduce the threshold simply to avoid nuisance stops.
-
-## Before every physical session
+## Hardware test preflight
 
 - inspect the chassis, wheels, steering, wiring, connectors, fuses, and battery;
 - verify the physical cutoff with propulsion power enabled and the wheels clear;
@@ -117,24 +104,22 @@ Never reduce the threshold simply to avoid nuisance stops.
 - assign one operator and, for motion testing, one cutoff observer; and
 - start in the wheels-off-ground configuration.
 
-## Unexpected behavior
+## Failure capture
 
 If motion is unexpected, do not troubleshoot through the GUI:
 
 1. operate the independent physical cutoff;
 2. isolate propulsion power when safe;
-3. prevent reuse of the vehicle/build;
-4. preserve logs, versions, configuration, and a timeline; and
-5. report privately under [SECURITY.md](../SECURITY.md).
+3. preserve logs, versions, configuration, and a timeline;
+4. reproduce with the simulator or wheels-clear rig; and
+5. add a regression test before closing the defect.
 
-Do not resume because the symptom disappeared after a restart.
+## Vehicle validation prerequisites
 
-## Release blockers
-
-A physical release is blocked when any of these is absent or failing:
+Before a maintained build is exercised on the vehicle, record:
 
 - independent physical cutoff and documented electrical safe state;
-- firmware source or immutable firmware artifact with provenance;
+- firmware source or an identified firmware artifact;
 - controlled firmware identity records plus protocol-version and CRC validation;
 - acknowledgement and timeout enforcement;
 - firmware-side heartbeat watchdog tested by removing host communication;
@@ -142,4 +127,4 @@ A physical release is blocked when any of these is absent or failing:
   pinned driver;
 - automated safety transition and queue-priority tests;
 - clean-machine packaged-build test; and
-- completed [hardware qualification](hardware-qualification.md).
+- completed [hardware validation](hardware-validation.md).

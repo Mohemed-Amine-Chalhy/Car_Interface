@@ -39,7 +39,7 @@ asserts brake, and inhibits motion.
 
 ## Consequences
 
-- Host and firmware must be released and qualified as a compatible pair.
+- Host and firmware must be tested and recorded as a compatible pair.
 - CRC detects accidental corruption but does not authenticate a malicious
   endpoint; physical/local access remains part of the threat model.
 - Sequence and retry semantics add state that needs conformance testing.
@@ -55,7 +55,7 @@ asserts brake, and inhibits motion.
 
 ## Rollback or supersession
 
-Rollback must restore the complete previously qualified host and firmware pair.
+Rollback must restore the complete previously tested host and firmware pair.
 Never add an automatic runtime legacy fallback. Breaking changes to `car_v1`
 require a new protocol version and ADR. The explicit profile governed by
 ADR-0005 does not change this protocol.

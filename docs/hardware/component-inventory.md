@@ -36,8 +36,8 @@ purchase record is captured.
 
 **Identification:** Arduino Uno R3-form-factor board with a socketed DIP
 ATmega328P, USB Type-B connector, barrel jack, ICSP headers, 14 digital headers,
-and six analog-input headers. Genuine-versus-clone provenance is not established
-by the supplied image.
+and six analog-input headers. The exact vendor and board revision are not visible
+in the supplied image.
 
 **Evidence:** owner confirmation that this board type was used and a historical
 Python serial experiment targeting an “Arduino” at 115200 baud.
@@ -59,7 +59,7 @@ used in the final assembled car.
 | ID | Component | Known identification | Project role | Evidence | Missing record |
 | --- | --- | --- | --- | --- | --- |
 | ECU-01 | ESP32 development board | 38-pin ESP-WROOM-32, CP2102, Micro-USB | Candidate primary vehicle controller and host serial gateway | **Confirmed component / candidate role** | Vendor, revision, flash size, pins, firmware |
-| ECU-02 | Arduino Uno | R3 form factor, DIP ATmega328P | Candidate auxiliary actuator controller | **Confirmed component / candidate role** | Genuine/clone, pins, firmware, link to ESP32 |
+| ECU-02 | Arduino Uno | R3 form factor, DIP ATmega328P | Candidate auxiliary actuator controller | **Confirmed component / candidate role** | Vendor/revision, pins, firmware, link to ESP32 |
 | SEN-01 | RPLidar | RPLidar family | 2D scan input and obstacle corridor | **Historical** | Exact model, serial, mount, scan rate |
 | SEN-02 | Camera | Host camera index 0 | Video capture and YOLO inference | **Historical** | Make/model, lens, resolution, mount, calibration |
 | HMI-01 | Game controller | Xbox/PS-compatible | Steering, throttle, brake, direction | **Historical** | Exact model, connection, verified mapping |
@@ -89,7 +89,6 @@ docs/hardware/evidence/
   wiring-overview.jpg
 ```
 
-The stock-style product images supplied for identification are intentionally not
-copied into the repository because their redistribution rights are unknown.
 Repository-native diagrams under [`docs/assets`](../assets/) communicate the
-confirmed topology without reusing those images.
+confirmed topology and keep the hardware record consistent with the rest of the
+documentation.

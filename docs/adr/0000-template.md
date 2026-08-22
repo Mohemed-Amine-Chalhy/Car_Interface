@@ -28,11 +28,11 @@ State the chosen option precisely, including invariants and public contracts.
 ## Consequences
 
 Positive, negative, operational, security, testing, migration, documentation,
-and hardware-qualification consequences.
+and hardware-validation consequences.
 
 ## Verification
 
-List tests, metrics, reviews, and qualification evidence that demonstrate the
+List tests, metrics, reviews, and validation evidence that demonstrate the
 decision is implemented.
 
 ## Rollback or supersession

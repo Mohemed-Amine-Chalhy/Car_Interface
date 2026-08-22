@@ -1,13 +1,12 @@
-# Hardware qualification checklist
+# Hardware validation checklist
 
-This is a template for one exact combination of vehicle, electronics, firmware,
-host build, configuration, controller, Lidar, and test environment. Completing
-it does not certify other combinations or satisfy any external regulatory
-standard.
+This checklist captures one exact combination of vehicle, electronics,
+firmware, host build, configuration, controller, Lidar, and test environment.
+It turns a hardware session into reproducible engineering evidence.
 
-Stop immediately on unexpected motion or an ineffective cutoff. Mark the run
-failed, quarantine the configuration, and follow the incident process in
-[Safety](safety.md).
+Stop immediately on unexpected motion or an ineffective cutoff, mark the run
+failed, and follow the failure-capture process in
+[Control-safety architecture](safety.md).
 
 ## Record identity
 
@@ -28,7 +27,7 @@ failed, quarantine the configuration, and follow the incident process in
 | Controller model, connection, driver, and mapping revision | |
 | RPLidar model, serial identity, driver, and mount revision | |
 
-Attach wiring diagrams, relevant datasheets, build logs, and the final signed
+Attach wiring diagrams, relevant datasheets, build logs, and the final
 configuration.
 
 ## Static inspection
@@ -47,17 +46,17 @@ configuration.
 - [ ] Locked clean install succeeds on a clean Windows machine.
 - [ ] `scripts/dev.py check --ci` passes.
 - [ ] `scripts/dev.py release-check` passes.
-- [ ] Safety/domain branch coverage meets the release threshold.
+- [ ] The configured aggregate coverage gate passes.
 - [ ] Simulator tests cover disconnect, stale input, timeout, NACK, malformed
       frame, worker failure, queue saturation, close, and repeated reconnect.
 - [ ] Built application starts in simulation without Python or source checkout.
-- [ ] SBOM, audit report, checksums, and release notes are archived.
+- [ ] Build checksums and release notes are archived.
 
 ## No-propulsion-power checks
 
 - [ ] Hardware mode cannot start without the exact acknowledgement flag.
 - [ ] Wrong/missing configuration and swapped ports are rejected safely.
-- [ ] Controlled-flash records and SHA-256 identify the approved firmware build.
+- [ ] Flash records and SHA-256 identify the tested firmware build.
 - [ ] Protocol-v1 frame/version validation succeeds; wrong protocol versions are
       rejected safely.
 - [ ] Invalid CRC, sequence, opcode, range, and oversized frames receive safe
@@ -75,7 +74,7 @@ configuration.
 
 Use the lowest possible propulsion limit and keep the cutoff observer ready.
 
-- [ ] Physical cutoff stops propulsion from minimum and maximum qualified command.
+- [ ] Physical cutoff stops propulsion from minimum and maximum tested command.
 - [ ] Software E-stop stops and latches from each state.
 - [ ] Brake and disarm evict pending motion commands.
 - [ ] Releasing brake alone remains `BRAKING`; fresh neutral plus explicit Arm is
@@ -96,12 +95,12 @@ Record measured stop latency for each failure; a visual impression is not enough
 
 ## Controlled-ground checks
 
-Perform only after every prior item passes and a written site-specific test plan
-is approved.
+Perform only after every prior item passes and the test environment, limits,
+and observer roles are recorded.
 
 - [ ] Exclusion zone, restraint/runoff, surface, lighting, and observer positions
       are documented.
-- [ ] Worst-case mechanical stopping distance is measured at each qualified
+- [ ] Worst-case mechanical stopping distance is measured at each tested
       speed/load/surface condition.
 - [ ] Lidar assist threshold exceeds measured stopping distance plus sensing,
       host, protocol, actuation latency, vehicle envelope, and safety margin.
@@ -114,19 +113,16 @@ is approved.
 ## Acceptance
 
 Document every failed or skipped item. `N/A` requires a written rationale and
-review; it is not equivalent to pass.
+is not equivalent to pass.
 
-| Decision | Name | Date | Signature/reference |
-| --- | --- | --- | --- |
-| Test owner | | | |
-| Safety reviewer | | | |
-| Firmware reviewer | | | |
-| Software release owner | | | |
+| Run summary | Recorded value |
+| --- | --- |
+| Test owner | |
+| Firmware revision | |
+| Host commit | |
+| Result | PASS / FAIL / INCOMPLETE |
 
-Final result: **PASS / FAIL / INCOMPLETE**
-
-Approved limits, restrictions, known residual risks, and expiry/requalification
-conditions:
+Validated limits, observations, and follow-up work:
 
 ```text
 
