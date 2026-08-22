@@ -47,8 +47,8 @@ repos:
         types: [python]
         require_serial: true
 
-      - id: production-readiness
-        name: production readiness checks
+      - id: full-project-checks
+        name: full project checks
         entry: uv run --locked --group dev python scripts/dev.py check --skip-audit
         language: system
         pass_filenames: false

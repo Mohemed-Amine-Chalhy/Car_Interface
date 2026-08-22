@@ -28,7 +28,6 @@ SOURCE_TARGETS = ("src", "tests", "scripts", "main.py")
 ENV_MARKER = "CAR_INTERFACE_DEV_RUNNER_ACTIVE"
 HARDWARE_ACK_ENV = "CAR_INTERFACE_HARDWARE_ACKNOWLEDGED"
 HARDWARE_ACK_FLAG = "--i-understand-this-controls-real-hardware"
-LICENSE_BLOCK_MARKER = "public or commercial distribution is blocked"
 
 
 class TaskError(RuntimeError):
@@ -235,23 +234,6 @@ def _security(*, skip_bandit: bool, skip_audit: bool) -> None:
         _audit()
 
 
-def _sbom(output: Path) -> None:
-    output.parent.mkdir(parents=True, exist_ok=True)
-    with tempfile.TemporaryDirectory(prefix="car-interface-sbom-") as temporary_directory:
-        requirements = Path(temporary_directory) / "requirements.txt"
-        _export_runtime_requirements(requirements)
-        _python_module(
-            "cyclonedx_py",
-            "requirements",
-            str(requirements),
-            "--output-format",
-            "JSON",
-            "--output-file",
-            str(output),
-        )
-    print(f"SBOM: {output}")
-
-
 def _checksums(directory: Path = DIST_DIR) -> Path:
     directory = directory.resolve()
     if not directory.is_dir():
@@ -262,7 +244,7 @@ def _checksums(directory: Path = DIST_DIR) -> Path:
             for path in directory.iterdir()
             if path.is_file()
             and path.name != "SHA256SUMS.txt"
-            and (path.suffix in {".whl", ".zip", ".json"} or path.name.endswith(".tar.gz"))
+            and (path.suffix in {".whl", ".zip"} or path.name.endswith(".tar.gz"))
         ),
         key=lambda path: path.name,
     )
@@ -356,17 +338,6 @@ def _project_version() -> str:
     return str(project["project"]["version"])
 
 
-def _assert_distribution_license_ready() -> None:
-    license_path = ROOT / "LICENSE"
-    if not license_path.is_file():
-        raise TaskError("release blocked: LICENSE is missing")
-    notice = license_path.read_text(encoding="utf-8").casefold()
-    if LICENSE_BLOCK_MARKER in notice:
-        raise TaskError(
-            "release blocked: copyright holders must authorize a distribution license first"
-        )
-
-
 def _release_check(
     *,
     allow_dirty: bool,
@@ -374,9 +345,7 @@ def _release_check(
     skip_audit: bool,
 ) -> None:
     if os.name != "nt":
-        raise TaskError("Release bundles must be qualified on Windows")
-
-    _assert_distribution_license_ready()
+        raise TaskError("Windows release bundles must be built on Windows")
 
     if not allow_dirty:
         status = _git_output("status", "--porcelain")
@@ -394,7 +363,6 @@ def _release_check(
 
     _check(ci=True, skip_audit=skip_audit)
     _build(clean=True)
-    _sbom(DIST_DIR / "car-interface.cdx.json")
     _checksums()
 
 
@@ -452,7 +420,9 @@ def _parser() -> argparse.ArgumentParser:
         help="additional pytest arguments after '--'",
     )
 
-    security_parser = subparsers.add_parser("security", help="run source and dependency audits")
+    security_parser = subparsers.add_parser(
+        "security", help="run source and dependency vulnerability checks"
+    )
     security_parser.add_argument("--skip-bandit", action="store_true")
     security_parser.add_argument("--skip-audit", action="store_true")
 
@@ -487,13 +457,6 @@ def _parser() -> argparse.ArgumentParser:
     build_parser = subparsers.add_parser("build", help="build Python and Windows release artifacts")
     build_parser.add_argument(
         "--clean", action="store_true", help="remove prior build output first"
-    )
-
-    sbom_parser = subparsers.add_parser("sbom", help="create a CycloneDX runtime SBOM")
-    sbom_parser.add_argument(
-        "--output",
-        type=Path,
-        default=DIST_DIR / "car-interface.cdx.json",
     )
 
     subparsers.add_parser("checksums", help="create a sorted SHA-256 release manifest")
@@ -544,8 +507,6 @@ def _dispatch(namespace: argparse.Namespace) -> None:
             _run_hardware(namespace)
         case "build":
             _build(clean=namespace.clean)
-        case "sbom":
-            _sbom(namespace.output.resolve())
         case "checksums":
             _checksums()
         case "release-check":

@@ -44,7 +44,6 @@ Source = "https://github.com/Mohemed-Amine-Chalhy/Car_Interface"
 [dependency-groups]
 dev = [
   "bandit[toml]>=1.8.6,<2",
-  "cyclonedx-bom>=7.1,<8",
   "hypothesis>=6.138,<7",
   "mypy>=1.17,<2",
   "pip-audit>=2.9,<3",
