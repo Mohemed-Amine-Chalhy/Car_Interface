@@ -25,6 +25,9 @@ class FakeWidget:
     def columnconfigure(self, *args, **kwargs) -> None:
         return
 
+    def rowconfigure(self, *args, **kwargs) -> None:
+        return
+
     def add(self, *args, **kwargs) -> None:
         return
 
@@ -38,6 +41,9 @@ class FakeWidget:
         return
 
     def set(self, *args, **kwargs) -> None:
+        return
+
+    def tag_configure(self, *args, **kwargs) -> None:
         return
 
 
@@ -64,6 +70,9 @@ def _window() -> ui.CarInterfaceWindow:
     for name in (
         "phase_label",
         "connection_label",
+        "vehicle_status_label",
+        "lidar_status_label",
+        "controller_status_label",
         "fault_label",
         "obstacle_label",
         "speed_label",
@@ -75,6 +84,10 @@ def _window() -> ui.CarInterfaceWindow:
         "speed_scale",
         "steering_scale",
         "steering_label",
+        "live_speed_label",
+        "live_steering_label",
+        "direction_status_label",
+        "brake_status_label",
         "log_text",
     ):
         setattr(window, name, Mock())
@@ -119,6 +132,8 @@ def test_widget_tree_builds_headlessly_for_both_runtime_modes(simulation: bool) 
     assert isinstance(window.notebook, FakeWidget)
     assert isinstance(window.speed_scale, FakeWidget)
     assert isinstance(window.lidar_canvas, FakeWidget)
+    assert isinstance(window.vehicle_status_label, FakeWidget)
+    assert isinstance(window.live_speed_label, FakeWidget)
     assert hasattr(window, "simulated_distance") is simulation
 
 
@@ -128,7 +143,18 @@ def test_style_configuration_tolerates_unavailable_theme() -> None:
     style.theme_use.side_effect = ui.tk.TclError
     with patch.object(ui.ttk, "Style", return_value=style):
         window._configure_styles()
-    assert style.configure.call_count == 6
+    configured_styles = {call.args[0] for call in style.configure.call_args_list}
+    assert {
+        "App.TFrame",
+        "Card.TFrame",
+        "Title.TLabel",
+        "Metric.TLabel",
+        "Primary.TButton",
+        "Emergency.TButton",
+        "TNotebook.Tab",
+    } <= configured_styles
+    mapped_styles = {call.args[0] for call in style.map.call_args_list}
+    assert {"Primary.TButton", "Emergency.TButton", "TNotebook.Tab"} <= mapped_styles
 
 
 def test_window_configuration_and_control_callbacks_are_view_only() -> None:
@@ -198,6 +224,16 @@ def test_handle_event_ignores_unrecognized_payloads_and_state_events() -> None:
     window._append_log.assert_not_called()
 
 
+def test_handle_event_hides_routine_heartbeats_but_keeps_operator_events() -> None:
+    window = _window()
+    window._append_log = Mock()
+
+    window._handle_event(ServiceEvent(EventType.COMMAND, "ACK seq=42 HBT", 1.0))
+    window._handle_event(ServiceEvent(EventType.COMMAND, "ACK seq=43 EST", 1.0))
+
+    window._append_log.assert_called_once_with("ACK seq=43 EST", EventType.COMMAND)
+
+
 @pytest.mark.parametrize(
     "snapshot",
     [
@@ -231,7 +267,32 @@ def test_snapshot_projection_updates_all_operator_controls(snapshot: ServiceSnap
     window.phase_label.config.assert_any_call(text=f"State: {snapshot.phase.upper()}")
     window.connection_label.config.assert_called_once()
     window.fault_label.config.assert_called_once_with(text=snapshot.fault or "")
+    if snapshot.fault:
+        window.fault_label.grid.assert_called_once_with()
+        window.fault_label.grid_remove.assert_not_called()
+    else:
+        window.fault_label.grid_remove.assert_called_once_with()
+        window.fault_label.grid.assert_not_called()
     window.auto_stop_value.set.assert_called_once_with(snapshot.auto_stop_enabled)
+    window.live_speed_label.config.assert_called_once_with(text=f"{abs(snapshot.speed_percent)}%")
+    expected_steering = (
+        "0%" if snapshot.steering_percent == 0 else f"{snapshot.steering_percent:+d}%"
+    )
+    window.live_steering_label.config.assert_called_once_with(text=expected_steering)
+    window.direction_status_label.config.assert_called_once_with(text=snapshot.direction.upper())
+    window.brake_status_label.config.assert_called_once_with(
+        text="ENGAGED" if snapshot.brake_active else "RELEASED",
+        style="Warning.TLabel" if snapshot.brake_active else "Safe.TLabel",
+    )
+    for label, connected, name in (
+        (window.vehicle_status_label, snapshot.vehicle_connected, "Vehicle"),
+        (window.lidar_status_label, snapshot.lidar_connected, "Lidar"),
+        (window.controller_status_label, snapshot.controller_connected, "Controller"),
+    ):
+        label.config.assert_called_once_with(
+            text=f"{'●' if connected else '○'} {name}",
+            style="DeviceOn.TLabel" if connected else "DeviceOff.TLabel",
+        )
     window.speed_scale.config.assert_called_once()
     window.steering_scale.config.assert_called_once()
     if snapshot.brake_active or snapshot.estop_active:
@@ -260,14 +321,23 @@ def test_lidar_rendering_filters_range_and_colors_distance_bands() -> None:
 
     canvas.delete.assert_called_once_with("all")
     assert canvas.create_arc.call_count == 4
-    assert canvas.create_text.call_count == 4
-    canvas.create_line.assert_called_once()
-    assert canvas.create_oval.call_count == 3
-    assert [call.kwargs["fill"] for call in canvas.create_oval.call_args_list] == [
+    assert canvas.create_polygon.call_count == 2
+    canvas.create_rectangle.assert_called_once()
+    scan_points = [
+        call
+        for call in canvas.create_oval.call_args_list
+        if call.kwargs.get("tags") == ("scan-point",)
+    ]
+    assert len(scan_points) == 3
+    assert [call.kwargs["fill"] for call in scan_points] == [
         "#ff5252",
         "#ffd740",
         "#69f0ae",
     ]
+    assert any(
+        call.kwargs.get("tags") == ("projected-path",)
+        for call in canvas.create_polygon.call_args_list
+    )
 
 
 def test_log_helpers_toggle_text_widget_state() -> None:
@@ -275,6 +345,7 @@ def test_log_helpers_toggle_text_widget_state() -> None:
     window._append_log("connected", EventType.CONNECTION)
     window.log_text.insert.assert_called_once()
     assert "CONNECTION: connected" in window.log_text.insert.call_args.args[1]
+    assert window.log_text.insert.call_args.args[2] == EventType.CONNECTION.value
     window.log_text.see.assert_called_once_with(ui.tk.END)
 
     window._clear_log()
