@@ -13,11 +13,23 @@ models, sounds, fonts, or copied code.
   Giphy and Instagram. The media files are not copied into the repository or
   included in packaged artifacts; their hosting and reuse rights remain subject
   to the respective services and copyright holders.
+- Owner-supplied stock-style product photographs were used only to identify the
+  ESP32-WROOM-32/CP2102 and Arduino Uno R3-style board families. They are not
+  copied into the repository because their original source and redistribution
+  rights are unknown.
+- The diagrams in `docs/assets/*.svg` are original, repository-native
+  abstractions created for this engineering dossier. They do not contain traced
+  product artwork, trademarks, third-party photography, or an inferred wiring
+  schematic.
 - v0.1 has no camera/vision adapter, OpenCV or Ultralytics dependency,
   vision-specific dependency group, model asset, or vision-enabled build.
 - The runtime dependency set is pygame, pyserial, and rplidar-roboticia as locked
   by `uv.lock`.
 - No ESP32 firmware artifact is shipped or qualified.
+
+The hardware dossier links to official Arduino and Espressif documentation as
+technical references. Linking to those pages does not incorporate their images
+or documentation into this repository.
 
 Removal prevents those historical items from entering new artifacts; it does
 not establish rights in earlier Git history. Do not restore, redistribute, or

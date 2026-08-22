@@ -1,164 +1,198 @@
-# Car Interface
+# Autonomous Vehicle Control & AI Perception Platform
 
-Car Interface is a Windows-first desktop control application for an ESP32-based
-vehicle. Its v0.1 application scope is manual driving with a game controller,
-RPLidar visualization and obstacle-assist inputs, and a safe-by-default
-simulator for development without hardware.
+[![CI](https://github.com/Mohemed-Amine-Chalhy/Car_Interface/actions/workflows/ci.yml/badge.svg)](https://github.com/Mohemed-Amine-Chalhy/Car_Interface/actions/workflows/ci.yml)
+![Python 3.13](https://img.shields.io/badge/Python-3.13-3776AB?logo=python&logoColor=white)
+![Type checked: mypy strict](https://img.shields.io/badge/type_checked-mypy_strict-2A6DB2)
+![Coverage gate: 80%](https://img.shields.io/badge/coverage_gate-80%25-brightgreen)
 
-## Project background and demonstration
+**A real autonomous-driving prototype built and demonstrated in 2025 by a
+12-engineer multidisciplinary team.** Mohamed Amine Chalhy was responsible for
+the vehicle software and YOLO-based AI perception integration: the Python
+operator interface, controller and serial communication, RPLidar processing,
+obstacle assistance, and camera-inference pipeline.
 
-Car Interface grew out of an autonomous-driving car built by a
-multidisciplinary team of engineers. Mohamed Amine Chalhy was part of that team
-and was responsible for the vehicle software and AI models. The complete
-engineering team is recognized in [Credits](docs/credits.md).
+![Autonomous-driving car and control-interface demonstration](https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExaHA0dHo1YW5wbjdua25ob2ZmN2Zya3Y1cnFocGFhb2E0c3g3Nm5kZiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/IpNjWXPWk869qG8ss6/giphy.gif)
 
-The maintained v0.1 package focuses on manual control, Lidar-assisted safety,
-and simulation. The AI and computer-vision work from the original engineering
-project is historical context and is not included in the current release.
+[Watch the project showcase](https://www.instagram.com/p/DJD9AVDM7V6/)
+· [Read the engineering case study](docs/case-study.md)
+· [See project results](docs/project-results.md)
 
-### Original project video
+## Project at a glance
 
-![Original autonomous-driving car and control-interface demonstration](https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExaHA0dHo1YW5wbjdua25ob2ZmN2Zya3Y1cnFocGFhb2E0c3g3Nm5kZiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/IpNjWXPWk869qG8ss6/giphy.gif)
+The project combines a custom vehicle, embedded controllers, range sensing,
+computer vision, and a Windows operator application. The physical 2025
+prototype proved the integrated concept. The repository now carries a typed,
+tested rearchitecture of its host-side control software so the engineering can
+be studied, simulated, and extended cleanly.
 
-[Watch the project showcase on Instagram](https://www.instagram.com/p/DJD9AVDM7V6/)
+![Vehicle control and perception system overview](docs/assets/vehicle-system-overview.svg)
 
-> [!WARNING]
-> This software is not a certified safety system and has not been validated on
-> every physical vehicle. A moving vehicle can injure people and damage
-> property. Use an independent, physical emergency-stop/power cutoff, keep the
-> test area controlled, and complete the hardware qualification checklist before
-> allowing the wheels to contact the ground. Never depend on the GUI, Lidar, a
-> wireless controller, or a host-computer process as the only stop mechanism.
+| Area | What was built |
+| --- | --- |
+| Vehicle electronics | ESP32 development board and Arduino Uno R3 integrated with the custom chassis and actuators |
+| Operator control | Python/Tkinter desktop application with game-controller and manual controls |
+| Perception | Real-time RPLidar visualization, path-focused obstacle detection, and YOLO-based camera inference integration |
+| Communication | USB serial command path between the host application and embedded control electronics |
+| Current engineering | Layered typed package, hardware-free simulator, explicit 2025-car compatibility profile, automated tests, CI, security checks, and Windows packaging |
 
-## Status and scope
+## What the prototype demonstrated
 
-The maintained tree now contains one production package and its supporting
-tests/tooling. Historical prototypes were removed from the working tree and
-remain available only through Git history. The v0.1 scope is:
+- A complete team-built vehicle driven through the desktop application and a
+  standard game controller.
+- Live 2D RPLidar visualization and obstacle detection focused on the vehicle's
+  projected path.
+- Assisted stopping and operator brake/E-stop controls in the prototype control
+  workflow.
+- Serial integration with the car's ESP32 and Arduino Uno R3 electronics.
+- A YOLO-based camera inference pipeline with real-time detections in the
+  original project software.
+- A practical integration of mechanical, electrical, embedded, software, and
+  AI work into one demonstrated system.
 
-- simulation is the default execution mode;
-- physical hardware requires explicit operator opt-in;
-- ESP32, controller, and Lidar failures must transition to a safe state;
-- the host/firmware protocol is versioned and requires acknowledgements and a
-  firmware-side watchdog;
-- camera, computer-vision, and YOLO support is deferred: v0.1 ships no vision
-  adapter, dependency extra, model asset, or vision-enabled build path; and
-- simulation and software qualification do not establish physical safety.
+The repository shows **YOLO model integration**, not a claim that a custom model
+was trained. Training data, experiment tracking, weights, and accuracy metrics
+were not retained in the maintained tree.
 
-No release should be described as hardware-qualified until the checklist in
-[Hardware qualification](docs/hardware-qualification.md) has been completed for
-the exact vehicle, firmware, host build, and controller model.
+## System architecture
 
-The repository does not include an identified, qualified ESP32 firmware
-artifact. Physical operation and any hardware-qualified release are therefore
-currently blocked. Public or commercial distribution is also blocked pending a
-copyright-holder license decision; see [LICENSE](LICENSE).
+### Demonstrated 2025 prototype
 
-## Quick start: simulator
+```mermaid
+flowchart LR
+    Controller[Game controller] --> Host[Python operator application]
+    Lidar[RPLidar] --> Host
+    Camera[Camera] --> Vision[YOLO inference]
+    Vision --> Host
+    Host -->|USB serial| Electronics[ESP32 + Arduino Uno R3]
+    Electronics --> Actuation[Propulsion, steering, and braking]
+```
 
-Requirements:
+The original build used both boards, but the surviving source does not establish
+the final division of pins and actuator responsibilities between them. The
+[hardware dossier](docs/hardware/README.md) records confirmed facts separately
+from values that still need to be recovered from the firmware and wiring.
 
-- Windows 10/11 for the full desktop application;
-- [uv](https://docs.astral.sh/uv/), which installs the Python version declared in
-  `.python-version`; and
-- PowerShell 7+ recommended on Windows. A POSIX bootstrap script is also
-  provided for logic-only development on Linux/macOS.
+### Maintained software
 
-From PowerShell:
+```mermaid
+flowchart LR
+    UI[Tkinter UI / CLI] --> Services[Application services]
+    Services --> Domain[Typed domain state and protocol]
+    Services --> Adapters[Device interfaces]
+    Adapters --> Simulator[Deterministic simulator]
+    Adapters --> Devices[Serial, controller, and RPLidar adapters]
+```
+
+The maintained implementation separates presentation, orchestration, domain
+logic, and device I/O. This makes control behavior testable without a connected
+vehicle and keeps hardware-specific details at adapter boundaries. See the
+[architecture guide](docs/architecture.md) for the complete design.
+
+## Engineering highlights
+
+- **Typed control core:** immutable state, explicit transitions, validated
+  commands, and strict mypy checking.
+- **Deterministic simulation:** in-memory vehicle, controller, and Lidar
+  adapters support repeatable development without the physical car.
+- **Resilient command delivery:** bounded prioritized dispatch, sequence-aware
+  protocol frames, acknowledgement handling, and stale-command rejection.
+- **Recovered-car compatibility:** the selectable `school_car_legacy_v0`
+  profile translates typed operations into the demonstrated car's newline
+  commands without pretending that write-only traffic was acknowledged.
+- **Real-time device boundaries:** isolated serial, pygame controller, and
+  threaded RPLidar adapters.
+- **Production-style tooling:** locked dependencies, Ruff, mypy, pytest,
+  Bandit, dependency auditing, pre-commit hooks, CI, SBOMs, and reproducible
+  Windows packaging.
+- **Operational documentation:** configuration, protocol, hardware setup,
+  testing, troubleshooting, and release workflows are documented end to end.
+
+## Timeline
+
+| Phase | Outcome |
+| --- | --- |
+| 2025 — multidisciplinary build | Twelve engineers designed, integrated, and demonstrated the physical autonomous-vehicle prototype. |
+| 2025 — software and perception | Mohamed Amine Chalhy developed the operator software and integrated controller, Lidar, embedded communication, and YOLO-based perception. |
+| 2026 — maintained rearchitecture | The experimental scripts were consolidated into a typed layered application with simulation, regression coverage, CI, and packaging. |
+| 2026 — compatibility recovery | The maintained host gained an explicit, tested translation profile for the 2025 car's reconstructed newline command dialect. |
+| Next — physical profile validation | Recover the exact firmware, pinout, and serial transcript, then exercise that compatibility profile against the existing car. |
+
+## Run the simulator
+
+The simulator is the fastest way to explore the current interface and control
+architecture. It does not require the car, a controller, or a Lidar.
+
+### Windows
 
 ```powershell
+git clone https://github.com/Mohemed-Amine-Chalhy/Car_Interface.git
+cd Car_Interface
 .\scripts\bootstrap.ps1
 .\.venv\Scripts\python.exe scripts\dev.py doctor
 .\.venv\Scripts\python.exe scripts\dev.py run-sim
 ```
 
-From a POSIX shell:
+### Linux or macOS for logic-only development
 
 ```bash
+git clone https://github.com/Mohemed-Amine-Chalhy/Car_Interface.git
+cd Car_Interface
 ./scripts/bootstrap.sh
 .venv/bin/python scripts/dev.py doctor
 .venv/bin/python scripts/dev.py run-sim
 ```
 
-Bootstrap creates a local virtual environment, installs the locked development
-dependencies, and installs the repository's Git hooks. It does not connect to
-hardware.
-
-If the bootstrap scripts or lockfile are not present in your checkout, that
-checkout predates the maintained environment and must not be used for hardware
-operation.
-
-## Hardware operation
-
-**Current status: BLOCKED.** No qualified firmware artifact or completed
-physical-hardware qualification is present. The command below exists for
-controlled commissioning only after those blockers are resolved; it is not an
-authorization to operate a vehicle.
-
-Hardware mode is deliberately not a quick-start path. Before commissioning it:
-
-1. Read [Safety](docs/safety.md) and prepare an independent physical cutoff.
-2. Verify wiring and power domains using [Hardware setup](docs/hardware-setup.md).
-3. Install the externally verified firmware artifact and complete the protocol
-   validation checks in
-   [Firmware compatibility](docs/firmware-compatibility.md).
-4. Configure ports and limits as described in
-   [Configuration](docs/configuration.md).
-5. Run the wheels-off-ground procedure in the
-   [Operator guide](docs/operator-guide.md).
-6. Start hardware mode only with the exact explicit acknowledgement shown below.
-
-Do not bypass the acknowledgement in scripts, shortcuts, or application code.
-
-```powershell
-.\.venv\Scripts\python.exe scripts\dev.py run-hardware `
-  --config C:\path\to\vehicle.toml `
-  --i-understand-this-controls-real-hardware
-```
+Requirements and platform details are covered in
+[Getting started](docs/getting-started.md).
 
 ## Quality checks
 
-The local check command is the same quality gate used by CI:
+The same command surface is used locally and in CI:
 
 ```powershell
 .\.venv\Scripts\python.exe scripts\dev.py check
 ```
 
-Individual commands include `format`, `lint`, `typecheck`, `test`, `security`,
-`build`, `sbom`, `checksums`, and `release-check`. Run
-`python scripts/dev.py --help` for the exact options in the current checkout.
-Hardware-in-the-loop tests are always opt-in and are never part of ordinary test
-collection.
+The suite contains more than 100 non-hardware tests, and CI enforces formatting,
+linting, strict type checking, at least 80% aggregate coverage, source security
+scanning, and dependency auditing. See [Project results](docs/project-results.md)
+and [Testing](docs/testing.md) for reproducible evidence.
 
 ## Documentation
 
-- [Documentation map](docs/README.md)
+- [Engineering case study](docs/case-study.md)
+- [Project results](docs/project-results.md)
 - [Getting started](docs/getting-started.md)
-- [Operator guide](docs/operator-guide.md)
-- [Safety model](docs/safety.md)
+- [Architecture](docs/architecture.md)
+- [Vehicle hardware dossier](docs/hardware/README.md)
+- [Vehicle specification](docs/hardware/vehicle-specification.md)
+- [Firmware and board dossier](docs/firmware/README.md)
+- [Perception dossier](docs/perception/README.md)
 - [Configuration reference](docs/configuration.md)
 - [Hardware setup](docs/hardware-setup.md)
-- [Architecture](docs/architecture.md)
+- [Operator guide](docs/operator-guide.md)
 - [Serial protocol](docs/protocol.md)
-- [Development](docs/development.md)
-- [Testing](docs/testing.md)
+- [Development workflow](docs/development.md)
+- [Testing strategy](docs/testing.md)
 - [Troubleshooting](docs/troubleshooting.md)
-- [Release and rollback](docs/release.md)
-- [Threat model](docs/threat-model.md)
-- [Support](docs/support.md)
-- [Credits](docs/credits.md)
+- [Team credits](docs/credits.md)
 
-## Contributing and security
+## Team
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) before opening a change. Report a
-potential vulnerability or unsafe behavior privately according to
-[SECURITY.md](SECURITY.md), not in a public issue. Community participation is
-covered by [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md).
+The physical car was a collaborative achievement by twelve engineers spanning
+mechanical, electrical, embedded, software, and AI work. The full team is
+recognized in [Credits](docs/credits.md).
 
-## Copyright, licensing, and third-party material
+## Operational note
 
-No open-source license is currently granted. Copyright remains with the
-respective holders, and public or commercial distribution is blocked until they
-authorize a common license. Read [LICENSE](LICENSE) and complete the provenance
-review in [Third-party assets](docs/third-party-assets.md) before distributing
-any artifact.
+The 2025 car was physically built and demonstrated with the original prototype
+stack. The maintained host now includes a tested `school_car_legacy_v0`
+translation for the recovered command dialect, but it has not yet been exercised
+against the car's missing firmware and serial transcript. Simulation remains the
+supported first run; physical work should follow the documented
+[setup](docs/hardware-setup.md) and [configuration](docs/configuration.md).
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the development workflow and
+[SECURITY.md](SECURITY.md) for private vulnerability reporting.

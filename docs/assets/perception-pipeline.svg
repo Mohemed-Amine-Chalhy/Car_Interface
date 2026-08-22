@@ -1,0 +1,96 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675" role="img" aria-labelledby="title desc">
+  <title id="title">Camera and Lidar perception pipeline</title>
+  <desc id="desc">Diagram showing historical camera and YOLO11n object detection alongside maintained RPLidar obstacle geometry, both feeding an operator interface.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#071426"/><stop offset="1" stop-color="#152b48"/></linearGradient>
+    <filter id="shadow"><feDropShadow dx="0" dy="8" stdDeviation="11" flood-opacity="0.38"/></filter>
+    <marker id="cyanArrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#67e8f9"/></marker>
+    <marker id="violetArrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#c4b5fd"/></marker>
+    <style>
+      .title { font:700 34px Inter,Segoe UI,Arial,sans-serif; fill:#f8fafc; }
+      .subtitle { font:400 16px Inter,Segoe UI,Arial,sans-serif; fill:#a9bad0; }
+      .heading { font:700 18px Inter,Segoe UI,Arial,sans-serif; fill:#f8fafc; }
+      .body { font:400 13px Inter,Segoe UI,Arial,sans-serif; fill:#d5deea; }
+      .small { font:700 11px Inter,Segoe UI,Arial,sans-serif; fill:#dbeafe; letter-spacing:.7px; }
+    </style>
+  </defs>
+  <rect width="1200" height="675" rx="24" fill="url(#bg)"/>
+  <text x="62" y="62" class="title">Dual-Stream Perception</text>
+  <text x="62" y="90" class="subtitle">Semantic camera detections + geometric Lidar proximity for the team-built vehicle</text>
+
+  <!-- Camera lane -->
+  <rect x="60" y="132" width="1080" height="191" rx="22" fill="#151d3b" stroke="#8b5cf6" stroke-width="1.5"/>
+  <rect x="82" y="151" width="92" height="21" rx="10" fill="#4c1d95"/>
+  <text x="96" y="166" class="small">HISTORICAL</text>
+  <text x="194" y="167" class="heading">Camera / YOLO11n semantic pipeline</text>
+
+  <g filter="url(#shadow)">
+    <rect x="89" y="198" width="178" height="91" rx="14" fill="#26204e" stroke="#a78bfa"/>
+    <rect x="110" y="222" width="48" height="34" rx="6" fill="none" stroke="#c4b5fd" stroke-width="3"/>
+    <circle cx="134" cy="239" r="8" fill="#8b5cf6"/>
+    <text x="176" y="231" class="heading">Camera</text>
+    <text x="176" y="252" class="body">index 0</text>
+    <text x="110" y="277" class="body">DirectShow → fallback backend</text>
+  </g>
+  <path d="M267 244H316" stroke="#c4b5fd" stroke-width="3" marker-end="url(#violetArrow)"/>
+  <g filter="url(#shadow)">
+    <rect x="326" y="198" width="178" height="91" rx="14" fill="#26204e" stroke="#a78bfa"/>
+    <text x="348" y="228" class="heading">Frame queue</text>
+    <text x="348" y="251" class="body">bounded to 10 frames</text>
+    <text x="348" y="274" class="body">drop oldest under load</text>
+  </g>
+  <path d="M504 244H553" stroke="#c4b5fd" stroke-width="3" marker-end="url(#violetArrow)"/>
+  <g filter="url(#shadow)">
+    <rect x="563" y="198" width="178" height="91" rx="14" fill="#26204e" stroke="#a78bfa"/>
+    <text x="585" y="228" class="heading">YOLO11n</text>
+    <text x="585" y="251" class="body">boxes • class • confidence</text>
+    <text x="585" y="274" class="body">weights provenance TBD</text>
+  </g>
+  <path d="M741 244H790" stroke="#c4b5fd" stroke-width="3" marker-end="url(#violetArrow)"/>
+  <g filter="url(#shadow)">
+    <rect x="800" y="198" width="300" height="91" rx="14" fill="#26204e" stroke="#a78bfa"/>
+    <text x="822" y="228" class="heading">Annotated view</text>
+    <text x="822" y="251" class="body">bounding boxes + labels + approximate range</text>
+    <text x="822" y="274" class="body">640 × 360 Tkinter presentation</text>
+  </g>
+
+  <!-- Lidar lane -->
+  <rect x="60" y="352" width="1080" height="191" rx="22" fill="#0d2c3d" stroke="#22d3ee" stroke-width="1.5"/>
+  <rect x="82" y="371" width="98" height="21" rx="10" fill="#064e3b"/>
+  <text x="96" y="386" class="small">MAINTAINED</text>
+  <text x="200" y="387" class="heading">RPLidar geometric obstacle pipeline</text>
+
+  <g filter="url(#shadow)">
+    <rect x="89" y="418" width="178" height="91" rx="14" fill="#0c3442" stroke="#22d3ee"/>
+    <circle cx="128" cy="453" r="22" fill="none" stroke="#67e8f9" stroke-width="3"/>
+    <path d="M128 453L145 439M128 453L105 450M128 453L133 477" stroke="#67e8f9" stroke-width="2"/>
+    <text x="165" y="447" class="heading">RPLidar</text>
+    <text x="165" y="470" class="body">scan in mm</text>
+    <text x="110" y="496" class="body">USB source • model TBD</text>
+  </g>
+  <path d="M267 464H316" stroke="#67e8f9" stroke-width="3" marker-end="url(#cyanArrow)"/>
+  <g filter="url(#shadow)">
+    <rect x="326" y="418" width="178" height="91" rx="14" fill="#0c3442" stroke="#22d3ee"/>
+    <text x="348" y="448" class="heading">Normalize</text>
+    <text x="348" y="471" class="body">mm → cm</text>
+    <text x="348" y="494" class="body">90° sensor → forward</text>
+  </g>
+  <path d="M504 464H553" stroke="#67e8f9" stroke-width="3" marker-end="url(#cyanArrow)"/>
+  <g filter="url(#shadow)">
+    <rect x="563" y="418" width="178" height="91" rx="14" fill="#0c3442" stroke="#22d3ee"/>
+    <text x="585" y="448" class="heading">Path corridor</text>
+    <text x="585" y="471" class="body">42 cm configured width</text>
+    <text x="585" y="494" class="body">closest in-path point</text>
+  </g>
+  <path d="M741 464H790" stroke="#67e8f9" stroke-width="3" marker-end="url(#cyanArrow)"/>
+  <g filter="url(#shadow)">
+    <rect x="800" y="418" width="300" height="91" rx="14" fill="#0c3442" stroke="#22d3ee"/>
+    <text x="822" y="448" class="heading">Operator + stop assist</text>
+    <text x="822" y="471" class="body">live scan • obstacle range • freshness</text>
+    <text x="822" y="494" class="body">50 cm historical/default threshold</text>
+  </g>
+
+  <rect x="60" y="579" width="1080" height="58" rx="14" fill="#0a1d30" stroke="#29445f"/>
+  <text x="84" y="603" class="heading">Validation target</text>
+  <text x="84" y="625" class="body">Publish measured FPS, p95 inference latency, detection metrics, range error, scan stability, and synchronized physical-car results.</text>
+</svg>
