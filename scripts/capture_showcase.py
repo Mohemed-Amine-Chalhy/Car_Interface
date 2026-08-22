@@ -26,11 +26,14 @@ GIF_COLORS = 128
 def _enable_windows_dpi_awareness() -> None:
     if os.name != "nt":
         return
+    windows_dlls = getattr(ctypes, "windll", None)
+    if windows_dlls is None:
+        return
     try:
-        ctypes.windll.shcore.SetProcessDpiAwareness(2)
+        windows_dlls.shcore.SetProcessDpiAwareness(2)
     except (AttributeError, OSError):
         try:
-            ctypes.windll.user32.SetProcessDPIAware()
+            windows_dlls.user32.SetProcessDPIAware()
         except (AttributeError, OSError):
             return
 
