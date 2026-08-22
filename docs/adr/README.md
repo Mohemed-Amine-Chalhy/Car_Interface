@@ -10,6 +10,7 @@ operator/protocol documentation.
 | [0002](0002-simulation-default-and-hardware-opt-in.md) | Simulation default and explicit hardware acknowledgement | Accepted |
 | [0003](0003-versioned-acknowledged-serial-protocol.md) | Versioned, CRC-protected, acknowledged protocol and firmware watchdog | Accepted |
 | [0004](0004-defer-vision-from-v0.1.md) | Controller/Lidar v0.1 scope; vision deferred and absent | Accepted |
+| [0005](0005-explicit-school-car-legacy-profile.md) | Explicit school-car legacy protocol compatibility | Accepted |
 
 Use [0000-template.md](0000-template.md) for a new record. Allocate the next
 number, discuss the safety and rollback consequences, and link implementation

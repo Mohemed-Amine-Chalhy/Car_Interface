@@ -283,6 +283,17 @@ def test_pygame_controller_normalizes_axes_direction_and_removal(monkeypatch) ->
     assert source.description == "controller:disconnected"
 
 
+def test_pygame_controller_can_invert_physical_steering_axis(monkeypatch) -> None:
+    joystick = FakeJoystick()
+    monkeypatch.setitem(sys.modules, "pygame", _fake_pygame(joystick, []))
+    source = PygameControllerSource(steering_invert=True)
+    source.connect()
+
+    assert source.poll().steering == pytest.approx(-0.4)
+
+    source.disconnect()
+
+
 def test_pygame_controller_reports_missing_device_without_leaking_module(monkeypatch) -> None:
     joystick = FakeJoystick()
     module = _fake_pygame(joystick, [])

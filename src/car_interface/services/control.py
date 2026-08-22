@@ -17,10 +17,13 @@ from car_interface.adapters.base import (
 from car_interface.adapters.simulated import SimulatedLidarSource
 from car_interface.config import AppConfig
 from car_interface.domain import (
+    CarV1WireProtocol,
+    CommandWireProtocol,
     ControlCommand,
     DeviceConnection,
     DeviceKind,
     FaultCode,
+    LegacyProtocolContract,
     ProtocolCodec,
     ProtocolContract,
     SafetyDecision,
@@ -28,6 +31,7 @@ from car_interface.domain import (
     SafetyPhase,
     SafetyPolicy,
     SafetyStateMachine,
+    SchoolCarLegacyProtocol,
 )
 
 from .dispatcher import CommandDispatcher, DispatchReceipt
@@ -61,15 +65,31 @@ class ControlService:
             max_abs_steering_percent=100,
         )
         self._machine = SafetyStateMachine(policy=policy)
-        contract = ProtocolContract(
-            ack_timeout_seconds=config.ack_timeout_seconds,
-            heartbeat_interval_seconds=config.heartbeat_interval_seconds,
-            watchdog_timeout_seconds=config.command_stale_seconds,
-        )
+        protocol: CommandWireProtocol
+        if config.mode == "hardware" and config.protocol == "school_car_legacy_v0":
+            protocol = SchoolCarLegacyProtocol(
+                LegacyProtocolContract(
+                    steering_minimum=config.legacy_steering_minimum,
+                    steering_center=config.legacy_steering_center,
+                    steering_maximum=config.legacy_steering_maximum,
+                    minimum_frame_interval_seconds=(
+                        config.legacy_minimum_command_interval_ms / 1_000
+                    ),
+                )
+            )
+            require_ack = False
+        else:
+            contract = ProtocolContract(
+                ack_timeout_seconds=config.ack_timeout_seconds,
+                heartbeat_interval_seconds=config.heartbeat_interval_seconds,
+                watchdog_timeout_seconds=config.command_stale_seconds,
+            )
+            protocol = CarV1WireProtocol(ProtocolCodec(contract))
+            require_ack = True if config.mode == "simulation" else config.require_ack
         self._dispatcher = CommandDispatcher(
             vehicle,
-            codec=ProtocolCodec(contract),
-            require_ack=config.require_ack,
+            protocol=protocol,
+            require_ack=require_ack,
             ack_timeout_seconds=config.ack_timeout_seconds,
             maximum_command_age_seconds=config.command_stale_seconds,
             on_receipt=self._on_receipt,
@@ -362,7 +382,7 @@ class ControlService:
             decision = self._transition(lambda now: self._machine.connect(now))
             receipts = self._apply_decision(decision)
             if not self._wait_for_receipts(receipts, 2.0):
-                raise RuntimeError("firmware did not acknowledge the initial safe state")
+                raise RuntimeError("the initial safe state was not delivered successfully")
             self._raise_if_connect_cancelled()
 
             self._controller.connect()
@@ -447,8 +467,7 @@ class ControlService:
             if not self._wait_for_receipts(receipts, 1.5):
                 self._publish(
                     EventType.FAULT,
-                    "Safe-stop acknowledgement timed out; rely on the firmware watchdog "
-                    "and physical E-stop.",
+                    "Safe-stop delivery timed out before disconnect.",
                 )
             self._dispatcher.wait_for_idle(0.5)
         self._dispatcher.stop()
@@ -562,7 +581,11 @@ class ControlService:
                     self._publish(EventType.SCAN, assessment)
                     self._handle_obstacle(assessment)
 
-                if now >= next_heartbeat and self._dispatcher.is_running:
+                if (
+                    now >= next_heartbeat
+                    and self._dispatcher.is_running
+                    and self._dispatcher.supports_heartbeat
+                ):
                     self._dispatcher.submit(ControlCommand.heartbeat())
                     next_heartbeat = now + self.config.heartbeat_interval_seconds
 
@@ -699,9 +722,15 @@ class ControlService:
         if receipt.cancelled:
             return
         if receipt.succeeded:
+            if receipt.acknowledged:
+                detail = f"ACK seq={receipt.sequence}"
+            elif receipt.written:
+                detail = f"WROTE {receipt.frames_written} frame(s) via {receipt.protocol_profile}"
+            else:
+                detail = f"HANDLED by {receipt.protocol_profile} without a wire command"
             self._publish(
                 EventType.COMMAND,
-                f"ACK seq={receipt.sequence} {receipt.command.kind.value}",
+                f"{detail} {receipt.command.kind.value}",
             )
             if receipt.command.kind.value == "HBT":
                 with suppress(SafetyError, ValueError):

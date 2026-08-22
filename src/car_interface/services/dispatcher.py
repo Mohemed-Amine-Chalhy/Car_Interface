@@ -12,12 +12,13 @@ from itertools import count
 from car_interface.adapters.base import AdapterError, VehicleTransport
 from car_interface.domain import (
     MAX_SEQUENCE,
+    CarV1WireProtocol,
     CommandPriority,
     CommandType,
+    CommandWireProtocol,
     ControlCommand,
     ProtocolCodec,
     ProtocolError,
-    ResponseKind,
     SafetyDecision,
 )
 
@@ -34,14 +35,28 @@ class DispatchReceipt:
     cancelled: bool = False
     response: str | None = None
     error: str | None = None
+    protocol_profile: str | None = None
+    frames_total: int = 0
+    frames_written: int = 0
+    acknowledged: bool = False
     _finished: threading.Event = field(default_factory=threading.Event, repr=False)
 
     @property
     def done(self) -> bool:
         return self._finished.is_set()
 
+    @property
+    def written(self) -> bool:
+        """Return whether every frame in a non-empty operation was written."""
+
+        return self.frames_total > 0 and self.frames_written == self.frames_total
+
     def wait(self, timeout_seconds: float | None = None) -> bool:
-        """Wait for completion and return whether the command was acknowledged."""
+        """Wait for completion and return whether dispatch succeeded.
+
+        Inspect :attr:`written` and :attr:`acknowledged` to distinguish a
+        write-only legacy result from firmware-confirmed protocol v1 delivery.
+        """
 
         self._finished.wait(timeout_seconds)
         return self.done and self.succeeded
@@ -53,11 +68,13 @@ class DispatchReceipt:
         cancelled: bool = False,
         response: str | None = None,
         error: str | None = None,
+        acknowledged: bool = False,
     ) -> None:
         self.succeeded = succeeded
         self.cancelled = cancelled
         self.response = response
         self.error = error
+        self.acknowledged = acknowledged
         self._finished.set()
 
 
@@ -85,8 +102,9 @@ class CommandDispatcher:
         self,
         transport: VehicleTransport,
         *,
+        protocol: CommandWireProtocol | None = None,
         codec: ProtocolCodec | None = None,
-        require_ack: bool = True,
+        require_ack: bool | None = None,
         ack_timeout_seconds: float = 0.2,
         maximum_command_age_seconds: float = 0.5,
         maximum_pending: int = 128,
@@ -96,9 +114,17 @@ class CommandDispatcher:
             raise ValueError("maximum_pending must be at least 8")
         if maximum_command_age_seconds <= 0:
             raise ValueError("maximum_command_age_seconds must be positive")
+        if protocol is not None and codec is not None:
+            raise ValueError("pass protocol or codec, not both")
         self._transport = transport
-        self._codec = codec or ProtocolCodec()
-        self._require_ack = require_ack
+        self._protocol = protocol or CarV1WireProtocol(codec)
+        self._require_ack = (
+            self._protocol.provides_acknowledgements if require_ack is None else require_ack
+        )
+        if self._require_ack and not self._protocol.provides_acknowledgements:
+            raise ValueError(
+                f"{self._protocol.profile_id} does not provide command acknowledgements"
+            )
         self._ack_timeout = ack_timeout_seconds
         self._maximum_command_age = maximum_command_age_seconds
         self._maximum_pending = maximum_pending
@@ -112,6 +138,7 @@ class CommandDispatcher:
         self._started = threading.Event()
         self._start_error: str | None = None
         self._active = False
+        self._last_frame_completed_at: float | None = None
 
     @property
     def is_running(self) -> bool:
@@ -122,6 +149,14 @@ class CommandDispatcher:
     def transport_description(self) -> str:
         return self._transport.description
 
+    @property
+    def protocol_profile(self) -> str:
+        return self._protocol.profile_id
+
+    @property
+    def supports_heartbeat(self) -> bool:
+        return self._protocol.supports_heartbeat
+
     def start(self, timeout_seconds: float = 5.0) -> None:
         with self._condition:
             current_thread = self._thread
@@ -131,6 +166,7 @@ class CommandDispatcher:
                 raise RuntimeError("the previous actuator dispatcher is still stopping")
             self._sequence = 0
             self._order = count()
+            self._last_frame_completed_at = None
             self._running = True
             self._started.clear()
             self._start_error = None
@@ -301,23 +337,37 @@ class CommandDispatcher:
                 raise TimeoutError(
                     f"refusing stale {pending.command.kind.value} command aged {command_age:.3f}s"
                 )
-            sequence = self._next_sequence()
-            receipt.sequence = sequence
-            frame = self._codec.encode_command(pending.command, sequence).rstrip("\r\n")
-            response = self._transport.transact(
-                frame,
-                self._ack_timeout if self._require_ack else 0.0,
-            )
+            if self._protocol.uses_sequences:
+                sequence = self._next_sequence()
+            operation = self._protocol.encode(pending.command, sequence)
+            receipt.sequence = operation.sequence
+            receipt.protocol_profile = self._protocol.profile_id
+            receipt.frames_total = len(operation.frames)
+            response: str | None = None
+            for index, frame in enumerate(operation.frames):
+                self._pace_frame()
+                expects_response = self._require_ack and index == len(operation.frames) - 1
+                response = self._transport.transact(
+                    frame,
+                    self._ack_timeout if expects_response else 0.0,
+                )
+                receipt.frames_written += 1
+                self._last_frame_completed_at = time.monotonic()
             if self._require_ack:
                 if response is None:
                     raise ProtocolError(f"ACK timeout for sequence {sequence}")
-                parsed = self._codec.parse_response(response, expected_sequence=sequence)
-                if parsed.kind is ResponseKind.NACK:
-                    raise ProtocolError(
-                        f"firmware rejected sequence {sequence}: {parsed.fault_code}"
-                    )
-            receipt._complete(succeeded=True, response=response)
-            LOGGER.debug("Dispatched %s as sequence %s", pending.command.kind.value, sequence)
+                self._protocol.validate_response(response, expected_sequence=sequence)
+            receipt._complete(
+                succeeded=True,
+                response=response,
+                acknowledged=self._require_ack,
+            )
+            LOGGER.debug(
+                "Dispatched %s with %s (%s)",
+                pending.command.kind.value,
+                self._protocol.profile_id,
+                "acknowledged" if receipt.acknowledged else "write-only",
+            )
         except Exception as exc:  # noqa: BLE001 - every transport failure completes the receipt.
             receipt._complete(error=str(exc))
             LOGGER.error(
@@ -327,6 +377,15 @@ class CommandDispatcher:
                 exc,
             )
         self._notify_receipt(receipt)
+
+    def _pace_frame(self) -> None:
+        interval = self._protocol.minimum_frame_interval_seconds
+        last_completed = self._last_frame_completed_at
+        if interval <= 0 or last_completed is None:
+            return
+        remaining = interval - (time.monotonic() - last_completed)
+        if remaining > 0:
+            time.sleep(remaining)
 
     def _submit_unlocked(
         self,

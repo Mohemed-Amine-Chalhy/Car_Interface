@@ -17,6 +17,13 @@ from .commands import (
     ResponseKind,
     crc16_ccitt,
 )
+from .protocol_profiles import (
+    CarV1WireProtocol,
+    CommandWireProtocol,
+    EncodedOperation,
+    LegacyProtocolContract,
+    SchoolCarLegacyProtocol,
+)
 from .safety import (
     InvalidTransition,
     SafetyDecision,
@@ -42,9 +49,11 @@ __all__ = [
     "MAX_SEQUENCE",
     "MIN_PERCENT",
     "MIN_SEQUENCE",
+    "CarV1WireProtocol",
     "CommandPriority",
     "CommandType",
     "CommandValidationError",
+    "CommandWireProtocol",
     "ControlCommand",
     "ControlMode",
     "ControlState",
@@ -52,9 +61,11 @@ __all__ = [
     "DeviceConnection",
     "DeviceKind",
     "DeviceStatus",
+    "EncodedOperation",
     "Fault",
     "FaultCode",
     "InvalidTransition",
+    "LegacyProtocolContract",
     "ProtocolCodec",
     "ProtocolContract",
     "ProtocolError",
@@ -66,6 +77,7 @@ __all__ = [
     "SafetyPolicy",
     "SafetyPrerequisiteError",
     "SafetyStateMachine",
+    "SchoolCarLegacyProtocol",
     "crc16_ccitt",
     "resolve_command_queue",
 ]

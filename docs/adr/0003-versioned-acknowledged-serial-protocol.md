@@ -4,7 +4,7 @@
 - Date: 2026-08-21
 - Decision owners: Car Interface maintainers
 - Supersedes: inconsistent newline-delimited prototype commands
-- Superseded by: none
+- Superseded in part by: [ADR-0005](0005-explicit-school-car-legacy-profile.md), for explicit compatibility with the demonstrated school car
 
 ## Context
 
@@ -43,7 +43,8 @@ asserts brake, and inhibits motion.
 - CRC detects accidental corruption but does not authenticate a malicious
   endpoint; physical/local access remains part of the threat model.
 - Sequence and retry semantics add state that needs conformance testing.
-- Legacy firmware is intentionally incompatible with production hardware mode.
+- Legacy firmware remains incompatible with `car_v1`. ADR-0005 permits it only
+  through a separately selected, write-only compatibility profile.
 
 ## Verification
 
@@ -55,5 +56,6 @@ asserts brake, and inhibits motion.
 ## Rollback or supersession
 
 Rollback must restore the complete previously qualified host and firmware pair.
-Never add a runtime “legacy protocol” fallback to a production release. Breaking
-changes require a new protocol version and ADR.
+Never add an automatic runtime legacy fallback. Breaking changes to `car_v1`
+require a new protocol version and ADR. The explicit profile governed by
+ADR-0005 does not change this protocol.

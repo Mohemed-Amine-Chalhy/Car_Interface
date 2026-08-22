@@ -2,7 +2,9 @@
 
 This document is the normative host/ESP32 wire contract for protocol version 1.
 The older prototype commands (`V 50`, `W 1795`, `S 1`, `Q 1`, and variants) are
-not protocol v1 and must not be accepted by production firmware.
+not protocol v1 and must not be accepted by protocol-v1 firmware. The host can
+select the separate, write-only `school_car_legacy_v0` compatibility profile
+described below; it is never auto-detected.
 
 > [!IMPORTANT]
 > The repository does not yet establish that a particular physical firmware
@@ -176,3 +178,22 @@ reset, and boot during a non-zero prior command.
 
 See [Firmware compatibility](firmware-compatibility.md) and
 [Hardware qualification](hardware-qualification.md).
+
+## Explicit school-car legacy compatibility
+
+`school_car_legacy_v0` is a host compatibility profile, not protocol v1. It is
+selected only through configuration and never by inspecting serial traffic.
+The default remains `car_v1`.
+
+The profile writes newline-terminated ASCII commands with no sequence, CRC, or
+command-correlated response contract: `A`, `M`, `D F`, `D R`, `V <0..100>`,
+`W <calibrated-raw>`, `S 1`, and `Q 1`. Signed speed is dispatched as one
+contiguous operation: direction first, then a non-negative speed magnitude.
+Steering maps `-100..100` piecewise through configured minimum, center, and
+maximum values. Consecutive lines are paced by a configurable interval that
+defaults to 50 ms.
+
+Because the demonstrated firmware does not return command-correlated replies,
+a successful receipt for this profile means all lines were written to the
+serial transport. It is explicitly not marked acknowledged. See
+[ADR-0005](adr/0005-explicit-school-car-legacy-profile.md).

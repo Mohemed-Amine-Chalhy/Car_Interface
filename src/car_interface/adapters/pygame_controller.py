@@ -14,10 +14,13 @@ LOGGER = logging.getLogger(__name__)
 class PygameControllerSource:
     """Read one Xbox/PlayStation-compatible controller without UI coupling."""
 
-    def __init__(self, controller_id: int = 0) -> None:
+    def __init__(self, controller_id: int = 0, *, steering_invert: bool = False) -> None:
         if controller_id < 0:
             raise ValueError("controller_id cannot be negative")
+        if not isinstance(steering_invert, bool):
+            raise TypeError("steering_invert must be a boolean")
         self._controller_id = controller_id
+        self._steering_multiplier = -1.0 if steering_invert else 1.0
         self._pygame: Any | None = None
         self._joystick: Any | None = None
         self._name = "controller:disconnected"
@@ -69,7 +72,9 @@ class PygameControllerSource:
                     return ControllerSnapshot(connected=False)
 
             axes = self._joystick.get_numaxes()
-            steering_raw = self._joystick.get_axis(0) if axes > 0 else 0.0
+            steering_raw = (
+                self._joystick.get_axis(0) * self._steering_multiplier if axes > 0 else 0.0
+            )
             rt_raw = self._joystick.get_axis(5) if axes > 5 else -1.0
             lt_raw = self._joystick.get_axis(4) if axes > 4 else -1.0
             if not all(math.isfinite(value) for value in (steering_raw, rt_raw, lt_raw)):

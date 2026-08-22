@@ -35,6 +35,7 @@ def build_parser() -> argparse.ArgumentParser:
     run.add_argument("--esp32-port")
     run.add_argument("--lidar-port")
     run.add_argument("--controller-id", type=int)
+    run.add_argument("--protocol", choices=("car_v1", "school_car_legacy_v0"))
     run.add_argument("--max-speed-percent", type=int)
     run.add_argument("--log-level", choices=("DEBUG", "INFO", "WARNING", "ERROR"))
     run.add_argument(
@@ -139,6 +140,7 @@ def _load_from_args(args: argparse.Namespace) -> AppConfig:
         "esp32_port",
         "lidar_port",
         "controller_id",
+        "protocol",
         "max_speed_percent",
         "log_level",
     ):

@@ -36,5 +36,8 @@ def build_control_service(config: AppConfig) -> ControlService:
             startup_delay_seconds=config.serial_startup_delay_seconds,
         ),
         lidar=RPLidarSource(config.lidar_port),
-        controller=PygameControllerSource(config.controller_id),
+        controller=PygameControllerSource(
+            config.controller_id,
+            steering_invert=config.controller_steering_invert,
+        ),
     )

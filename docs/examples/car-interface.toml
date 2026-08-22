@@ -8,8 +8,11 @@ lidar_port = "COM6"
 baud_rate = 115200
 serial_startup_delay_seconds = 2.0
 controller_id = 0
+controller_steering_invert = false
+protocol = "car_v1"
 
-# Acknowledgements are mandatory for physical hardware.
+# Acknowledgements are mandatory for car_v1; the explicit legacy profile below
+# is write-only and therefore requires this setting to be false.
 require_ack = true
 ack_timeout_seconds = 0.2
 heartbeat_interval_seconds = 0.1
@@ -21,3 +24,16 @@ auto_stop_distance_cm = 50.0
 vehicle_width_cm = 42.0
 max_speed_percent = 50
 log_level = "INFO"
+
+# Historical school-car firmware is an explicit, hardware-only, write-only
+# compatibility profile. It is never auto-detected. To use it, select hardware
+# mode and the profile, disable ACK requirements, then replace the calibration
+# only with measured values:
+# mode = "hardware"
+# protocol = "school_car_legacy_v0"
+# require_ack = false
+# controller_steering_invert = true
+# legacy_steering_minimum = 200
+# legacy_steering_center = 1750
+# legacy_steering_maximum = 2900
+# legacy_minimum_command_interval_ms = 50

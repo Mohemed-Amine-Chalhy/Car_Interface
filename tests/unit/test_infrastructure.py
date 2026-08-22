@@ -155,5 +155,5 @@ def test_factory_composes_hardware_adapters_without_opening_them() -> None:
     assert result is built_service
     serial.assert_called_once_with("COM1", 115_200, startup_delay_seconds=2.0)
     rplidar.assert_called_once_with("COM2")
-    pygame.assert_called_once_with(0)
+    pygame.assert_called_once_with(0, steering_invert=False)
     service.assert_called_once_with(config, vehicle=vehicle, lidar=lidar, controller=controller)

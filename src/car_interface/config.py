@@ -29,6 +29,8 @@ class AppConfig:
     baud_rate: int = 115_200
     serial_startup_delay_seconds: float = 2.0
     controller_id: int = 0
+    controller_steering_invert: bool = False
+    protocol: str = "car_v1"
     require_ack: bool = True
     ack_timeout_seconds: float = 0.2
     heartbeat_interval_seconds: float = 0.1
@@ -37,6 +39,10 @@ class AppConfig:
     auto_stop_distance_cm: float = 50.0
     vehicle_width_cm: float = 42.0
     max_speed_percent: int = 50
+    legacy_steering_minimum: int = 200
+    legacy_steering_center: int = 1_750
+    legacy_steering_maximum: int = 2_900
+    legacy_minimum_command_interval_ms: int = 50
     log_level: str = "INFO"
     config_path: Path | None = None
 
@@ -45,10 +51,19 @@ class AppConfig:
             raise ConfigurationError("mode must be a string")
         if not isinstance(self.log_level, str):
             raise ConfigurationError("log_level must be a string")
+        if not isinstance(self.protocol, str):
+            raise ConfigurationError("protocol must be a string")
         for integer_name, integer_value in (
             ("baud_rate", self.baud_rate),
             ("controller_id", self.controller_id),
             ("max_speed_percent", self.max_speed_percent),
+            ("legacy_steering_minimum", self.legacy_steering_minimum),
+            ("legacy_steering_center", self.legacy_steering_center),
+            ("legacy_steering_maximum", self.legacy_steering_maximum),
+            (
+                "legacy_minimum_command_interval_ms",
+                self.legacy_minimum_command_interval_ms,
+            ),
         ):
             if isinstance(integer_value, bool) or not isinstance(integer_value, int):
                 raise ConfigurationError(f"{integer_name} must be an integer")
@@ -67,8 +82,16 @@ class AppConfig:
                 raise ConfigurationError(f"{float_name} must be finite")
         if not isinstance(self.require_ack, bool):
             raise ConfigurationError("require_ack must be a boolean")
+        if not isinstance(self.controller_steering_invert, bool):
+            raise ConfigurationError("controller_steering_invert must be a boolean")
         if self.mode not in {"simulation", "hardware"}:
             raise ConfigurationError("mode must be 'simulation' or 'hardware'")
+        if self.protocol not in {"car_v1", "school_car_legacy_v0"}:
+            raise ConfigurationError("protocol must be 'car_v1' or 'school_car_legacy_v0'")
+        if self.protocol == "school_car_legacy_v0" and self.mode != "hardware":
+            raise ConfigurationError(
+                "school_car_legacy_v0 is available only in explicit hardware mode"
+            )
         for port_name, port_value in (
             ("esp32_port", self.esp32_port),
             ("lidar_port", self.lidar_port),
@@ -85,8 +108,12 @@ class AppConfig:
             not isinstance(self.lidar_port, str) or not self.lidar_port.strip()
         ):
             raise ConfigurationError("hardware mode requires lidar_port")
-        if self.mode == "hardware" and not self.require_ack:
+        if self.mode == "hardware" and self.protocol == "car_v1" and not self.require_ack:
             raise ConfigurationError("hardware mode requires protocol acknowledgements")
+        if self.protocol == "school_car_legacy_v0" and self.require_ack:
+            raise ConfigurationError(
+                "school_car_legacy_v0 has no acknowledgements; set require_ack=false"
+            )
         if (
             self.mode == "hardware"
             and self.esp32_port is not None
@@ -104,7 +131,7 @@ class AppConfig:
             raise ConfigurationError("ack_timeout_seconds must be between 0.05 and 10")
         if not 0.05 <= self.heartbeat_interval_seconds <= 5.0:
             raise ConfigurationError("heartbeat_interval_seconds must be between 0.05 and 5")
-        if self.command_stale_seconds <= (
+        if self.protocol == "car_v1" and self.command_stale_seconds <= (
             self.heartbeat_interval_seconds + self.ack_timeout_seconds
         ):
             raise ConfigurationError("command_stale_seconds must exceed heartbeat plus ACK timeout")
@@ -116,6 +143,20 @@ class AppConfig:
             raise ConfigurationError("vehicle_width_cm must be between 10 and 500 cm")
         if not 1 <= self.max_speed_percent <= 100:
             raise ConfigurationError("max_speed_percent must be between 1 and 100")
+        if not (
+            0
+            <= self.legacy_steering_minimum
+            < self.legacy_steering_center
+            < self.legacy_steering_maximum
+            <= 65_535
+        ):
+            raise ConfigurationError(
+                "legacy steering calibration must satisfy 0 <= minimum < center < maximum <= 65535"
+            )
+        if not 1 <= self.legacy_minimum_command_interval_ms <= 1_000:
+            raise ConfigurationError(
+                "legacy_minimum_command_interval_ms must be between 1 and 1000"
+            )
         if self.log_level.upper() not in {
             "DEBUG",
             "INFO",
@@ -133,8 +174,16 @@ class AppConfig:
 
 
 _ENV_PREFIX = "CAR_INTERFACE_"
-_BOOL_FIELDS = {"require_ack"}
-_INT_FIELDS = {"baud_rate", "controller_id", "max_speed_percent"}
+_BOOL_FIELDS = {"controller_steering_invert", "require_ack"}
+_INT_FIELDS = {
+    "baud_rate",
+    "controller_id",
+    "legacy_minimum_command_interval_ms",
+    "legacy_steering_center",
+    "legacy_steering_maximum",
+    "legacy_steering_minimum",
+    "max_speed_percent",
+}
 _FLOAT_FIELDS = {
     "serial_startup_delay_seconds",
     "ack_timeout_seconds",
