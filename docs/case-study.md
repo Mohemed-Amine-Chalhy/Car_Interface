@@ -167,8 +167,8 @@ builds a smoke-tested Windows application bundle.
 
 | Measure | Current verified baseline |
 | --- | --- |
-| Automated suite | **113 tests passed** |
-| Aggregate coverage | **82.94%** |
+| Automated suite | **121 tests passed** |
+| Aggregate coverage | **83.59%** |
 | Static typing | Strict mypy across application and tooling |
 | Continuous integration | Windows and Ubuntu quality jobs plus Windows packaging |
 | Delivery formats | Wheel, source distribution, and PyInstaller desktop bundle |

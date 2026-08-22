@@ -14,7 +14,7 @@ For a focused technical evaluation:
 1. Read the [engineering case study](case-study.md) for the problem, my
    contribution, and the system-level outcome.
 2. Review [project results](project-results.md) for the verified baseline of
-   113 tests, 82.94% aggregate coverage, strict typing, CI, and Windows
+   121 tests, 83.59% aggregate coverage, strict typing, CI, and Windows
    packaging.
 3. Follow the [architecture guide](architecture.md) from UI and services into
    the typed domain and device adapters.

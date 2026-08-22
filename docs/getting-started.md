@@ -67,6 +67,13 @@ device is not an error for simulation.
 .\.venv\Scripts\python.exe scripts\dev.py run-sim
 ```
 
+To let the application traverse the complete portfolio walkthrough
+automatically, add the simulation-only showcase flag:
+
+```powershell
+.\.venv\Scripts\python.exe scripts\dev.py run-sim --showcase
+```
+
 Simulation uses in-memory ESP32, controller, and Lidar adapters. It starts
 neutral and braked, creates no serial connection, and is suitable for UI and
 safety-state testing. Closing the application should leave the simulated
@@ -93,6 +100,7 @@ network-backed check separately.
 
 - Operators: [Operator guide](operator-guide.md)
 - Contributors: [Development](development.md)
+- Reviewers: [Software showcase](showcase.md)
 - Hardware owners: [Safety](safety.md), then
   [Hardware setup](hardware-setup.md)
 - Problems: [Troubleshooting](troubleshooting.md)

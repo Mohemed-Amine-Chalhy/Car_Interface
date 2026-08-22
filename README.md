@@ -3,8 +3,8 @@
 [![CI](https://github.com/Mohemed-Amine-Chalhy/Car_Interface/actions/workflows/ci.yml/badge.svg)](https://github.com/Mohemed-Amine-Chalhy/Car_Interface/actions/workflows/ci.yml)
 ![Python 3.13](https://img.shields.io/badge/Python-3.13-3776AB?logo=python&logoColor=white)
 ![Type checked: mypy strict](https://img.shields.io/badge/type_checked-mypy_strict-2A6DB2)
-![Tests: 113 passed](https://img.shields.io/badge/tests-113_passed-brightgreen)
-![Aggregate coverage: 82.94%](https://img.shields.io/badge/coverage-82.94%25-brightgreen)
+![Tests: 121 passed](https://img.shields.io/badge/tests-121_passed-brightgreen)
+![Aggregate coverage: 83.59%](https://img.shields.io/badge/coverage-83.59%25-brightgreen)
 
 **I'm Mohamed Amine Chalhy, and this repository presents my software-engineering
 work on a real autonomous-driving car built and demonstrated in 2025 by a
@@ -12,6 +12,38 @@ twelve-engineer multidisciplinary team.** I owned the vehicle-software and
 AI-integration workstream: the Python operator application, game-controller
 input, embedded serial communication, RPLidar processing, obstacle assistance,
 and YOLO-based camera inference.
+
+## Software walkthrough
+
+I recorded this walkthrough directly from the maintained application running
+against its deterministic ESP32, controller, and RPLidar simulators. It uses the
+same typed service layer, safety state machine, command dispatcher, and UI as the
+hardware configuration—no mocked screenshots or pre-rendered states.
+
+![Car Interface simulator walkthrough showing connection, driving, Lidar assistance, and diagnostics](docs/assets/showcase/app-walkthrough.gif)
+
+The walkthrough connects all three simulated devices, arms the vehicle, applies
+bounded speed and steering commands, moves an obstacle into the projected path,
+shows the automatic emergency stop, and then traverses the genuine command log.
+
+| Operator control | Lidar-assisted stop |
+| :---: | :---: |
+| ![Connected operator dashboard while driving in simulation](docs/assets/showcase/03-control-driving.png) | ![Vehicle-relative Lidar view during an automatic assisted stop](docs/assets/showcase/05-lidar-assisted-stop.png) |
+| **Live control and telemetry** | **Projected-path obstacle response** |
+
+![Diagnostics view showing simulator connection, commands, acknowledgements, and safety events](docs/assets/showcase/06-diagnostics.png)
+
+The [showcase guide](docs/showcase.md) explains the sequence and how I made the
+capture reproducible. To traverse it locally after setup, run:
+
+~~~powershell
+.\.venv\Scripts\python.exe scripts\dev.py run-sim --showcase
+~~~
+
+## Physical vehicle demonstration
+
+This is the real autonomous-driving car our multidisciplinary team built and
+demonstrated in 2025:
 
 ![Autonomous-driving car and control-interface demonstration](https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExaHA0dHo1YW5wbjdua25ob2ZmN2Zya3Y1cnFocGFhb2E0c3g3Nm5kZiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/IpNjWXPWk869qG8ss6/giphy.gif)
 
@@ -96,8 +128,8 @@ the car to be connected.
 
 | Signal | Verified result |
 | --- | --- |
-| Automated tests | **113 passed** across unit, integration, regression, GUI-support, and simulator behavior |
-| Aggregate coverage | **82.94%** |
+| Automated tests | **121 passed** across unit, integration, regression, GUI-support, and simulator behavior |
+| Aggregate coverage | **83.59%** |
 | Type checking | **Strict mypy** across the application and development tooling |
 | Code quality | Ruff formatting and linting, enforced locally and in CI |
 | CI platforms | Current Windows and Ubuntu GitHub-hosted runners |
@@ -180,6 +212,7 @@ and [firmware dossier](docs/firmware/README.md).
 - [Getting started](docs/getting-started.md)
 - [Development workflow](docs/development.md)
 - [Testing strategy](docs/testing.md)
+- [Software showcase and media capture](docs/showcase.md)
 - [Vehicle specification](docs/hardware/vehicle-specification.md)
 - [ESP32 and Arduino configuration](docs/firmware/board-configuration.md)
 - [Perception engineering](docs/perception/README.md)

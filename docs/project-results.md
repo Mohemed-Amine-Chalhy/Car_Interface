@@ -24,8 +24,8 @@ The maintained host has a reproducible, hardware-free verification path:
 
 | Engineering signal | Verified result |
 | --- | --- |
-| Automated test suite | **113 tests passed** |
-| Aggregate coverage | **82.94%** |
+| Automated test suite | **121 tests passed** |
+| Aggregate coverage | **83.59%** |
 | Static typing | Strict mypy checks across the application package and development tooling |
 | Formatting and linting | Ruff runs locally, through pre-commit, and in CI |
 | Cross-platform CI | Quality checks execute on current Windows and Ubuntu GitHub-hosted runners |
