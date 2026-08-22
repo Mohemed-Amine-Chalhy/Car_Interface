@@ -5,9 +5,19 @@ build-backend = "hatchling.build"
 [project]
 name = "car-interface"
 version = "0.1.0"
-description = "Safety-oriented desktop control interface for an ESP32-based vehicle"
+description = "Control and perception platform for a team-built ESP32 autonomous-vehicle prototype"
 readme = "README.md"
 requires-python = ">=3.13,<3.14"
+keywords = [
+  "autonomous-vehicle",
+  "computer-vision",
+  "esp32",
+  "rplidar",
+  "robotics",
+  "serial-communication",
+  "tkinter",
+  "yolo",
+]
 classifiers = [
   "Development Status :: 3 - Alpha",
   "Environment :: Win32 (MS Windows)",
@@ -52,7 +62,7 @@ build = [
 ]
 
 [tool.uv]
-required-version = ">=0.8.15,<0.12"
+required-version = ">=0.8.15,<0.13"
 default-groups = ["dev"]
 
 [tool.hatch.build.targets.wheel]
