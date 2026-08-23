@@ -3,13 +3,13 @@
 ## Supported versions
 
 Security fixes are applied to `main` and, after releases begin, the latest
-tagged release. Historical prototype commits and older releases are unsupported.
+tagged release. Other commits and older releases are unsupported.
 
 | Version | Supported |
 | --- | --- |
 | `main` | Yes |
 | Latest tagged release | Yes |
-| Older or historical revisions | No |
+| Other revisions | No |
 
 ## Report a vulnerability
 

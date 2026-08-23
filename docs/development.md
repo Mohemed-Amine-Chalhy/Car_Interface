@@ -1,8 +1,7 @@
 # Development workflow
 
-This project uses one reproducible Python 3.13 environment and one task runner.
-The production package is under `src/car_interface`; historical prototype
-scripts have been removed from the maintained tree.
+This project uses one Python 3.13 environment and one task runner. The
+application package is under `src/car_interface`.
 
 ## Environment and dependency model
 
@@ -19,12 +18,12 @@ Declared dependency sets:
 
 - runtime: pygame, pyserial, and rplidar-roboticia;
 - `dev`: Ruff, mypy, pytest/coverage/timeout, Hypothesis, Bandit, pip-audit,
-  pre-commit, and type stubs; and
+  pre-commit, Pillow media capture, and type stubs; and
 - `build`: build, the locked Hatchling backend, and PyInstaller.
 
-Camera/vision work is deferred. v0.1 has no vision adapter, dependency extra,
-model asset, bootstrap option, or build flag. A future implementation requires a
-clear architecture, isolated execution, tests, and a packaging plan.
+The packaged host keeps the vehicle-control and RPLidar runtime independent from
+camera and model dependencies. The demonstrated YOLO integration is documented
+in the [perception guide](perception/README.md).
 
 To change dependencies:
 
@@ -34,8 +33,6 @@ To change dependencies:
 4. run `scripts/dev.py check`; and
 5. review declaration, lockfile, transitive dependency, and vulnerability
    changes together.
-
-Do not revive `requirements.txt` as the source of truth.
 
 ## Developer commands
 
@@ -63,7 +60,7 @@ dependency checks.
 
 ## Style and type checking
 
-Ruff is the formatter, import sorter, linter, and modernization tool. Its target
+Ruff handles formatting, import sorting, and linting. Its target
 is Python 3.13 and line length is 100. Do not add file-wide
 ignores to silence a design problem. A narrow rule exemption needs a comment and
 review.

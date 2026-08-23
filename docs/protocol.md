@@ -1,15 +1,14 @@
 # Car Interface serial protocol v1
 
 This document is the normative host/ESP32 wire contract for protocol version 1.
-The older prototype commands (`V 50`, `W 1795`, `S 1`, `Q 1`, and variants) are
-not protocol v1 and must not be accepted by protocol-v1 firmware. The host can
-select the separate, write-only `school_car_legacy_v0` compatibility profile
-described below; it is never auto-detected.
+Short newline commands such as `V 50`, `W 1795`, `S 1`, and `Q 1` belong to the
+separate, write-only `school_car_legacy_v0` compatibility profile described
+below. They are not accepted by protocol-v1 firmware, and the host never
+auto-detects a profile.
 
 > [!IMPORTANT]
-> The repository does not yet establish that a particular physical firmware
-> build implements this contract. Hardware mode is release-blocked until the
-> firmware artifact is identified and the conformance tests pass.
+> Pair hardware mode with a firmware build that passes the conformance suite,
+> then record that artifact in the compatibility matrix.
 
 Normative terms **MUST**, **MUST NOT**, **SHOULD**, and **MAY** indicate protocol
 requirements.
@@ -179,7 +178,7 @@ reset, and boot during a non-zero prior command.
 See [Firmware compatibility](firmware-compatibility.md) and
 [Hardware validation](hardware-validation.md).
 
-## Explicit school-car legacy compatibility
+## Vehicle compatibility profile
 
 `school_car_legacy_v0` is a host compatibility profile, not protocol v1. It is
 selected only through configuration and never by inspecting serial traffic.
@@ -193,7 +192,7 @@ Steering maps `-100..100` piecewise through configured minimum, center, and
 maximum values. Consecutive lines are paced by a configurable interval that
 defaults to 50 ms.
 
-Because the demonstrated firmware does not return command-correlated replies,
-a successful receipt for this profile means all lines were written to the
-serial transport. It is explicitly not marked acknowledged. See
+The profile has no command-correlated response contract, so a successful
+receipt means all lines were written to the serial transport. It is not marked
+acknowledged. See
 [ADR-0005](adr/0005-explicit-school-car-legacy-profile.md).

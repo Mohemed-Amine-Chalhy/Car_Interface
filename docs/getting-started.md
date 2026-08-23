@@ -14,9 +14,8 @@ Linux and macOS may be used for pure domain, protocol, and test work. Device
 names, controller behavior, Tk support, and packaged artifacts can differ and
 are not release substitutes for Windows testing.
 
-Do not install dependencies globally. Historical prototype scripts were removed
-from the maintained tree because some performed hardware I/O directly; do not
-restore or run them from Git history.
+Keep project dependencies inside the environment created by the bootstrap
+script.
 
 ## 2. Bootstrap
 
@@ -67,7 +66,7 @@ device is not an error for simulation.
 .\.venv\Scripts\python.exe scripts\dev.py run-sim
 ```
 
-To let the application traverse the complete portfolio walkthrough
+To let the application traverse the guided operator flow
 automatically, add the simulation-only showcase flag:
 
 ```powershell

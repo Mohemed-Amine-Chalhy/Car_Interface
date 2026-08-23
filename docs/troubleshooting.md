@@ -126,12 +126,12 @@ logs. Device I/O, inference, sleeps, and worker callbacks must not block the
 Tkinter event thread; Tkinter widgets must not be touched from worker threads.
 Reproduce in simulation before attempting another hardware run.
 
-## Camera or vision requested
+## Camera or vision startup
 
-Camera/YOLO support is deferred and not shipped in v0.1. There is no supported
-extra, model asset, adapter, or build flag. Use the controller/Lidar scope; a
-future vision implementation requires an isolated design, reproducible model
-artifact, and validation plan.
+The v0.1 desktop package does not ship a Camera/YOLO extra, model asset, runtime
+adapter, or build flag. Its packaged runtime covers controller and Lidar
+integration. Any packaged vision adapter requires an isolated design,
+reproducible model artifact, and validation plan.
 
 ## Pre-commit or quality-gate failure
 

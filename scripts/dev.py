@@ -413,10 +413,10 @@ def _parser() -> argparse.ArgumentParser:
 
     subparsers.add_parser("doctor", help="validate the local toolchain and lockfile")
 
-    format_parser = subparsers.add_parser("format", help="format maintained Python code")
+    format_parser = subparsers.add_parser("format", help="format project Python code")
     format_parser.add_argument("--check", action="store_true", help="check without modifying files")
 
-    lint_parser = subparsers.add_parser("lint", help="lint maintained Python code")
+    lint_parser = subparsers.add_parser("lint", help="lint project Python code")
     lint_parser.add_argument("--fix", action="store_true", help="apply safe automatic fixes")
 
     subparsers.add_parser("typecheck", help="run strict mypy checking")

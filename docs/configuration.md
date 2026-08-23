@@ -56,9 +56,9 @@ Keep machine-specific configuration outside Git.
 | `baud_rate` | `CAR_INTERFACE_BAUD_RATE` | `115200` | Integer from 1,200 through 4,000,000; must match firmware |
 | `serial_startup_delay_seconds` | `CAR_INTERFACE_SERIAL_STARTUP_DELAY_SECONDS` | `2.0` | Finite number from 0 through 4 seconds; wait after opening ESP32 serial before clearing buffers and starting the safe handshake |
 | `controller_id` | `CAR_INTERFACE_CONTROLLER_ID` | `0` | Non-negative pygame controller index |
-| `controller_steering_invert` | `CAR_INTERFACE_CONTROLLER_STEERING_INVERT` | `false` | Inverts physical axis 0 after reading it; use `true` for the historical controller orientation |
+| `controller_steering_invert` | `CAR_INTERFACE_CONTROLLER_STEERING_INVERT` | `false` | Inverts physical axis 0 after reading it; the vehicle controller profile uses `true` |
 | `protocol` | `CAR_INTERFACE_PROTOCOL` | `car_v1` | `car_v1` or the explicit hardware-only `school_car_legacy_v0`; never auto-detected |
-| `require_ack` | `CAR_INTERFACE_REQUIRE_ACK` | `true` | Required for `car_v1`; must be `false` for the write-only legacy profile |
+| `require_ack` | `CAR_INTERFACE_REQUIRE_ACK` | `true` | Required for `car_v1`; must be `false` for the write-only vehicle profile |
 | `ack_timeout_seconds` | `CAR_INTERFACE_ACK_TIMEOUT_SECONDS` | `0.2` | `car_v1` response timeout from 0.05 through 10 seconds |
 | `heartbeat_interval_seconds` | `CAR_INTERFACE_HEARTBEAT_INTERVAL_SECONDS` | `0.1` | `car_v1` heartbeat interval from 0.05 through 5 seconds |
 | `command_stale_seconds` | `CAR_INTERFACE_COMMAND_STALE_SECONDS` | `0.5` | Motion freshness limit; for `car_v1`, it must exceed heartbeat interval plus ACK timeout and supplies the code-level watchdog contract |

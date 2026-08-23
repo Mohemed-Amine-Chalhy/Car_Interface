@@ -1,9 +1,8 @@
 # Software showcase
 
-The README walkthrough is an authentic recording of the maintained Tkinter
-application operating against the repository's deterministic simulated vehicle,
-controller, firmware, and RPLidar adapters. I use it to demonstrate the complete
-operator flow without requiring access to the physical car.
+The walkthrough runs the Tkinter operator application in simulation mode with
+the ESP32, controller, firmware, and RPLidar adapters. It covers the operator
+flow from connection and arming to obstacle response and diagnostics.
 
 ## Run the guided walkthrough
 
@@ -15,24 +14,22 @@ flag:
 .\.venv\Scripts\python.exe scripts\dev.py run-sim --showcase
 ~~~
 
-The normal interactive simulator remains available through `run-sim` without
-the flag.
+For free-form control, run `run-sim` without `--showcase`.
 
 ## What the walkthrough exercises
 
 1. Opens the operator dashboard in a disconnected, braked state.
 2. Connects the simulated ESP32 transport, game controller, and RPLidar.
-3. Arms the safety state machine only after all required devices are ready.
-4. Applies 32% speed and -18% steering through the real control service.
-5. Traverses the live vehicle-relative Lidar view.
+3. Arms the vehicle when all required devices report ready.
+4. Sets speed to 32% and steering to -18%.
+5. Opens the live vehicle-relative Lidar view.
 6. Moves the simulated obstacle from 180 cm to 35 cm.
-7. Lets the regular projected-path analysis trigger the latched emergency stop.
-8. Opens Diagnostics to show the genuine commands, acknowledgements, and events.
+7. Triggers the latched emergency stop when the obstacle enters the projected path.
+8. Opens Diagnostics to show commands, acknowledgements, and events.
 9. Clears the simulated obstacle, resets the latch, and returns to a safe state.
 
-The director does not write snapshots into the UI and does not bypass domain
-transitions. It sequences the same operations an operator can invoke manually,
-then waits for observable service states before advancing.
+The guided sequence uses the same service methods as the manual controls and
+advances when each expected state is observed.
 
 ## Regenerate the repository media
 
@@ -58,12 +55,10 @@ app-walkthrough.gif
 
 The window must remain visible while capture runs. The script prefers native
 window-handle capture on Windows and falls back to the Tk client-area bounds.
-Pillow is locked as a development-only dependency; it is not part of the
-desktop application's runtime dependency set.
+Pillow is installed as a development dependency because it is only used by the
+capture command.
 
-## Media intent
+## Demo modes
 
-The software walkthrough is explicitly a simulation-mode demonstration of the
-maintained code. The separate video in the README shows the physical vehicle
-that my team built and demonstrated. Keeping both makes the distinction between
-repeatable software evidence and the completed real-world prototype clear.
+The guided walkthrough shows simulation mode. The physical-vehicle video in the
+README shows the completed car during our team demonstration.

@@ -3,14 +3,13 @@
 - Status: Accepted
 - Date: 2026-08-21
 - Decision owners: Car Interface maintainers
-- Supersedes: hard-coded/import-time hardware startup in prototypes
 - Superseded by: none
 
 ## Context
 
-Prototype scripts could open hard-coded COM ports or send commands when run or
-imported. Developers, test collectors, and operators need a reliable way to
-explore the application without any chance of actuating a vehicle.
+Hardware mode can open serial ports and command physical actuators. Developers,
+test collectors, and operators need a reliable way to explore the application
+without actuating the vehicle.
 
 ## Decision drivers
 

@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675" role="img" aria-labelledby="title desc">
   <title id="title">Camera and Lidar perception pipeline</title>
-  <desc id="desc">Diagram showing historical camera and YOLO11n object detection alongside maintained RPLidar obstacle geometry, both feeding an operator interface.</desc>
+  <desc id="desc">Diagram showing camera and YOLO11n object detection alongside RPLidar obstacle geometry, both feeding an operator interface.</desc>
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#071426"/><stop offset="1" stop-color="#152b48"/></linearGradient>
     <filter id="shadow"><feDropShadow dx="0" dy="8" stdDeviation="11" flood-opacity="0.38"/></filter>
@@ -20,9 +20,9 @@
 
   <!-- Camera lane -->
   <rect x="60" y="132" width="1080" height="191" rx="22" fill="#151d3b" stroke="#8b5cf6" stroke-width="1.5"/>
-  <rect x="82" y="151" width="92" height="21" rx="10" fill="#4c1d95"/>
-  <text x="96" y="166" class="small">HISTORICAL</text>
-  <text x="194" y="167" class="heading">Camera / YOLO11n semantic pipeline</text>
+  <rect x="82" y="151" width="126" height="21" rx="10" fill="#4c1d95"/>
+  <text x="96" y="166" class="small">CAMERA PIPELINE</text>
+  <text x="228" y="167" class="heading">Camera / YOLO11n semantic pipeline</text>
 
   <g filter="url(#shadow)">
     <rect x="89" y="198" width="178" height="91" rx="14" fill="#26204e" stroke="#a78bfa"/>
@@ -56,9 +56,9 @@
 
   <!-- Lidar lane -->
   <rect x="60" y="352" width="1080" height="191" rx="22" fill="#0d2c3d" stroke="#22d3ee" stroke-width="1.5"/>
-  <rect x="82" y="371" width="98" height="21" rx="10" fill="#064e3b"/>
-  <text x="96" y="386" class="small">MAINTAINED</text>
-  <text x="200" y="387" class="heading">RPLidar geometric obstacle pipeline</text>
+  <rect x="82" y="371" width="126" height="21" rx="10" fill="#064e3b"/>
+  <text x="96" y="386" class="small">LIDAR PIPELINE</text>
+  <text x="228" y="387" class="heading">RPLidar geometric obstacle pipeline</text>
 
   <g filter="url(#shadow)">
     <rect x="89" y="418" width="178" height="91" rx="14" fill="#0c3442" stroke="#22d3ee"/>
@@ -87,10 +87,10 @@
     <rect x="800" y="418" width="300" height="91" rx="14" fill="#0c3442" stroke="#22d3ee"/>
     <text x="822" y="448" class="heading">Operator + stop assist</text>
     <text x="822" y="471" class="body">live scan • obstacle range • freshness</text>
-    <text x="822" y="494" class="body">50 cm historical/default threshold</text>
+    <text x="822" y="494" class="body">50 cm configured threshold</text>
   </g>
 
   <rect x="60" y="579" width="1080" height="58" rx="14" fill="#0a1d30" stroke="#29445f"/>
-  <text x="84" y="603" class="heading">Validation target</text>
-  <text x="84" y="625" class="body">Publish measured FPS, p95 inference latency, detection metrics, range error, scan stability, and synchronized physical-car results.</text>
+  <text x="84" y="603" class="heading">Performance characterization</text>
+  <text x="84" y="625" class="body">Measure FPS, p95 inference latency, detection metrics, range error, scan stability, and synchronized vehicle results.</text>
 </svg>

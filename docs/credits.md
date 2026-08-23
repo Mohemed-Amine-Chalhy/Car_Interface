@@ -6,7 +6,7 @@ electrical, embedded, software, and AI disciplines.
 
 ## My role — vehicle software and AI integration
 
-I owned the software and AI-integration workstream:
+I was responsible for the software and AI-integration workstream:
 
 - Python/Tkinter operator application;
 - manual and game-controller vehicle control;
@@ -18,7 +18,7 @@ I owned the software and AI-integration workstream:
 My work connected operator input, sensing, perception, and embedded actuation
 in the demonstrated vehicle. The
 [engineering case study](case-study.md) and
-[technical source tour](../README.md#technical-tour) provide the detailed
+[code map](../README.md#code-map) provide the detailed
 implementation story.
 
 ## Full project team

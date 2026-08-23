@@ -116,7 +116,7 @@ If motion is unexpected, do not troubleshoot through the GUI:
 
 ## Vehicle validation prerequisites
 
-Before a maintained build is exercised on the vehicle, record:
+Before an application build is exercised on the vehicle, record:
 
 - independent physical cutoff and documented electrical safe state;
 - firmware source or an identified firmware artifact;

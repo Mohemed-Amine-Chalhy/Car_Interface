@@ -25,10 +25,10 @@ vehicle_width_cm = 42.0
 max_speed_percent = 50
 log_level = "INFO"
 
-# Historical school-car firmware is an explicit, hardware-only, write-only
+# The vehicle's newline firmware uses an explicit, hardware-only, write-only
 # compatibility profile. It is never auto-detected. To use it, select hardware
-# mode and the profile, disable ACK requirements, then replace the calibration
-# only with measured values:
+# mode and the profile, disable ACK requirements, then confirm the calibration
+# against measured values:
 # mode = "hardware"
 # protocol = "school_car_legacy_v0"
 # require_ack = false

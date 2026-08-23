@@ -39,8 +39,8 @@
     <path d="M88 177h20M98 167v20M115 174h4M121 180h4" stroke="#7dd3fc" stroke-width="3" stroke-linecap="round"/>
     <text x="132" y="174" class="heading">Game controller</text>
     <text x="86" y="207" class="body">Steering • throttle • brake • direction</text>
-    <rect x="86" y="218" width="78" height="18" rx="9" fill="#0c4a6e"/>
-    <text x="98" y="231" class="small">HISTORICAL</text>
+    <rect x="86" y="218" width="112" height="18" rx="9" fill="#0c4a6e"/>
+    <text x="98" y="231" class="small">OPERATOR INPUT</text>
   </g>
 
   <g filter="url(#shadow)">
@@ -50,8 +50,8 @@
     <path d="M99 301L112 289M99 301L81 299M99 301L103 319" stroke="#67e8f9" stroke-width="2"/>
     <text x="132" y="299" class="heading">RPLidar</text>
     <text x="86" y="333" class="body">2D scan • corridor geometry • proximity</text>
-    <rect x="86" y="344" width="84" height="18" rx="9" fill="#064e3b"/>
-    <text x="98" y="357" class="small">MAINTAINED</text>
+    <rect x="86" y="344" width="112" height="18" rx="9" fill="#064e3b"/>
+    <text x="98" y="357" class="small">RANGE SENSING</text>
   </g>
 
   <g filter="url(#shadow)">
@@ -61,15 +61,15 @@
     <path d="M118 424l12-7v29l-12-7" fill="#c4b5fd"/>
     <text x="145" y="425" class="heading">Camera + YOLO11n</text>
     <text x="86" y="459" class="body">Object boxes • classes • confidence</text>
-    <rect x="86" y="470" width="78" height="18" rx="9" fill="#4c1d95"/>
-    <text x="98" y="483" class="small">HISTORICAL</text>
+    <rect x="86" y="470" width="112" height="18" rx="9" fill="#4c1d95"/>
+    <text x="98" y="483" class="small">AI PERCEPTION</text>
   </g>
 
   <!-- Host -->
   <g filter="url(#shadow)">
     <rect x="405" y="176" width="346" height="284" rx="24" fill="url(#host)" stroke="#5eead4" stroke-width="2"/>
     <rect x="431" y="201" width="294" height="54" rx="12" fill="#042f2e" opacity="0.62"/>
-    <text x="455" y="226" class="small">WINDOWS-FIRST DESKTOP HOST</text>
+    <text x="455" y="226" class="small">WINDOWS DESKTOP APPLICATION</text>
     <text x="455" y="248" class="heading">Car Interface</text>
 
     <rect x="431" y="279" width="135" height="60" rx="12" fill="#022c22" opacity="0.65"/>
@@ -92,7 +92,7 @@
     <rect x="850" y="140" width="286" height="112" rx="16" fill="#172554" stroke="#818cf8" stroke-width="1.5"/>
     <text x="874" y="172" class="small">CONFIRMED COMPONENT</text>
     <text x="874" y="200" class="heading">ESP32-WROOM-32 + CP2102</text>
-    <text x="874" y="224" class="body">USB serial and embedded vehicle control</text>
+    <text x="874" y="224" class="body">Configured host serial target</text>
     <rect x="1021" y="158" width="91" height="21" rx="10" fill="#312e81"/>
     <text x="1034" y="173" class="small">INSTALLED</text>
   </g>
@@ -101,7 +101,7 @@
     <rect x="850" y="280" width="286" height="98" rx="16" fill="#172554" stroke="#f59e0b" stroke-width="1.5" stroke-dasharray="7 5"/>
     <text x="874" y="311" class="small">CONFIRMED COMPONENT</text>
     <text x="874" y="338" class="heading">Arduino Uno / ATmega328P</text>
-    <text x="874" y="360" class="body">ATmega328P auxiliary control electronics</text>
+    <text x="874" y="360" class="body">ATmega328P installed board • role TBD</text>
   </g>
 
   <g filter="url(#shadow)">
@@ -122,8 +122,9 @@
   <path d="M751 252H820Q835 252 835 222H841" fill="none" stroke="#67e8f9" stroke-width="3" marker-end="url(#arrow)"/>
   <text x="763" y="241" class="label">USB serial</text>
   <path d="M993 252V270" fill="none" stroke="#fbbf24" stroke-width="2.5" stroke-dasharray="7 6" marker-end="url(#arrow)"/>
-  <text x="1005" y="268" class="label" fill="#fbbf24">vehicle control</text>
-  <path d="M993 378V397" fill="none" stroke="#67e8f9" stroke-width="3" marker-end="url(#arrow)"/>
+  <text x="1005" y="268" class="label" fill="#fbbf24">inter-board link TBD</text>
+  <path d="M993 378V397" fill="none" stroke="#fbbf24" stroke-width="2.5" stroke-dasharray="7 6" marker-end="url(#arrow)"/>
+  <text x="1005" y="395" class="label" fill="#fbbf24">actuator routing TBD</text>
 
   <rect x="64" y="566" width="1072" height="52" rx="14" fill="#0f2138" stroke="#29445f"/>
   <text x="88" y="589" class="heading">Demonstrated multidisciplinary system</text>

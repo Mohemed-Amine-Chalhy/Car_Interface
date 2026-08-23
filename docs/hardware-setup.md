@@ -1,9 +1,9 @@
 # Hardware setup
 
-This guide connects the maintained host to the project vehicle. The exact
-original firmware, pin assignments, power stage, and calibration are recorded
-from the car before a test session; the board and configuration dossiers provide
-the capture template.
+This guide connects the host application to the project vehicle. The firmware,
+pin assignments, power stage, and calibration must be recorded from the car
+before a test session; the board and configuration guides provide the capture
+template.
 
 ## Expected v0.1 components
 
@@ -16,9 +16,9 @@ the capture template.
 - independent physical emergency-stop or propulsion-power cutoff; and
 - restraints or a stand that keeps driven wheels clear during commissioning.
 
-The original prototype also integrated camera/YOLO perception. Maintained v0.1
-focuses its runnable package on control and Lidar while preserving the vision
-implementation record in the perception dossier.
+The project also includes camera and YOLO perception. The v0.1 runnable package
+focuses on control and Lidar; the perception guide documents the vision pipeline
+and its validation plan.
 
 ## Electrical prerequisites
 
@@ -34,7 +34,7 @@ Before connecting the host:
   cannot command motion; and
 - restrain cables so steering and wheels cannot pull them loose.
 
-Do not infer wiring from historical COM-port names or command strings.
+Do not infer wiring from COM-port names or command strings.
 
 ## Firmware
 
@@ -91,8 +91,8 @@ Use Windows **Set up USB game controllers** or the manufacturer's tool to check:
 Controller name heuristics are not validation. Record the exact model,
 connection type, driver, mapping, and results.
 
-The built-in pygame mapping currently expects axis 0 for steering, axis 5 for
-the right-trigger throttle, axis 4 for the left-trigger brake, and hat 0 vertical
+The built-in pygame mapping expects axis 0 for steering, axis 5 for the
+right-trigger throttle, axis 4 for the left-trigger brake, and hat 0 vertical
 for forward/reverse. There is no default controller-button E-stop reset. If a
 device reports different released trigger values or axis numbers, it is not
 compatible until a reviewed mapping/calibration change is made; do not drive by

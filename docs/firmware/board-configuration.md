@@ -1,8 +1,8 @@
 # ESP32 and Arduino board configuration
 
-This page turns the supplied board identification into a reproducible firmware
-configuration plan. It separates settings that can be selected now from values
-that must be recovered from the physical car.
+This page defines the firmware build and bring-up configuration for the ESP32
+and Arduino Uno used in the car. Board-specific values that cannot be read from
+the hardware remain TBD until they are measured.
 
 ## ESP32-WROOM-32 development board
 
@@ -20,24 +20,24 @@ The carrier vendor and revision remain unknown. Espressif's
 is a useful functional reference, but it is not proof that the installed
 carrier is an official DevKitC.
 
-### Settings to recover before rebuilding
+### Settings to verify before building
 
 | Build setting | Current value | How to verify |
 | --- | --- | --- |
-| Framework | Candidate: Arduino framework | Recover source/includes or build log |
-| Espressif board package | TBD | Recover IDE preferences or compile metadata |
+| Framework | Candidate: Arduino framework | Inspect source/includes or build log |
+| Espressif board package | TBD | Inspect IDE preferences or compile metadata |
 | Board identifier | TBD; do not assume `esp32dev` from appearance | Read carrier marking and test a non-actuating firmware build |
 | Module flash size | TBD | Query chip/flash ID, compare module marking |
-| Flash mode/frequency | TBD | Recover build configuration or known-good binary metadata |
-| Partition scheme | TBD | Recover build configuration |
-| Upload speed | TBD | Recover IDE/PlatformIO settings; start conservatively |
-| Serial monitor speed | 115200 candidate | Historical host configuration |
+| Flash mode/frequency | TBD | Inspect build configuration or known-good binary metadata |
+| Partition scheme | TBD | Inspect build configuration |
+| Upload speed | TBD | Inspect IDE/PlatformIO settings; start conservatively |
+| Serial monitor speed | 115200 candidate | Vehicle host configuration |
 | USB driver | Silicon Labs CP210x | Confirm VID/PID and driver in Device Manager |
-| Firmware libraries | TBD | Recover lock, `platformio.ini`, or Arduino library list |
+| Firmware libraries | TBD | Locate a lock, `platformio.ini`, or Arduino library list |
 
-`Serial.begin(115200)` is the historical compatibility target, but serial baud
-alone does not select the command dialect. The integrated prototype used
-newline commands; the maintained application uses [protocol v1](../protocol.md).
+`Serial.begin(115200)` is the candidate vehicle compatibility target, but serial
+baud alone does not select the command dialect. The school-car profile uses
+newline commands, and the application also supports [protocol v1](../protocol.md).
 
 ### Reproducible PlatformIO template
 
@@ -87,10 +87,10 @@ reference capabilities do not identify how the car used the pins.
 | PlatformIO board | `uno` |
 | MCU | ATmega328P |
 | Clock | 16 MHz, selected by the board definition |
-| Framework | Arduino candidate; recover source to confirm |
-| Serial speed | 115200 only if recovered firmware confirms the historical experiment |
+| Framework | Arduino candidate; inspect firmware source to confirm |
+| Serial speed | 115200 only if firmware or a captured transcript confirms the vehicle configuration |
 | Port | Select by USB identity; do not commit a COM number |
-| Libraries | TBD from recovered firmware |
+| Libraries | TBD pending firmware source or build metadata |
 
 ```ini
 [env:uno_aux]
@@ -112,7 +112,7 @@ have been documented.
 
 No GPIO assignment can be inferred safely from the product photos. Populate
 this table from firmware and continuity measurements before presenting a wiring
-diagram as historical fact.
+diagram as a confirmed vehicle configuration.
 
 | Function | Board | GPIO/pin | Signal type | Active state / range | Boot/reset state | Evidence |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -125,26 +125,26 @@ diagram as historical fact.
 | ESP32 ↔ Uno link | Both | TBD | UART/I²C/SPI TBD | TBD | TBD | Wiring + firmware |
 | Status/diagnostic output | TBD | TBD | LED/serial TBD | TBD | TBD | Firmware |
 
-## Recovery and bring-up sequence
+## Board identification and bring-up sequence
 
 1. Photograph both board faces and every connected header before unplugging
    anything.
 2. Label every conductor at both ends and create a continuity map.
 3. Record Windows USB VID, PID, serial number, driver, and current COM port for
    each USB device.
-4. Read the ESP32 chip and flash identity without erasing it; archive any
-   recoverable flash image and its SHA-256.
-5. Archive the Uno flash/EEPROM only when a known-good recovery method is
+4. Read the ESP32 chip and flash identity without erasing it; archive any flash
+   image that can be read safely and record its SHA-256.
+5. Archive the Uno flash/EEPROM only when a known-good readback method is
    available; record fuses and lock bits.
-6. Recover source, libraries, board packages, IDE settings, and build logs from
-   the original development computers.
+6. Collect source, libraries, board packages, IDE settings, and build logs from
+   the development computers used for the vehicle build.
 7. Compile deterministic binaries without connecting actuator power.
-8. Replay a captured [legacy protocol](legacy-protocol.md) transcript on a bench
+8. Replay a captured [vehicle protocol](legacy-protocol.md) transcript on a bench
    and compare serial responses and output waveforms.
 9. Replace candidate pin, timing, range, and role entries with the verified
    values.
 10. Tag the host, ESP32, Uno, configuration, and evidence report as one tested
     vehicle profile.
 
-This process preserves compatibility with the already-built car while making
-future changes traceable and repeatable.
+This process keeps the software compatible with the physical car and makes each
+configuration change traceable and repeatable.

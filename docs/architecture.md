@@ -2,8 +2,8 @@
 
 Car Interface uses a layered, dependency-injected architecture so control and
 safety decisions can be tested without importing a GUI toolkit or opening a
-device. The design replaces the historical large Tkinter scripts, which were
-removed from the maintained tree and remain only in Git history.
+device. The UI, application services, domain, and device adapters have clear
+ownership and dependency boundaries.
 
 ## Dependency direction
 
@@ -116,7 +116,7 @@ lifecycle operation.
 The simulated actuator also models protocol sequence checking, ARM/BRK/EST
 semantics, and a latched independent watchdog. Watchdog expiry enters its safe
 state and rejects heartbeat/unsafe traffic with `WATCHDOG_TIMEOUT` until reset
-or reconnect. It is a test oracle, not evidence about unprovided ESP32 firmware.
+or reconnect. This provides a repeatable target for host-side timeout handling.
 
 ## Concurrency model
 
@@ -161,20 +161,9 @@ High-frequency scan points and controller axes must not flood logs. Credentials
 are not required; device identifiers and local paths still require redaction
 before sharing.
 
-## Deferred vision scope
+## Vision integration boundary
 
-v0.1 contains no camera/vision adapter, OpenCV or Ultralytics dependency, model
-asset, or vision-enabled packaging path. Vision is not installable or supported
-in this release. A future proposal must use a new ADR and prove failure
-isolation, bounded concurrency, reproducible model identity, and that vision cannot clear
-or weaken a brake, E-stop, or fault.
-
-## Historical code
-
-The earlier root-level prototypes and `Manette/` snapshots were removed from the
-maintained tree. Git history preserves them for archaeology only; they are not
-supported entry points and must not be restored for hardware use. The small root
-`main.py` is only a compatibility shim to the maintained package and contains no
-application behavior.
-
-See [ADR-0001](adr/0001-layered-production-architecture.md) for the decision.
+The vehicle's camera pipeline and YOLO integration are documented in the
+[perception guide](perception/README.md). Camera inference is isolated from the
+control state machine so perception output cannot clear a brake, E-stop, or
+fault. The packaged control application focuses on vehicle control and RPLidar.

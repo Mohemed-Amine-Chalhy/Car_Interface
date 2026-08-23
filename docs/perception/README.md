@@ -1,72 +1,53 @@
 # Perception engineering
 
-The original vehicle software combined two complementary perception streams:
-2D RPLidar geometry for obstacle proximity and a camera/YOLO11n pipeline for
-semantic object detection. The maintained application continues the Lidar
-analysis path; the camera and YOLO code remain documented historical work and
-are not packaged in v0.1.
+The vehicle uses two complementary perception streams: RPLidar geometry for
+obstacle proximity and a camera with YOLO11n for semantic object detection.
 
 ![Perception pipeline](../assets/perception-pipeline.svg)
 
 ## Capability map
 
-| Capability | Original prototype | Maintained host | Evidence |
-| --- | --- | --- | --- |
-| RPLidar acquisition | Implemented | Implemented | Source and tests |
-| Millimetre-to-centimetre normalization | Implemented | Implemented | Source and tests |
-| Vehicle-relative scan angles | 90° sensor angle treated as forward | Configurable analysis around vehicle forward | Historical source / maintained source |
-| Projected-path obstacle detection | 42 cm configured corridor | 42 cm default corridor | Historical source / maintained tests |
-| Stop-assist distance | 50 cm default | 50 cm default | Historical source / maintained config |
-| Camera capture | Camera index 0, DirectShow fallback | Not shipped in v0.1 | Historical source |
-| YOLO inference | `yolo11n.pt` through Ultralytics | Not shipped in v0.1 | Historical source |
-| Detection overlay | Class, confidence, box, approximate distance | Not shipped in v0.1 | Historical source |
-| Path planning / trajectory control | Not established | Not implemented | No supporting artifact |
+| Capability | Implementation |
+| --- | --- |
+| RPLidar acquisition | Threaded scan source with immutable latest-scan snapshots |
+| Range normalization | Millimetres converted to centimetres for analysis and display |
+| Vehicle-relative geometry | Sensor angles rotated into the vehicle frame |
+| Projected-path detection | Points filtered against the configured vehicle corridor |
+| Assisted-stop distance | 50 cm default threshold connected to the control service |
+| Camera capture | OpenCV camera input with a bounded freshness-oriented queue |
+| YOLO inference | YOLO11n inference through Ultralytics |
+| Detection overlay | Class, confidence, bounding box, and approximate distance |
 
-## Engineering contribution
+## My contribution
 
-My role covered the vehicle software and AI-model integration: device
-orchestration, serial control, controller mapping, Lidar processing, the
-operator interface, camera capture, YOLO inference, and detection visualization.
-The repository demonstrates model integration; custom training should only be
-claimed when a dataset, training configuration, weights, and evaluation results
-are recovered.
+I integrated the perception path with the operator application. My work covered
+RPLidar processing, the vehicle-relative display, projected-path obstacle
+detection, camera capture, YOLO inference, and annotated detections.
 
 ## Lidar geometry
 
-The integrated prototype converted each RPLidar measurement from millimetres to
-centimetres, rotated the sensor frame so 90° represented vehicle-forward, and
-checked whether each point intersected the configured vehicle corridor:
+Each RPLidar measurement is converted from millimetres to centimetres and
+rotated so 90 degrees represents vehicle forward. The application then checks
+whether the point falls inside the configured vehicle corridor:
 
 ```text
-vehicle_angle = sensor_angle - 90°
-lateral_distance = abs(distance_cm × sin(vehicle_angle))
+vehicle_angle = sensor_angle - 90 degrees
+lateral_distance = abs(distance_cm x sin(vehicle_angle))
 in_path = lateral_distance <= vehicle_width_cm / 2
 ```
 
-With the historical 42 cm corridor, points within 21 cm of the projected
-centerline were treated as in-path. The final integrated settings used a 180°
-front view, a 500 cm analysis horizon, a 2000 cm display horizon, five scans of
-history, and a 50 cm stop-assist default.
+With the 42 cm corridor, points within 21 cm of the projected centerline are
+treated as in-path. The operator view uses a 180-degree front scan, while the
+control service tracks the closest in-path point and compares it with the
+assisted-stop threshold.
 
-## Vision status
+## YOLO integration
 
-The historical pipeline is reconstructed in
-[historical-yolo-pipeline.md](historical-yolo-pipeline.md). Restoring it to the
-maintained package requires a typed, optional subsystem with a pinned model
-identifier, checksum, and real performance measurements. The implementation and validation
-sequence is in [restoration-plan.md](restoration-plan.md).
+The camera pipeline sends frames through YOLO11n and displays the resulting
+class labels, confidence values, bounding boxes, and approximate distance
+estimates. A bounded frame queue favors recent images when inference takes
+longer than the camera frame interval.
 
-## Results that remain to measure
-
-The original repository does not contain a reproducible benchmark report. A
-future physical-car record should publish:
-
-- camera capture resolution and frames per second;
-- median and 95th-percentile inference latency on the project host;
-- end-to-end display latency and frame-drop rate;
-- model classes, test-set precision, recall, and mAP where applicable;
-- approximate-distance error at fixed measured ranges;
-- RPLidar scan rate, drop/stale rate, and known-distance error; and
-- stop-assist trigger distance across repeated approaches.
-
-Those measurements form the benchmark for the restored perception subsystem.
+See the [YOLO11n pipeline](yolo-pipeline.md) for the implementation details and
+the [perception validation plan](validation-plan.md) for calibration,
+performance measurements, and model evaluation.

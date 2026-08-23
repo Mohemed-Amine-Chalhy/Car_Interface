@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675" role="img" aria-labelledby="title desc">
-  <title id="title">Installed ESP32 and Arduino controller boards</title>
+  <title id="title">Installed ESP32 and Arduino boards</title>
   <desc id="desc">Documentation diagram comparing the ESP32-WROOM-32 development board and Arduino Uno R3-style board used in the project vehicle.</desc>
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
@@ -17,8 +17,8 @@
     </style>
   </defs>
   <rect width="1200" height="675" rx="24" fill="url(#bg)"/>
-  <text x="64" y="64" class="title">Installed Embedded Controllers</text>
-  <text x="64" y="92" class="subtitle">ESP32-WROOM-32 and Arduino Uno R3 platform used in the 2025 vehicle</text>
+  <text x="64" y="64" class="title">Installed Embedded Boards</text>
+  <text x="64" y="92" class="subtitle">ESP32-WROOM-32 and Arduino Uno R3 board families used in the 2025 vehicle</text>
 
   <!-- ESP32 card -->
   <g filter="url(#shadow)">
@@ -46,9 +46,9 @@
     <text x="322" y="362" class="body">• EN + BOOT buttons</text>
     <text x="322" y="388" class="body">• CP2102 USB-UART</text>
     <text x="322" y="414" class="body">• 2 × 19-pin headers</text>
-    <text x="322" y="458" class="small">PROJECT FUNCTION</text>
-    <text x="322" y="485" class="body">Vehicle controller</text>
-    <text x="322" y="507" class="body">and host gateway</text>
+    <text x="322" y="458" class="small">CONFIGURATION ROLE</text>
+    <text x="322" y="485" class="body">Host serial target</text>
+    <text x="322" y="507" class="body">firmware role TBD</text>
   </g>
 
   <!-- Uno card -->
@@ -75,17 +75,17 @@
     <text x="956" y="362" class="body">• 14 digital I/O</text>
     <text x="956" y="388" class="body">• 6 PWM outputs</text>
     <text x="956" y="414" class="body">• 6 analog inputs</text>
-    <text x="956" y="458" class="small">PROJECT FUNCTION</text>
-    <text x="956" y="485" class="body">Auxiliary embedded</text>
-    <text x="956" y="507" class="body">control electronics</text>
+    <text x="956" y="458" class="small">CONFIGURATION ROLE</text>
+    <text x="956" y="485" class="body">Installed board</text>
+    <text x="956" y="507" class="body">firmware role TBD</text>
   </g>
 
   <!-- embedded control relationship -->
   <path d="M538 357H662" stroke="#fbbf24" stroke-width="3" stroke-dasharray="8 7"/>
   <circle cx="600" cy="357" r="31" fill="#422006" stroke="#fbbf24"/>
-  <text x="580" y="364" class="small" fill="#fde68a">CONTROL</text>
-  <text x="551" y="408" class="small" fill="#fde68a">VEHICLE SYSTEM</text>
+  <text x="582" y="364" class="small" fill="#fde68a">LINK</text>
+  <text x="574" y="408" class="small" fill="#fde68a">TBD</text>
 
   <rect x="62" y="606" width="1076" height="35" rx="12" fill="#0a1d30" stroke="#29445f"/>
-  <text x="86" y="628" class="body">Dual-controller embedded platform documented with reproducible board and firmware configuration worksheets.</text>
+  <text x="86" y="628" class="body">Installed board families documented with reproducible build and vehicle-configuration worksheets.</text>
 </svg>

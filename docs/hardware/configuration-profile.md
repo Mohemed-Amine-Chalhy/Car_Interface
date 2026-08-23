@@ -1,10 +1,11 @@
 # Host and vehicle configuration profile
 
-The maintained host accepts a flat `[car_interface]` TOML table and provides two
-explicit wire profiles. COM ports must be replaced with the identities observed
-on the physical car; the application never guesses a protocol from a port.
+The host application accepts a flat `[car_interface]` TOML table and provides
+two explicit wire profiles. COM ports must be replaced with the identities
+observed on the physical car; the application never guesses a protocol from a
+port.
 
-## Maintained protocol-v1 profile
+## Protocol-v1 profile
 
 ```toml
 [car_interface]
@@ -29,10 +30,10 @@ log_level = "INFO"
 
 `car_v1` uses checksummed, sequenced commands and correlated ACK/NACK responses.
 
-## Existing school-car compatibility profile
+## School-car compatibility profile
 
-The maintained host includes the explicit `school_car_legacy_v0` adapter for
-the original newline-delimited vehicle commands:
+The host application includes the explicit `school_car_legacy_v0` adapter for
+the newline-delimited vehicle commands:
 
 ```toml
 [car_interface]
@@ -59,22 +60,22 @@ legacy_minimum_command_interval_ms = 50
 log_level = "INFO"
 ```
 
-The legacy firmware did not define command-correlated acknowledgements, so this
-profile truthfully reports successful serial writes rather than fabricated
-firmware ACKs. It is available only in explicit hardware mode and must be paired
-with `require_ack = false`. Physical serial-transcript verification on the
-existing car is still pending.
+The school-car firmware protocol does not define command-correlated
+acknowledgements, so this profile reports successful serial writes rather than
+firmware ACKs. It is available only in explicit hardware mode and must be
+paired with `require_ack = false`. Physical serial-transcript verification on
+the car is still pending.
 
-## Evidence-backed prototype profile
+## Vehicle reference profile
 
-These fields describe the reconstructed physical configuration. They are a
-documentation schema, not keys accepted by the current host parser.
+These fields describe the recorded physical configuration. They are a
+documentation schema, not keys accepted by the host parser.
 
 ```toml
-# Reference profile only — do not pass this table to the current CLI.
+# Reference profile only — do not pass this table to the host CLI.
 [vehicle]
 profile_id = "academic-car-2025"
-platform = "custom-autonomous-vehicle-prototype"
+platform = "custom-autonomous-vehicle"
 configured_path_width_cm = 42.0
 measured_width_cm = "TBD"
 
@@ -103,7 +104,7 @@ minimum_raw = 200
 center_raw = 1750
 maximum_raw = 2900
 invert_input = true
-calibration_state = "historical-candidate"
+calibration_state = "candidate"
 
 [vehicle.controller]
 pygame_index = 0
@@ -131,15 +132,15 @@ display_width = 640
 display_height = 360
 
 [vehicle.vision]
-historical_model = "YOLO11n"
+model = "YOLO11n"
 model_sha256 = "TBD"
-status = "historical integration; not shipped by maintained v0.1"
+status = "project integration; not included in host v0.1 package"
 ```
 
 ## Configuration promotion checklist
 
-A historical or candidate value becomes a verified car profile only when its
-evidence is recorded:
+A recorded or candidate value becomes part of the verified car profile only
+when its evidence is captured:
 
 | Field group | Verification artifact |
 | --- | --- |

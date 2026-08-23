@@ -3,15 +3,14 @@
 - Status: Accepted
 - Date: 2026-08-21
 - Decision owners: Car Interface maintainers
-- Supersedes: inconsistent newline-delimited prototype commands
 - Superseded in part by: [ADR-0005](0005-explicit-school-car-legacy-profile.md), for explicit compatibility with the demonstrated school car
 
 ## Context
 
-Prototype code used incompatible command spellings, ranges, spacing, and
-steering semantics. Adding a command to a FIFO queue could be reported as
-success even when firmware never received it. Stop commands could wait behind
-motion, and host failure had no documented independent firmware timeout.
+The host and firmware need one unambiguous contract for command spelling,
+ranges, timing, and steering semantics. Queue admission is not proof of firmware
+receipt, stop commands must outrank motion, and communication loss needs an
+independent firmware timeout.
 
 ## Decision drivers
 

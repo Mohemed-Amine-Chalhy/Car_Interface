@@ -1,20 +1,19 @@
-# ADR-0005: Add an explicit school-car legacy protocol profile
+# ADR-0005: Select the school-car protocol profile explicitly
 
 - Status: Accepted
 - Date: 2026-08-22
 - Decision owners: Car Interface maintainers
-- Supersedes: the blanket legacy exclusion in ADR-0003
-- Superseded by: none
+- Related protocol policy: ADR-0003
 
 ## Context
 
-The demonstrated school car used newline-delimited commands understood by its
-ESP32/Arduino-era firmware. The current `car_v1` protocol is deliberately
+The demonstrated school car uses newline-delimited commands understood by its
+ESP32/Arduino firmware. The `car_v1` protocol is deliberately
 incompatible because it adds sequence numbers, CRC protection, ACK/NACK, and a
 watchdog contract. Replacing the vehicle firmware is not a prerequisite for
-using the current host architecture with the existing car.
+using the host architecture with the physical car.
 
-The historical firmware did not provide command-correlated acknowledgements.
+The available vehicle integration has no command-correlated acknowledgements.
 The host must not report an operating-system serial write as firmware
 acknowledgement.
 
@@ -23,7 +22,7 @@ acknowledgement.
 Keep `car_v1` as the default and add `school_car_legacy_v0` as an explicit
 configuration choice. Do not probe the port or auto-detect a protocol.
 
-The compatibility profile emits the historical ASCII lines:
+The compatibility profile emits the vehicle's ASCII lines:
 
 - `A` and `M` for automatic/remote and manual modes;
 - `D F` or `D R`, immediately followed by non-negative `V <percent>`, for a
@@ -43,19 +42,19 @@ firmware-acknowledged. Hardware mode and protocol selection remain explicit.
 
 ## Consequences
 
-- The current host can emit the recovered school-car dialect without weakening
-  or changing `car_v1`; physical compatibility still requires bench validation.
-- Legacy delivery confirms serial writes only; it cannot prove firmware
+- The host can emit the school-car dialect without weakening or changing
+  `car_v1`; physical compatibility still requires bench validation.
+- School-car delivery confirms serial writes only; it cannot prove firmware
   parsing, actuator application, or mechanical response.
 - Steering calibration and controller-axis inversion are vehicle-profile
   settings and must be measured on the physical car.
 - The ESP32-WROOM-32 development board and Arduino Uno R3 are confirmed
   components, but their roles and GPIO assignments remain undocumented until
-  the original firmware or wiring is recovered.
+  firmware sources or wiring documentation are available.
 
 ## Verification
 
-- Golden tests cover every historical command mapping.
+- Golden tests cover every school-car command mapping.
 - Tests cover asymmetric piecewise steering calibration and inversion of the
   physical controller steering axis.
 - Dispatcher tests cover contiguous signed-speed writes, pacing, partial-write

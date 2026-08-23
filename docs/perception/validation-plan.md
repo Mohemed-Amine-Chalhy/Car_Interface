@@ -1,16 +1,16 @@
-# Perception restoration and validation plan
+# Perception validation plan
 
-The goal is to restore the original camera/YOLO capability as a polished,
-optional subsystem without coupling model inference to vehicle-control timing.
-Each phase has a concrete artifact and an objective completion check.
+This plan covers camera configuration, model identity, runtime performance,
+calibration, and synchronized vehicle testing. Each phase has a concrete output
+and a completion check.
 
-## Phase 1 — recover the physical and model record
+## Phase 1: record the camera and model configuration
 
 Collect:
 
 - camera make, model, lens, mount height/pitch, supported resolutions, and
   Windows device identity;
-- original YOLO weight file, SHA-256, source, class list, and model
+- YOLO weight file, SHA-256, source, class list, and model
   version;
 - training dataset/configuration and evaluation output if the model was trained
   or fine-tuned by the team;
@@ -20,7 +20,7 @@ Collect:
 **Complete when:** a model card and camera inventory identify every runtime
 artifact and configuration value.
 
-## Phase 2 — introduce an optional typed boundary
+## Phase 2: define the typed boundary
 
 Define interfaces for:
 
@@ -38,7 +38,7 @@ Ultralytics, or model weights installed.
 **Complete when:** unit tests use fake frame/detector adapters and the base
 simulation/build remains unchanged without the optional dependency group.
 
-## Phase 3 — build a freshness-oriented inference worker
+## Phase 3: build a freshness-oriented inference worker
 
 - capture into a bounded queue of one or two frames;
 - discard superseded frames under load;
@@ -51,7 +51,7 @@ simulation/build remains unchanged without the optional dependency group.
 **Complete when:** overload tests prove bounded memory and result age, and
 disconnect/failure tests prove the UI remains responsive.
 
-## Phase 4 — configure and package the model
+## Phase 4: configure and package the model
 
 Add a dedicated optional configuration surface:
 
@@ -76,12 +76,12 @@ large binary.
 **Complete when:** a clean machine can reproduce the environment, verify the
 model checksum, run a recorded-video smoke test, and build the application.
 
-## Phase 5 — camera and distance calibration
+## Phase 5: camera and distance calibration
 
 1. Calibrate camera intrinsics with a documented target and save calibration
    metadata tied to the camera serial/mode.
 2. Place representative objects at measured distances and orientations.
-3. Compare the historical box-width heuristic with a calibrated method.
+3. Compare the box-width heuristic with a calibrated method.
 4. Report median, 95th-percentile, and maximum absolute/range-relative error.
 5. Keep approximate ranges visibly labeled if the error is unsuitable for
    physical control decisions.
@@ -89,7 +89,7 @@ model checksum, run a recorded-video smoke test, and build the application.
 **Complete when:** the UI wording and documentation match the measured error
 envelope.
 
-## Phase 6 — model evaluation
+## Phase 6: model evaluation
 
 Create a versioned evaluation set representing the car's actual
 environment. Report per-class counts, precision, recall, confusion, mAP at the
@@ -99,7 +99,7 @@ test data and record the exact evaluation command.
 **Complete when:** every headline model claim links to an immutable metric file
 and model hash.
 
-## Phase 7 — vehicle integration
+## Phase 7: vehicle integration
 
 - display detection overlays alongside Lidar state;
 - keep vision results advisory until a separately reviewed fusion/control design

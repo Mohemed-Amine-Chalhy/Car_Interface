@@ -4,12 +4,12 @@ Host code and vehicle firmware share a versioned command contract. Compatibility
 is established through protocol behavior, timing, configuration, and regression
 tests rather than a matching baud rate alone.
 
-## Current status
+## Status
 
-The maintained host implements acknowledged `car_v1` and the demonstrated
-vehicle's `school_car_legacy_v0` command profile. The original firmware binary
-is not stored in this repository, so the exact installed build is captured from
-the car during the next vehicle-side validation session.
+The host implements acknowledged `car_v1` and the demonstrated vehicle's
+`school_car_legacy_v0` command profile. The installed firmware binary is not
+stored in this repository, so its exact build remains TBD until it is captured
+from the car during a vehicle-side validation session.
 
 ## Compatibility policy
 
@@ -52,7 +52,7 @@ Maintain this table in each release branch:
 | Host profile | Protocol | Firmware artifact | Hardware revision | Status | Evidence |
 | --- | --- | --- | --- | --- | --- |
 | `car_v1` | `CAR,1` | Conforming firmware build | Configured vehicle | Host-tested | Simulator and protocol regression suite |
-| `school_car_legacy_v0` | Newline commands | Original 2025 build | School car | Adapter-tested | Encoding, pacing, partial-write, configuration, and composition tests |
+| `school_car_legacy_v0` | Newline commands | 2025 vehicle build | School car | Adapter-tested | Encoding, pacing, partial-write, configuration, and composition tests |
 
 Add the captured firmware hash, board revision, serial transcript, and vehicle
 session results to this matrix after hardware validation.

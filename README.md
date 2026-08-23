@@ -6,25 +6,26 @@
 ![Tests: 121 passed](https://img.shields.io/badge/tests-121_passed-brightgreen)
 ![Aggregate coverage: 83.59%](https://img.shields.io/badge/coverage-83.59%25-brightgreen)
 
-**I'm Mohamed Amine Chalhy, and this repository presents my software-engineering
-work on a real autonomous-driving car built and demonstrated in 2025 by a
-twelve-engineer multidisciplinary team.** I owned the vehicle-software and
-AI-integration workstream: the Python operator application, game-controller
-input, embedded serial communication, RPLidar processing, obstacle assistance,
-and YOLO-based camera inference.
+I'm Mohamed Amine Chalhy. In 2025, I was part of a twelve-person engineering
+team that built and demonstrated a physical autonomous-vehicle platform. It
+combined operator control, perception-assisted stopping, and camera inference
+on a team-built car. I was responsible for the vehicle software and AI
+integration: the Python operator application, game-controller input, serial
+communication with the vehicle electronics, RPLidar processing,
+obstacle-aware stopping, and camera-based YOLO inference.
 
-## Software walkthrough
+The desktop application brings vehicle control, telemetry, RPLidar perception,
+and diagnostics together in one interface. It provides hardware and simulation
+modes.
 
-I recorded this walkthrough directly from the maintained application running
-against its deterministic ESP32, controller, and RPLidar simulators. It uses the
-same typed service layer, safety state machine, command dispatcher, and UI as the
-hardware configuration—no mocked screenshots or pre-rendered states.
+## Application walkthrough
+
+This walkthrough follows a complete drive session in simulation. It connects
+the vehicle, controller, and Lidar, arms the drive system, applies steering and
+throttle, moves an obstacle into the projected path, activates the assisted
+stop, and finishes in the diagnostics view.
 
 ![Car Interface simulator walkthrough showing connection, driving, Lidar assistance, and diagnostics](docs/assets/showcase/app-walkthrough.gif)
-
-The walkthrough connects all three simulated devices, arms the vehicle, applies
-bounded speed and steering commands, moves an obstacle into the projected path,
-shows the automatic emergency stop, and then traverses the genuine command log.
 
 | Operator control | Lidar-assisted stop |
 | :---: | :---: |
@@ -33,62 +34,67 @@ shows the automatic emergency stop, and then traverses the genuine command log.
 
 ![Diagnostics view showing simulator connection, commands, acknowledgements, and safety events](docs/assets/showcase/06-diagnostics.png)
 
-The [showcase guide](docs/showcase.md) explains the sequence and how I made the
-capture reproducible. To traverse it locally after setup, run:
+Hardware and simulation modes use the same control services and device
+interfaces. The simulator covers connection handling, vehicle commands, Lidar
+processing, assisted stopping, and diagnostics without connecting the car.
+
+Replay the walkthrough locally:
 
 ~~~powershell
 .\.venv\Scripts\python.exe scripts\dev.py run-sim --showcase
 ~~~
 
+The [showcase guide](docs/showcase.md) covers the sequence and capture command.
+
 ## Physical vehicle demonstration
 
-This is the real autonomous-driving car our multidisciplinary team built and
-demonstrated in 2025:
+The physical-vehicle recording shows the system during our 2025 team
+demonstration. The wider team covered the mechanical, electrical, embedded, and
+vehicle-integration work.
 
 ![Autonomous-driving car and control-interface demonstration](https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExaHA0dHo1YW5wbjdua25ob2ZmN2Zya3Y1cnFocGFhb2E0c3g3Nm5kZiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/IpNjWXPWk869qG8ss6/giphy.gif)
 
 [Watch the full project showcase](https://www.instagram.com/p/DJD9AVDM7V6/)
 · [Read the engineering case study](docs/case-study.md)
-· [Review verified results](docs/project-results.md)
+· [See test and build results](docs/project-results.md)
 
 ## My engineering contribution
 
-My contribution connected operator input, real-time sensing, AI inference, and
-embedded actuation in one working vehicle platform.
+I was responsible for the software path from operator input and sensor data to
+commands sent to the vehicle electronics.
 
-| Area | Software-engineering contribution |
+| Area | My contribution |
 | --- | --- |
-| Vehicle control | Built the Python/Tkinter operator workflow for connection state, manual control, game-controller driving, braking, logs, and device feedback |
-| Embedded integration | Implemented the USB serial command path between the Windows host and the ESP32/Arduino-based vehicle electronics |
-| Controller processing | Normalized analog steering, throttle, brake, and direction inputs into bounded vehicle commands |
-| Lidar perception | Converted RPLidar polar scans into a live 2D vehicle-relative view with projected-path obstacle detection |
-| AI perception | Integrated camera capture and YOLO inference with labeled detections, confidence scores, bounding boxes, and an approximate-distance overlay |
-| Software architecture | Reworked the host into typed domain, service, adapter, configuration, simulation, and UI layers |
-| Developer experience | Added locked setup scripts, strict type checking, automated tests, pre-commit checks, CI, and Windows packaging |
+| Vehicle control | Built the Python/Tkinter workflow for device connection, arming, manual driving, game-controller input, braking, diagnostics, and vehicle feedback |
+| Embedded communication | Implemented the USB serial command path between the Windows host and the vehicle electronics |
+| Controller input | Converted analog steering, throttle, brake, and direction input into validated vehicle commands |
+| Lidar perception | Processed RPLidar scans into a live vehicle-relative view and detected obstacles inside the projected driving path |
+| AI perception | Connected camera capture to YOLO inference and displayed labels, confidence scores, bounding boxes, and approximate distance estimates |
+| Software design | Structured the application around typed domain, service, adapter, configuration, simulation, and UI layers |
+| Project delivery | Set up locked environments, strict type checking, automated tests, pre-commit checks, CI, and Windows packaging |
 
-## What the physical prototype demonstrated
+## Application capabilities
 
-- Desktop and game-controller operation of the team-built vehicle.
-- Live RPLidar visualization and obstacle detection along the projected path.
-- Assisted stopping plus explicit brake and emergency-stop controls.
-- Host communication with the installed ESP32-WROOM-32 and Arduino Uno R3
-  electronics.
-- A working camera-to-YOLO detection pipeline in the original project software.
-- End-to-end integration across mechanical, electrical, embedded, software, and
-  AI disciplines.
+- Drive through the desktop controls or a connected game controller.
+- Monitor vehicle, controller, and Lidar connection state and telemetry.
+- Convert RPLidar scans into a live vehicle-relative map.
+- Detect obstacles inside the projected path and request an assisted stop.
+- Exchange commands with the vehicle electronics over USB serial.
+- Exercise the operator workflow through the included simulator.
 
-The AI contribution is an end-to-end YOLO integration. The retained project
-record does not establish a separate custom-training workflow. The maintained
-package currently focuses on vehicle control and RPLidar; the demonstrated
-camera pipeline is documented in the
-[historical YOLO engineering record](docs/perception/historical-yolo-pipeline.md).
+The vehicle demonstration also included camera-based YOLO inference with
+annotated detections, confidence scores, and approximate distance estimates. My
+vision work covered that camera and application integration. The
+[perception engineering notes](docs/perception/yolo-pipeline.md)
+describe the pipeline in detail.
 
-## Architecture
+## Software architecture
 
 ![Vehicle control and perception system overview](docs/assets/vehicle-system-overview.svg)
 
-The maintained application keeps control decisions independent from GUI and
-device libraries:
+The application separates control state, command handling, device access,
+perception, and interface code into typed layers. Hardware and simulator
+adapters implement the same contracts.
 
 ~~~mermaid
 flowchart LR
@@ -103,59 +109,57 @@ flowchart LR
     Perception --> Simulation
 ~~~
 
-The result is a system that can exercise state transitions, command ordering,
-timeouts, disconnects, sensor staleness, and obstacle behavior without requiring
-the car to be connected.
+This design supports testing of state transitions, command ordering, timeouts,
+disconnects, sensor staleness, and obstacle behavior with or without the car.
 
 ### Engineering highlights
 
 - **Typed control core:** immutable state, explicit transitions, validated
   commands, and strict mypy checking.
-- **Deterministic simulation:** in-memory vehicle, controller, and Lidar
+- **Simulator:** in-memory vehicle, controller, and Lidar
   adapters implement the same interfaces as physical devices.
 - **Resilient dispatch:** bounded priority queues, sequence-aware protocol
   frames, acknowledgement handling, stale-command rejection, and motion
   eviction on stop transitions.
-- **Explicit protocol profiles:** the checksummed protocol-v1 implementation and
-  a selectable adapter for the original car's newline command dialect.
+- **Protocol profiles:** the checksummed protocol-v1 implementation and a
+  selectable adapter for the vehicle's newline command dialect.
 - **Concurrency boundaries:** device workers never own Tkinter widgets or mutate
   domain state directly.
-- **Reproducible delivery:** Python 3.13, a committed uv lockfile, custom
+- **Developer tooling:** Python 3.13, a committed uv lockfile, custom
   bootstrap/development scripts, cross-platform CI, and a PyInstaller Windows
   bundle.
 
-## Verified software baseline
+## Quality checks
 
-| Signal | Verified result |
+| Check | Result |
 | --- | --- |
 | Automated tests | **121 passed** across unit, integration, regression, GUI-support, and simulator behavior |
 | Aggregate coverage | **83.59%** |
 | Type checking | **Strict mypy** across the application and development tooling |
 | Code quality | Ruff formatting and linting, enforced locally and in CI |
-| CI platforms | Current Windows and Ubuntu GitHub-hosted runners |
+| CI platforms | Windows and Ubuntu GitHub-hosted runners |
 | Packaging | Python wheel, source distribution, and smoke-tested Windows application bundle |
 | Reproducibility | Python version pin, committed uv lockfile, PowerShell/Bash bootstrap scripts, and pre-commit hooks |
 
-The complete check is run through the same custom command surface locally and in
-CI:
+Run the full local check with:
 
 ~~~powershell
 .\.venv\Scripts\python.exe scripts\dev.py check
 ~~~
 
 See [Project results](docs/project-results.md) and
-[Testing strategy](docs/testing.md) for the reproducible verification path.
+[Testing strategy](docs/testing.md) for the test setup and commands.
 
-## Technical tour
+## Code map
 
-These files are good starting points for reviewing the engineering directly:
+These files are good starting points for exploring the implementation:
 
-| Concern | Representative implementation | What to inspect |
+| Area | File | Details |
 | --- | --- | --- |
 | Control state machine | [domain/safety.py](src/car_interface/domain/safety.py) | Explicit phases, transition decisions, latching, and stop behavior |
 | Command dispatch | [services/dispatcher.py](src/car_interface/services/dispatcher.py) | Priority ordering, bounded queues, acknowledgement tracking, retries, and pacing |
-| Protocol compatibility | [domain/protocol_profiles.py](src/car_interface/domain/protocol_profiles.py) | Checksummed protocol v1 and the explicit school-car legacy translation |
-| Simulation | [adapters/simulated.py](src/car_interface/adapters/simulated.py) | Deterministic vehicle, controller, firmware, and Lidar substitutes |
+| Protocol compatibility | [domain/protocol_profiles.py](src/car_interface/domain/protocol_profiles.py) | Checksummed protocol v1 and the vehicle command profile |
+| Simulation | [adapters/simulated.py](src/car_interface/adapters/simulated.py) | Vehicle, controller, firmware, and Lidar simulators |
 | Lidar analysis | [services/lidar_analysis.py](src/car_interface/services/lidar_analysis.py) | Vehicle-relative geometry, projected-path filtering, and closest-obstacle assessment |
 | State-machine tests | [test_domain_safety.py](tests/unit/test_domain_safety.py) | Transition and invariant coverage |
 | Dispatcher regressions | [test_dispatcher_regressions.py](tests/unit/test_dispatcher_regressions.py) | Ordering, partial writes, pacing, and failure behavior |
@@ -163,8 +167,8 @@ These files are good starting points for reviewing the engineering directly:
 
 ## Run the simulator
 
-The simulator exercises the current interface and control architecture without
-the vehicle, controller, or Lidar.
+The simulator runs the full interface and control architecture without the
+vehicle, controller, or Lidar.
 
 ### Windows
 
@@ -193,16 +197,16 @@ Platform details and command explanations are in
 
 | Subsystem | Project configuration |
 | --- | --- |
-| Main controller | 38-pin ESP32 development board with ESP-WROOM-32 module and CP2102 USB-to-UART |
-| Secondary controller | Arduino Uno R3-form-factor board with DIP ATmega328P |
+| ESP32 board | 38-pin development board with ESP-WROOM-32 module and CP2102 USB-to-UART; configured host serial target |
+| Arduino board | Uno R3-form-factor board with DIP ATmega328P; installed role defined by the vehicle firmware and pin map |
 | Ranging | USB-connected RPLidar with vehicle-relative scan processing |
 | Vision | Host camera with the demonstrated YOLO11n inference pipeline |
 | Driver input | pygame-compatible game controller |
 | Host | Windows desktop application |
 
-Detailed specifications, board settings, command mappings, and reconstruction
-steps are available in the [vehicle hardware dossier](docs/hardware/README.md)
-and [firmware dossier](docs/firmware/README.md).
+Board specifications, configuration settings, command mappings, and setup notes
+are in the [hardware guide](docs/hardware/README.md) and
+[firmware guide](docs/firmware/README.md).
 
 ## Documentation
 
@@ -221,14 +225,13 @@ and [firmware dossier](docs/firmware/README.md).
 
 ## Team
 
-The physical car was a collaborative achievement by twelve engineers spanning
-mechanical, electrical, embedded, software, and AI work. I owned the
-vehicle-software and AI-integration scope described above. The full team is
-recognized in [Credits](docs/credits.md).
+I developed the vehicle software and AI integration as part of a twelve-person
+team spanning mechanical, electrical, embedded, software, and AI engineering.
+Everyone who worked on the car is listed in [Credits](docs/credits.md).
 
-## Hardware compatibility status
+## Connecting the physical vehicle
 
-The car was physically built and demonstrated with the original stack. The
-maintained host includes a regression-tested translation for the recovered
-command dialect; final vehicle-side validation requires the original firmware,
-serial transcript, pin map, and actuator calibration.
+Hardware mode includes the `school_car_legacy_v0` newline command profile for
+the vehicle. Before a physical run, configure the serial port and confirm the
+connected firmware, pin assignments, and actuator calibration using the
+[hardware guide](docs/hardware/README.md).
