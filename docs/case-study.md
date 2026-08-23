@@ -11,7 +11,8 @@ I was responsible for the vehicle software and AI integration. My work
 connected the operator, sensors, inference pipeline, and embedded vehicle
 controllers in one system.
 
-[Watch the recorded physical-car showcase](https://www.instagram.com/p/DJD9AVDM7V6/)
+[Watch the physical drive test](assets/showcase/physical-drive-demo.mp4) ·
+[Watch the full project showcase](https://www.instagram.com/p/DJD9AVDM7V6/)
 
 ## Engineering challenge
 

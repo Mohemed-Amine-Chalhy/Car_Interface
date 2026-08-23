@@ -48,13 +48,20 @@ The [showcase guide](docs/showcase.md) covers the sequence and capture command.
 
 ## Physical vehicle demonstration
 
-The physical-vehicle recording shows the system during our 2025 team
-demonstration. The wider team covered the mechanical, electrical, embedded, and
-vehicle-integration work.
+This drive test shows me operating the vehicle software from the laptop as the
+vehicle moves through the campus test route. The wider team covered the
+mechanical, electrical, embedded, and vehicle-integration work.
 
-![Autonomous-driving car and control-interface demonstration](https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExaHA0dHo1YW5wbjdua25ob2ZmN2Zya3Y1cnFocGFhb2E0c3g3Nm5kZiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/IpNjWXPWk869qG8ss6/giphy.gif)
+<p align="center">
+  <a href="docs/assets/showcase/physical-drive-demo.mp4">
+    <img src="docs/assets/showcase/physical-drive-demo.gif" width="400" alt="Team-built vehicle during the 2025 campus drive test" />
+  </a>
+</p>
 
-[Watch the full project showcase](https://www.instagram.com/p/DJD9AVDM7V6/)
+<p align="center"><sub>Physical drive test</sub></p>
+
+[Watch the MP4](docs/assets/showcase/physical-drive-demo.mp4)
+· [Watch the full project showcase](https://www.instagram.com/p/DJD9AVDM7V6/)
 · [Read the engineering case study](docs/case-study.md)
 · [See test and build results](docs/project-results.md)
 

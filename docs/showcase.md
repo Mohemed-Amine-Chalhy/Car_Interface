@@ -60,5 +60,5 @@ capture command.
 
 ## Demo modes
 
-The guided walkthrough shows simulation mode. The physical-vehicle video in the
-README shows the completed car during our team demonstration.
+The guided walkthrough shows simulation mode. The README pairs it with a
+repository-hosted drive-test excerpt and the full 2025 team showcase.

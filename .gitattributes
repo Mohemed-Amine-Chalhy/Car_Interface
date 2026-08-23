@@ -29,6 +29,7 @@ CODEOWNERS text eol=lf
 *.ico binary
 *.wav binary
 *.mp3 binary
+*.mp4 binary
 *.pt binary
 *.onnx binary
 *.zip binary
